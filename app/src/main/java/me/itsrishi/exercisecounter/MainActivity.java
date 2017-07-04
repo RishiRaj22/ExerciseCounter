@@ -41,8 +41,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.itsrishi.exercisecounter.adapters.SessionAdapter;
 import me.itsrishi.exercisecounter.listeners.RecyclerViewClickListener;
-import me.itsrishi.exercisecounter.models.BodyPart;
-import me.itsrishi.exercisecounter.models.Exercise;
 import me.itsrishi.exercisecounter.models.Session;
 
 public class MainActivity extends AppCompatActivity implements RecyclerViewClickListener {
@@ -58,21 +56,12 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        sessions = new ArrayList<>();
+    }
 
-        ObjectMapper mapper = new ObjectMapper();
-        int i = 0;
-        while (true) {
-            try {
-                FileInputStream inputStream = this.openFileInput(String.format("sessions_%d.json",i));
-                sessions.add(mapper.readValue(inputStream, Session.class));
-                inputStream.close();
-            } catch (IOException e) {
-                break;
-            }
-            i++;
-        }
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fetchSessionList();
         adapter = new SessionAdapter(new ArrayList<>(sessions), this);
         sessionsList.setAdapter(adapter);
         sessionsList.refreshDrawableState();
@@ -85,6 +74,22 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
                 startActivity(intent);
             }
         });
+    }
+
+    private void fetchSessionList() {
+        sessions = new ArrayList<>();
+        ObjectMapper mapper = new ObjectMapper();
+        int i = 0;
+        while (true) {
+            try {
+                FileInputStream inputStream = this.openFileInput(String.format("sessions_%d.json",i));
+                sessions.add(mapper.readValue(inputStream, Session.class));
+                inputStream.close();
+            } catch (IOException e) {
+                break;
+            }
+            i++;
+        }
     }
 
     private void play(Session session) {
