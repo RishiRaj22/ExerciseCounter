@@ -33,10 +33,10 @@ import me.itsrishi.exercisecounter.adapters.ListChangeAdapter;
  * @author Rishi Raj
  */
 
-public class CustomItemTouchHelperCallback extends ItemTouchHelper.Callback {
+public class ExerciseTouchHelperCallback extends ItemTouchHelper.Callback {
     private ListChangeAdapter changeAdapter;
 
-    public CustomItemTouchHelperCallback(ListChangeAdapter changeAdapter) {
+    public ExerciseTouchHelperCallback(ListChangeAdapter changeAdapter) {
         this.changeAdapter = changeAdapter;
     }
     @Override

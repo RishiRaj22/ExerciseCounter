@@ -40,8 +40,6 @@ import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -110,7 +108,7 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
         exerciseEditList.setAdapter(exerciseAdapter);
 
 
-        touchHelper = new ItemTouchHelper(new CustomItemTouchHelperCallback(exerciseAdapter));
+        touchHelper = new ItemTouchHelper(new ExerciseTouchHelperCallback(exerciseAdapter));
         touchHelper.attachToRecyclerView(exerciseEditList);
 
         exerciseAdapter.notifyDataSetChanged();
@@ -154,8 +152,6 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
             Snackbar.make(exerciseEditList, R.string.undo_message, Snackbar.LENGTH_LONG).setAction(R.string.undo_text, SessionCreateActivity.this).setActionTextColor(Color.RED).show();
         else prev = new ArrayList<>(exercises);
         temp = new ArrayList<>(exercises);
-        exerciseAdapter.notifyDataSetChanged();
-        exerciseEditList.refreshDrawableState();
     }
 
 

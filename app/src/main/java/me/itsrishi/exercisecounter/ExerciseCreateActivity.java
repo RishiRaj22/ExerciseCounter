@@ -60,7 +60,7 @@ public class ExerciseCreateActivity extends AppCompatActivity implements Compoun
     private Session session;
     private int index;
     private int position;
-    private boolean shouldAutoplay;
+    private boolean shouldAutoplay = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

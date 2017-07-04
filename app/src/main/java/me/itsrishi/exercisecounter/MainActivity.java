@@ -34,7 +34,9 @@ import android.widget.LinearLayout;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -62,9 +64,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
     protected void onResume() {
         super.onResume();
         fetchSessionList();
-        adapter = new SessionAdapter(new ArrayList<>(sessions), this);
-        sessionsList.setAdapter(adapter);
-        sessionsList.refreshDrawableState();
         sessionPlusFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,6 +89,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
             }
             i++;
         }
+        adapter = new SessionAdapter(new ArrayList<>(sessions), this);
+        sessionsList.setAdapter(adapter);
+        sessionsList.refreshDrawableState();
     }
 
     private void play(Session session) {
@@ -99,6 +101,25 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
         startActivity(intent);
     }
 
+    private void deleteSession(int index) {
+        while (true) {
+            try {
+                String[] files = this.fileList();
+                for(int i = index + 1; i <= files.length; i++) {
+                    FileInputStream inputStream = this.openFileInput(String.format("sessions_%d.json",i + 1));
+                    FileChannel source = inputStream.getChannel();
+                    FileOutputStream outputStream = this.openFileOutput(String.format("sessions_%d.json",i),MODE_PRIVATE);
+                    FileChannel dest = outputStream.getChannel();
+                    dest.transferFrom(source,0,source.size());
+                    source.close();
+                    dest.close();
+                }
+            } catch (IOException e) {
+                break;
+            }
+        }
+        fetchSessionList();
+    }
     @Override
     public void onClick(int position, View view) {
         if (view instanceof ImageView) {

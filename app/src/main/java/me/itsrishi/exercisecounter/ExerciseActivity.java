@@ -79,7 +79,7 @@ public class ExerciseActivity extends AppCompatActivity implements IntegerChange
         exerciseModificationListeners.add(this);
         exerciseModificationListeners.add(playingView);
         adapter = new UpcomingExercisesAdapter(exercises, 0, exerciseModificationListeners);
-        touchHelper = new ItemTouchHelper(new CustomItemTouchHelperCallback(adapter));
+        touchHelper = new ItemTouchHelper(new ExerciseTouchHelperCallback(adapter));
         touchHelper.attachToRecyclerView(recyclerView);
         recyclerView.setAdapter(adapter);
 
