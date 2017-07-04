@@ -22,9 +22,12 @@
 
 package me.itsrishi.exercisecounter;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -81,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
         int i = 0;
         while (true) {
             try {
-                FileInputStream inputStream = this.openFileInput(String.format("sessions_%d.json",i));
+                FileInputStream inputStream = this.openFileInput(String.format("sessions_%d.json", i));
                 sessions.add(mapper.readValue(inputStream, Session.class));
                 inputStream.close();
             } catch (IOException e) {
@@ -102,27 +105,31 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
     }
 
     private void deleteSession(int index) {
-        while (true) {
+
+        String[] files = this.fileList();
+        FileChannel source, dest;
+        int i;
+        for (i = index; i <= files.length; i++) {
             try {
-                String[] files = this.fileList();
-                for(int i = index + 1; i <= files.length; i++) {
-                    FileInputStream inputStream = this.openFileInput(String.format("sessions_%d.json",i + 1));
-                    FileChannel source = inputStream.getChannel();
-                    FileOutputStream outputStream = this.openFileOutput(String.format("sessions_%d.json",i),MODE_PRIVATE);
-                    FileChannel dest = outputStream.getChannel();
-                    dest.transferFrom(source,0,source.size());
-                    source.close();
-                    dest.close();
-                }
+                FileInputStream inputStream = this.openFileInput(String.format("sessions_%d.json", i + 1));
+                source = inputStream.getChannel();
+                FileOutputStream outputStream = this.openFileOutput(String.format("sessions_%d.json", i), MODE_PRIVATE);
+                dest = outputStream.getChannel();
+                dest.transferFrom(source, 0, source.size());
+                source.close();
+                dest.close();
             } catch (IOException e) {
                 break;
             }
         }
+        deleteFile(String.format("sessions_%d.json", i));
         fetchSessionList();
     }
+
     @Override
     public void onClick(int position, View view) {
         if (view instanceof ImageView) {
+//            deleteSession(position);
             Intent intent = new Intent(MainActivity.this, SessionCreateActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra("index", position);
@@ -131,5 +138,27 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
         }
         if (view instanceof LinearLayout)
             play(sessions.get(position));
+    }
+
+    @Override
+    public void onLongClick(final int position, View v) {
+        String sessionName = sessions.get(position).getName();
+        new AlertDialog.Builder(this).
+                setIcon(R.drawable.ic_delete_white_24dp)
+                .setTitle("Delete " + sessionName)
+                .setMessage("Are you sure you want to delete " + sessionName + "?")
+                .setPositiveButton("No",new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteSession(position);
+                    }
+                })
+                .show();
     }
 }

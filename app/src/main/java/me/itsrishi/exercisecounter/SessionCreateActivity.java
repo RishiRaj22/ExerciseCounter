@@ -243,4 +243,9 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
         intent.putExtra("session", session);
         startActivity(intent);
     }
+
+    @Override
+    public void onLongClick(int position, View v) {
+
+    }
 }

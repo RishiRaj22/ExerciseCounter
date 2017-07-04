@@ -29,6 +29,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -83,7 +84,7 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionH
         return sessions.size();
     }
 
-    class SessionHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class SessionHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnLongClickListener {
         int position;
         TextView sessionName,scheduledTime,sessionTime;
         ImageView sessionEdit;
@@ -95,13 +96,25 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionH
             sessionTime = (TextView) itemView.findViewById(R.id.session_time);
             sessionEdit = (ImageView) itemView.findViewById(R.id.session_edit_button);
             sessionMetadata = (LinearLayout) itemView.findViewById(R.id.session_metadata);
+
             sessionEdit.setOnClickListener(this);
             sessionMetadata.setOnClickListener(this);
+
+            sessionMetadata.setLongClickable(true);
+            sessionEdit.setLongClickable(true);
+            sessionMetadata.setOnLongClickListener(this);
+            sessionEdit.setOnLongClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             listener.onClick(position,v);
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            listener.onLongClick(position,v);
+            return true;
         }
     }
 }

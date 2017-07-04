@@ -35,4 +35,6 @@ public interface RecyclerViewClickListener {
      * @param view The view of the item clicked
      */
     public void onClick(int position, View view);
+
+    public void onLongClick(int position, View v);
 }

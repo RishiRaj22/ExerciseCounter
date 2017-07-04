@@ -83,6 +83,11 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         clickListener.onClick(position,view);
     }
 
+    @Override
+    public void onLongClick(int position, View v) {
+
+    }
+
     class ExerciseViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         int position;
         TextView name,reps;
