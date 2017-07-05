@@ -56,14 +56,14 @@ public class UpcomingExercisesAdapter extends RecyclerView.Adapter<UpcomingExerc
     @Override
     public ExerciseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View exerciseView = LayoutInflater.from(parent.getContext()).
-                inflate(R.layout.exercise_layout,parent,false);
+                inflate(R.layout.exercise_layout, parent, false);
         return new ExerciseViewHolder(exerciseView);
     }
 
     @Override
     public void onBindViewHolder(ExerciseViewHolder holder, int position) {
         holder.name.setText("" + exercises.get(beg + position).getName());
-        holder.reps.setText("X "+ exercises.get(beg + position).getTurns());
+        holder.reps.setText("X " + exercises.get(beg + position).getTurns());
     }
 
     @Override
@@ -75,14 +75,6 @@ public class UpcomingExercisesAdapter extends RecyclerView.Adapter<UpcomingExerc
         beg = index + 1;
     }
 
-    class ExerciseViewHolder extends RecyclerView.ViewHolder {
-        TextView name,reps;
-        ExerciseViewHolder(View itemView) {
-            super(itemView);
-            name = (TextView) itemView.findViewById(R.id.exercise_name);
-            reps = (TextView) itemView.findViewById(R.id.exercise_reps);
-        }
-    }
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
         if (fromPosition < toPosition) {
@@ -111,5 +103,15 @@ public class UpcomingExercisesAdapter extends RecyclerView.Adapter<UpcomingExerc
             exerciseModificationListener.onChange(true);
         }
         return true;
+    }
+
+    class ExerciseViewHolder extends RecyclerView.ViewHolder {
+        TextView name, reps;
+
+        ExerciseViewHolder(View itemView) {
+            super(itemView);
+            name = (TextView) itemView.findViewById(R.id.exercise_name);
+            reps = (TextView) itemView.findViewById(R.id.exercise_reps);
+        }
     }
 }

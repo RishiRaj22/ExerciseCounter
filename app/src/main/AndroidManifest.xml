@@ -45,7 +45,7 @@
         <activity
             android:name=".ExerciseCreateActivity"
             android:label="@string/title_activity_exercise_create"
-            android:windowSoftInputMode="stateVisible" />
+            android:windowSoftInputMode="stateUnchanged" />
     </application>
 
 </manifest>

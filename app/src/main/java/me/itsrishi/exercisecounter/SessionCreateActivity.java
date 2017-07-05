@@ -56,6 +56,7 @@ import me.itsrishi.exercisecounter.models.Session;
 public class SessionCreateActivity extends Activity implements View.OnClickListener,
         ExerciseModificationListener, RecyclerViewClickListener {
 
+    public static final String SESSION_EDIT_INDEX = "session_edit_index";
     @BindView(R.id.session_name_set)
     AppCompatEditText sessionNameSet;
     @BindView(R.id.session_gap_set)
@@ -64,15 +65,12 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
     RecyclerView exerciseEditList;
     @BindView(R.id.session_submit)
     AppCompatButton sessionSubmit;
-
     ExerciseAdapter exerciseAdapter;
     Session session;
     ItemTouchHelper touchHelper;
     ArrayList<Exercise> prev, temp;
     ArrayList<Exercise> exercises;
     int index;
-
-    public static final String SESSION_EDIT_INDEX = "session_edit_index";
     @BindView(R.id.exercise_plus_fab)
     FloatingActionButton exercisePlusFab;
 
@@ -119,7 +117,8 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
                 session.setName(sessionNameSet.getText().toString());
                 try {
                     session.setGapBetweenExercises(Integer.valueOf(sessionGapSet.getText().toString()));
-                } catch (NumberFormatException ex) {}
+                } catch (NumberFormatException ex) {
+                }
                 int position = 0;
                 if (exercises != null)
                     position = exercises.size();
@@ -193,7 +192,7 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
     private boolean saveSession() {
         try {
             session.setName(sessionNameSet.getText().toString());
-            if(session.getName() == "") {
+            if (session.getName() == "") {
                 Toast.makeText(this, "Enter valid name for session", Toast.LENGTH_LONG).show();
                 return false;
             }
@@ -203,13 +202,13 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
                 Toast.makeText(this, "Enter valid gap between exercises", Toast.LENGTH_LONG).show();
                 return false;
             }
-            if(exercises == null) {
+            if (exercises == null) {
                 Toast.makeText(this, "Add exercises to the session", Toast.LENGTH_LONG).show();
                 return false;
             }
             session.setExercises(exercises);
             ObjectMapper mapper = new ObjectMapper();
-            FileOutputStream outputStream = this.openFileOutput(String.format("sessions_%d.json",index),MODE_PRIVATE);
+            FileOutputStream outputStream = this.openFileOutput(String.format("sessions_%d.json", index), MODE_PRIVATE);
             mapper.writeValue(outputStream, session);
             outputStream.close();
             Log.d("JSON-VAL", "sessions_" + index + ".json\n" + mapper.writeValueAsString(session));
@@ -235,17 +234,13 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
         session.setName(sessionNameSet.getText().toString());
         try {
             session.setGapBetweenExercises(Integer.valueOf(sessionGapSet.getText().toString()));
-        } catch (NumberFormatException ex) {}
+        } catch (NumberFormatException ex) {
+        }
         Intent intent = new Intent(SessionCreateActivity.this, ExerciseCreateActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("index", index);
         intent.putExtra("position", position);
         intent.putExtra("session", session);
         startActivity(intent);
-    }
-
-    @Override
-    public void onLongClick(int position, View v) {
-
     }
 }

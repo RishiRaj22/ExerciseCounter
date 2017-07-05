@@ -29,7 +29,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -45,6 +44,7 @@ import me.itsrishi.exercisecounter.models.Session;
 public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionHolder> {
     List<Session> sessions;
     RecyclerViewClickListener listener;
+
     public SessionAdapter(List<Session> sessions) {
         this.sessions = sessions;
     }
@@ -57,7 +57,7 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionH
     @Override
     public SessionHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.session_layout,parent,false);
+                .inflate(R.layout.session_layout, parent, false);
         return new SessionHolder(view);
     }
 
@@ -65,16 +65,16 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionH
     public void onBindViewHolder(SessionHolder holder, int position) {
         holder.sessionName.setText(sessions.get(position).getName());
         int time = 0;
-        for (Exercise exercise:
-             sessions.get(position).getExercises()) {
-            time += (int)(exercise.getTurns()
+        for (Exercise exercise :
+                sessions.get(position).getExercises()) {
+            time += (int) (exercise.getTurns()
                     * exercise.getTimePerTurn());
             time += (exercise.getTurns() - 1)
                     * exercise.getGapBetweenTurns();
         }
         time += sessions.get(position).getGapBetweenExercises()
                 * (sessions.get(position).getExercises().size() - 1);
-        String totalTime = time/60 + "m " + time%60 +"s";
+        String totalTime = time / 60 + "m " + time % 60 + "s";
         holder.sessionTime.setText("" + totalTime);
         holder.position = position;
     }
@@ -84,11 +84,12 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionH
         return sessions.size();
     }
 
-    class SessionHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnLongClickListener {
+    public class SessionHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         int position;
-        TextView sessionName,scheduledTime,sessionTime;
+        TextView sessionName, scheduledTime, sessionTime;
         ImageView sessionEdit;
         LinearLayout sessionMetadata;
+
         public SessionHolder(View itemView) {
             super(itemView);
             sessionName = (TextView) itemView.findViewById(R.id.session_name);
@@ -99,22 +100,12 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionH
 
             sessionEdit.setOnClickListener(this);
             sessionMetadata.setOnClickListener(this);
-
-            sessionMetadata.setLongClickable(true);
-            sessionEdit.setLongClickable(true);
-            sessionMetadata.setOnLongClickListener(this);
-            sessionEdit.setOnLongClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            listener.onClick(position,v);
+            listener.onClick(position, v);
         }
 
-        @Override
-        public boolean onLongClick(View v) {
-            listener.onLongClick(position,v);
-            return true;
-        }
     }
 }

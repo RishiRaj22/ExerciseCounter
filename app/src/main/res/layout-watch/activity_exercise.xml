@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2017 Rishi Raj
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -28,15 +27,15 @@
     android:orientation="vertical">
 
     <me.itsrishi.exercisecounter.views.PlayingView
+        android:id="@+id/playing_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:keepScreenOn="true"
-        android:id="@+id/playing_view">
-    </me.itsrishi.exercisecounter.views.PlayingView>
+        android:keepScreenOn="true"></me.itsrishi.exercisecounter.views.PlayingView>
+
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/upcoming_exercises"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/upcoming_exercises">
+        android:layout_height="match_parent">
         app:layoutManager="android.support.v7.widget.LinearLayoutManager">
         android:id="@+id/upcoming_exercises">
     </android.support.v7.widget.RecyclerView>

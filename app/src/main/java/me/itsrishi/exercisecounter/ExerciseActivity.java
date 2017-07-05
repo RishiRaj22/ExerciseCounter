@@ -54,11 +54,11 @@ public class ExerciseActivity extends AppCompatActivity implements IntegerChange
     PlayingView playingView;
     @BindView(R.id.upcoming_exercises)
     RecyclerView recyclerView;
-    private int index;
     UpcomingExercisesAdapter adapter;
     ItemTouchHelper touchHelper;
     ArrayList<Exercise> prev, temp;
     ArrayList<Exercise> exercises;
+    private int index;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

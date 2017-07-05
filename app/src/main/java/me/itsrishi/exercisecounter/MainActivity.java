@@ -22,7 +22,6 @@
 
 package me.itsrishi.exercisecounter;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,6 +29,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -94,6 +95,19 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
         }
         adapter = new SessionAdapter(new ArrayList<>(sessions), this);
         sessionsList.setAdapter(adapter);
+        ItemTouchHelper callback = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
+                                  RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                MainActivity.this.onSwipe(viewHolder.getAdapterPosition(), viewHolder.itemView);
+            }
+        });
+        callback.attachToRecyclerView(sessionsList);
         sessionsList.refreshDrawableState();
     }
 
@@ -140,23 +154,27 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
             play(sessions.get(position));
     }
 
-    @Override
-    public void onLongClick(final int position, View v) {
+    public void onSwipe(final int position, View v) {
         String sessionName = sessions.get(position).getName();
-        new AlertDialog.Builder(this).
-                setIcon(R.drawable.ic_delete_white_24dp)
+        new AlertDialog.Builder(this)
+                .setCancelable(false)
+                .setIcon(R.drawable.ic_delete_white_24dp)
                 .setTitle("Delete " + sessionName)
                 .setMessage("Are you sure you want to delete " + sessionName + "?")
-                .setPositiveButton("No",new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.no, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        fetchSessionList();
                     }
                 })
-                .setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        long time = System.nanoTime();
                         deleteSession(position);
+                        long delta = System.nanoTime() - time;
+                        double d = delta / Math.pow(10, 9);
+                        Log.d("TIME_DUR", String.format("Deletion of %d took %f time", position, d));
                     }
                 })
                 .show();

@@ -111,7 +111,7 @@ public class ExerciseCreateActivity extends AppCompatActivity implements Compoun
                     Toast.makeText(ExerciseCreateActivity.this, "Enter valid values", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if(exName == "") {
+                if (exName == "") {
                     Toast.makeText(ExerciseCreateActivity.this, "Enter valid na", Toast.LENGTH_SHORT).show();
                     return;
                 }

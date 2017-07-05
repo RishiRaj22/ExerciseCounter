@@ -46,10 +46,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:minEms="6"
             android:imeOptions="actionNext"
             android:inputType="text"
             android:maxLines="1"
+            android:minEms="6"
             android:textSize="18sp" />
 
         <LinearLayout
@@ -72,8 +72,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:minEms="3"
                 android:inputType="number"
+                android:minEms="3"
                 android:textSize="20sp" />
 
         </LinearLayout>
@@ -91,7 +91,8 @@
             android:layout_height="match_parent"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager">
             android:background="#999999"
-            android:visibility="visible"></android.support.v7.widget.RecyclerView>
+            android:visibility="visible">
+        </android.support.v7.widget.RecyclerView>
     </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton

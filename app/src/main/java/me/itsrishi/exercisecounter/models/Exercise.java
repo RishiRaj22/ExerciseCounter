@@ -30,13 +30,24 @@ import android.os.Parcelable;
  */
 
 public class Exercise implements Parcelable {
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Exercise> CREATOR = new Parcelable.Creator<Exercise>() {
+        @Override
+        public Exercise createFromParcel(Parcel in) {
+            return new Exercise(in);
+        }
+
+        @Override
+        public Exercise[] newArray(int size) {
+            return new Exercise[size];
+        }
+    };
     private String name;
     private int turns;
     private float timePerTurn;
     private float gapBetweenTurns = 1;
     private int bodyPart;
     private boolean autoplay;
-
 
     public Exercise() {
         name = "Exercise";
@@ -55,10 +66,19 @@ public class Exercise implements Parcelable {
         this.autoplay = autoplay;
     }
 
+
     public Exercise(String name, int turns, float timePerTurn, float gapBetweenTurns, int bodyPart) {
         this(name, turns, timePerTurn, gapBetweenTurns, bodyPart, true);
     }
 
+    protected Exercise(Parcel in) {
+        name = in.readString();
+        turns = in.readInt();
+        timePerTurn = in.readFloat();
+        gapBetweenTurns = in.readFloat();
+        bodyPart = in.readInt();
+        autoplay = in.readByte() != 0x00;
+    }
 
     public String getName() {
         return name;
@@ -108,15 +128,6 @@ public class Exercise implements Parcelable {
         this.autoplay = autoplay;
     }
 
-    protected Exercise(Parcel in) {
-        name = in.readString();
-        turns = in.readInt();
-        timePerTurn = in.readFloat();
-        gapBetweenTurns = in.readFloat();
-        bodyPart = in.readInt();
-        autoplay = in.readByte() != 0x00;
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -131,17 +142,4 @@ public class Exercise implements Parcelable {
         dest.writeInt(bodyPart);
         dest.writeByte((byte) (autoplay ? 0x01 : 0x00));
     }
-
-    @SuppressWarnings("unused")
-    public static final Parcelable.Creator<Exercise> CREATOR = new Parcelable.Creator<Exercise>() {
-        @Override
-        public Exercise createFromParcel(Parcel in) {
-            return new Exercise(in);
-        }
-
-        @Override
-        public Exercise[] newArray(int size) {
-            return new Exercise[size];
-        }
-    };
 }

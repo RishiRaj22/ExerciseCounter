@@ -42,7 +42,7 @@ import me.itsrishi.exercisecounter.models.Exercise;
  */
 
 public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder>
-        implements RecyclerViewClickListener,ListChangeAdapter {
+        implements RecyclerViewClickListener, ListChangeAdapter {
 
     private ArrayList<Exercise> exercises;
     private List<ExerciseModificationListener> exerciseModificationListeners;
@@ -57,7 +57,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     @Override
     public ExerciseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View exerciseView = LayoutInflater.from(parent.getContext()).
-                inflate(R.layout.exercise_layout,parent,false);
+                inflate(R.layout.exercise_layout, parent, false);
         return new ExerciseViewHolder(exerciseView);
     }
 
@@ -65,7 +65,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     @Override
     public void onBindViewHolder(ExerciseViewHolder holder, int position) {
         holder.name.setText("" + exercises.get(position).getName());
-        holder.reps.setText("X "+ exercises.get(position).getTurns());
+        holder.reps.setText("X " + exercises.get(position).getTurns());
         holder.position = position;
     }
 
@@ -80,29 +80,9 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
     @Override
     public void onClick(int position, View view) {
-        clickListener.onClick(position,view);
+        clickListener.onClick(position, view);
     }
 
-    @Override
-    public void onLongClick(int position, View v) {
-
-    }
-
-    class ExerciseViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        int position;
-        TextView name,reps;
-        ExerciseViewHolder(View itemView) {
-            super(itemView);
-            name = (TextView) itemView.findViewById(R.id.exercise_name);
-            reps = (TextView) itemView.findViewById(R.id.exercise_reps);
-            itemView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            clickListener.onClick(position,v);
-        }
-    }
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
         if (fromPosition < toPosition) {
@@ -131,5 +111,22 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
             exerciseModificationListener.onChange(true);
         }
         return true;
+    }
+
+    class ExerciseViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        int position;
+        TextView name, reps;
+
+        ExerciseViewHolder(View itemView) {
+            super(itemView);
+            name = (TextView) itemView.findViewById(R.id.exercise_name);
+            reps = (TextView) itemView.findViewById(R.id.exercise_reps);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            clickListener.onClick(position, v);
+        }
     }
 }

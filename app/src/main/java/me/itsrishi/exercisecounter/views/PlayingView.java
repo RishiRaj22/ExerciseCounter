@@ -59,6 +59,8 @@ import me.itsrishi.exercisecounter.models.IntegerChangeListener;
 public class PlayingView extends View implements TextToSpeech.OnInitListener, ExerciseModificationListener {
 
     private final static String TAG = "PLAYVIEW";
+    private final float RATIO = 0.2f;
+    private final TextToSpeech textToSpeech = new TextToSpeech(getContext(), this);
     //Current state variables:
     private ArrayList<Exercise> exercises;
     private volatile int index;
@@ -75,19 +77,13 @@ public class PlayingView extends View implements TextToSpeech.OnInitListener, Ex
     private int prevSec;
     private int timeLeftAfterCurrentExercise; //I know that LOOONG name hurts ;)
     private LinkedList<IntegerChangeListener> integerChangeListeners;
-
     private float gapBetweenExercises;
-
-    private final float RATIO = 0.2f;
-
     private int playCircleColor = Color.RED;
     private int playRingColor = Color.WHITE;
     private int playBGcolor = Color.BLACK;
     private int playTxtColor = Color.WHITE;
     private int playButtonColor = Color.WHITE;
     private float playSwipeThreshold = 120;
-
-
     //Value determined at run time
     private float cx, cy, turnsTextYpos, outerRadius, innerRadius, circleLength, volumeControlX, volumeControlY;
     private Paint paint, paintExName, paintTurns, paintRest, paintButton, paintButtonHover, paintTimer;
@@ -96,7 +92,6 @@ public class PlayingView extends View implements TextToSpeech.OnInitListener, Ex
     private float timerX, timerY;
     private boolean ttsEnabled = true;
     private int timeForExerciseAt[];
-    private final TextToSpeech textToSpeech = new TextToSpeech(getContext(), this);
 
 
     public PlayingView(Context context) {
@@ -391,11 +386,10 @@ public class PlayingView extends View implements TextToSpeech.OnInitListener, Ex
                 }, 300);
             }
             if (turnsPassed >= exercises.get(index).getTurns()) {
-                setIndex(getIndex() + 1); //index++
                 timePassed = -gapBetweenExercises;
-                if(!exercises.get(index).getAutoplay())
-                    timePassed = 0;
+                setIndex(getIndex() + 1); //index++
                 turnsPassed = 0;
+
             } else timePassed = 0 - exercises.get(index).getGapBetweenTurns();
         }
     }
@@ -627,9 +621,11 @@ public class PlayingView extends View implements TextToSpeech.OnInitListener, Ex
             System.gc();
             if (exercises != null && exercises.get(val) != null) {
                 Exercise ex = exercises.get(val);
+                if (!ex.getAutoplay())
+                    timePassed = 0;
                 calculateTimeLeftAfterCurrentExercise(val);
                 setRingFontFor(ex.getName());
-                paused = ex.getAutoplay()? paused: true;
+                paused = ex.getAutoplay() ? paused : true;
             } else {
                 Log.e(TAG, "Exercises is null");
             }
@@ -675,7 +671,7 @@ public class PlayingView extends View implements TextToSpeech.OnInitListener, Ex
                         soundPool.play(nextSound, volume, volume, 2, 0, 1);
                     }
                 }
-            }, 900);
+            }, 400);
         }
     }
 

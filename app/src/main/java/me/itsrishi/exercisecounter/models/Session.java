@@ -32,9 +32,41 @@ import java.util.ArrayList;
  */
 
 public class Session implements Parcelable {
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Session> CREATOR = new Parcelable.Creator<Session>() {
+        @Override
+        public Session createFromParcel(Parcel in) {
+            return new Session(in);
+        }
+
+        @Override
+        public Session[] newArray(int size) {
+            return new Session[size];
+        }
+    };
     private String name;
     private int gapBetweenExercises;
     private ArrayList<Exercise> exercises;
+
+    public Session() {
+    }
+
+    public Session(String name, int gapBetweenExercises, ArrayList<Exercise> exercises) {
+        this.name = name;
+        this.gapBetweenExercises = gapBetweenExercises;
+        this.exercises = exercises;
+    }
+
+    public Session(Parcel in) {
+        name = in.readString();
+        gapBetweenExercises = in.readInt();
+        if (in.readByte() == 0x01) {
+            exercises = new ArrayList<Exercise>();
+            in.readList(exercises, Exercise.class.getClassLoader());
+        } else {
+            exercises = null;
+        }
+    }
 
     public String getName() {
         return name;
@@ -60,27 +92,6 @@ public class Session implements Parcelable {
         this.exercises = exercises;
     }
 
-
-    public Session() {
-    }
-
-    public Session(String name, int gapBetweenExercises, ArrayList<Exercise> exercises) {
-        this.name = name;
-        this.gapBetweenExercises = gapBetweenExercises;
-        this.exercises = exercises;
-    }
-
-    public Session(Parcel in) {
-        name = in.readString();
-        gapBetweenExercises = in.readInt();
-        if (in.readByte() == 0x01) {
-            exercises = new ArrayList<Exercise>();
-            in.readList(exercises, Exercise.class.getClassLoader());
-        } else {
-            exercises = null;
-        }
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -98,18 +109,5 @@ public class Session implements Parcelable {
             dest.writeList(exercises);
         }
     }
-
-    @SuppressWarnings("unused")
-    public static final Parcelable.Creator<Session> CREATOR = new Parcelable.Creator<Session>() {
-        @Override
-        public Session createFromParcel(Parcel in) {
-            return new Session(in);
-        }
-
-        @Override
-        public Session[] newArray(int size) {
-            return new Session[size];
-        }
-    };
 
 }

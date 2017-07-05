@@ -39,6 +39,7 @@ public class ExerciseTouchHelperCallback extends ItemTouchHelper.Callback {
     public ExerciseTouchHelperCallback(ListChangeAdapter changeAdapter) {
         this.changeAdapter = changeAdapter;
     }
+
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
         int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
@@ -50,7 +51,7 @@ public class ExerciseTouchHelperCallback extends ItemTouchHelper.Callback {
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
         int fromPos = viewHolder.getAdapterPosition();
         int toPos = target.getAdapterPosition();
-        return changeAdapter.onItemMove(fromPos,toPos);
+        return changeAdapter.onItemMove(fromPos, toPos);
     }
 
     @Override
@@ -63,16 +64,14 @@ public class ExerciseTouchHelperCallback extends ItemTouchHelper.Callback {
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder
             , float dX, float dY, int actionState, boolean isCurrentlyActive) {
 
-        if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+        if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
             float width = (float) viewHolder.itemView.getWidth();
             float alpha = 1.0f - Math.abs(dX) / width;
             viewHolder.itemView.setAlpha(alpha);
             viewHolder.itemView.setTranslationX(dX);
-        }
+        } else if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
 
-        else if(actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
-
-            if(!isCurrentlyActive) {
+            if (!isCurrentlyActive) {
                 viewHolder.itemView.setScaleX(1);
                 viewHolder.itemView.setScaleY(1);
                 viewHolder.itemView.setAlpha(1);
