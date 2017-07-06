@@ -138,7 +138,7 @@ public class ExerciseCreateActivity extends AppCompatActivity implements Compoun
         }
         exercise = new Exercise(exName, turnCount, timeCount, gapCount, -1, shouldAutoplay);
         ArrayList<Exercise> exercises = session.getExercises();
-        if(position < exercises.size())
+        if (position < exercises.size())
             exercises.set(position, exercise);
         else exercises.add(exercise);
         session.setExercises(exercises);

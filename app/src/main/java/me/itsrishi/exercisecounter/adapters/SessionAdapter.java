@@ -50,10 +50,10 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionH
     boolean isEditable;
 
     public SessionAdapter(ArrayList<Session> sessions) {
-        this(sessions,null,false);
+        this(sessions, null, false);
     }
 
-    public SessionAdapter(ArrayList<Session> sessions, RecyclerViewClickListener listener,boolean isEditable) {
+    public SessionAdapter(ArrayList<Session> sessions, RecyclerViewClickListener listener, boolean isEditable) {
         this.sessions = sessions;
         this.listener = listener;
         this.isEditable = isEditable;
@@ -90,6 +90,15 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionH
         return sessions.size();
     }
 
+    public ArrayList<Session> getSessions() {
+        return sessions;
+    }
+
+    public void setSessions(ArrayList<Session> sessions) {
+        this.sessions = sessions;
+        notifyDataSetChanged();
+    }
+
     public class SessionHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         int position;
         TextView sessionName, scheduledTime, sessionTime;
@@ -104,7 +113,7 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionH
             sessionEdit = (ImageView) itemView.findViewById(R.id.session_edit_button);
             sessionMetadata = (LinearLayout) itemView.findViewById(R.id.session_metadata);
 
-            sessionEdit.setVisibility(isEditable? View.VISIBLE : View.INVISIBLE);
+            sessionEdit.setVisibility(isEditable ? View.VISIBLE : View.INVISIBLE);
             sessionEdit.setOnClickListener(this);
             sessionMetadata.setOnClickListener(this);
         }
@@ -115,14 +124,5 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionH
                 listener.onClick(position, v);
         }
 
-    }
-
-    public ArrayList<Session> getSessions() {
-        return sessions;
-    }
-
-    public void setSessions(ArrayList<Session> sessions) {
-        this.sessions = sessions;
-        notifyDataSetChanged();
     }
 }

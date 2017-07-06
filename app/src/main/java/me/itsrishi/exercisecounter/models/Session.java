@@ -35,6 +35,18 @@ import java.util.ArrayList;
  */
 
 public class Session implements Parcelable {
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Session> CREATOR = new Parcelable.Creator<Session>() {
+        @Override
+        public Session createFromParcel(Parcel in) {
+            return new Session(in);
+        }
+
+        @Override
+        public Session[] newArray(int size) {
+            return new Session[size];
+        }
+    };
     private String name;
     private int gapBetweenExercises;
     private ArrayList<Exercise> exercises;
@@ -125,18 +137,5 @@ public class Session implements Parcelable {
             dest.writeValue(alarmTimes);
         }
     }
-
-    @SuppressWarnings("unused")
-    public static final Parcelable.Creator<Session> CREATOR = new Parcelable.Creator<Session>() {
-        @Override
-        public Session createFromParcel(Parcel in) {
-            return new Session(in);
-        }
-
-        @Override
-        public Session[] newArray(int size) {
-            return new Session[size];
-        }
-    };
 
 }

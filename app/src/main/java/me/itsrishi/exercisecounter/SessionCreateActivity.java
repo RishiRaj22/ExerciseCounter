@@ -96,15 +96,14 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
             session = new Session();
         } else {
 
-            if(index < sessions.size())
+            if (index < sessions.size())
                 session = sessions.get(index);
 
             if (session != null) {
                 sessionNameSet.setText(session.getName());
                 sessionGapSet.setText("" + session.getGapBetweenExercises());
                 exercises = session.getExercises();
-            }
-            else session = new Session();
+            } else session = new Session();
         }
 
         if (exercises != null) {
@@ -132,7 +131,7 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
                     session.setGapBetweenExercises(Integer.valueOf(sessionGapSet.getText().toString()));
                 } catch (NumberFormatException ex) {
                 }
-                if(index < sessions.size())
+                if (index < sessions.size())
                     sessions.set(index, session);
                 else sessions.add(session);
                 int position = 0;

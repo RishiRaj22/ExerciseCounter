@@ -43,7 +43,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -110,7 +109,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
             ex.printStackTrace();
             sessions = new ArrayList<>();
         }
-
     }
 
     private void play(Session session) {
@@ -120,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
         startActivity(intent);
     }
 
-    private void savesessions() {
+    private void saveSessions() {
         ObjectMapper mapper = new ObjectMapper();
         try {
             FileOutputStream outputStream = this.openFileOutput("sessions.json", MODE_PRIVATE);
@@ -134,7 +132,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
     @Override
     public void onClick(int position, View view) {
         if (view instanceof ImageView) {
-//            deleteSession(position);
             Intent intent = new Intent(MainActivity.this, SessionCreateActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra("index", position);
@@ -164,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
                     public void onClick(DialogInterface dialog, int which) {
                         sessions.remove(position);
                         long time = System.nanoTime();
-                        savesessions();
+                        saveSessions();
                         long delta = System.nanoTime() - time;
                         adapter.setSessions(sessions);
                         double d = delta / Math.pow(10, 9);

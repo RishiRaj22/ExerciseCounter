@@ -45,8 +45,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.itsrishi.exercisecounter.adapters.UpcomingExercisesAdapter;
 import me.itsrishi.exercisecounter.listeners.ExerciseModificationListener;
-import me.itsrishi.exercisecounter.models.Exercise;
 import me.itsrishi.exercisecounter.listeners.IntegerChangeListener;
+import me.itsrishi.exercisecounter.models.Exercise;
 import me.itsrishi.exercisecounter.models.Session;
 import me.itsrishi.exercisecounter.views.PlayingView;
 

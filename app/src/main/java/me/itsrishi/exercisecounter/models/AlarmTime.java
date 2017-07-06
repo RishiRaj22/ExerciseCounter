@@ -34,11 +34,6 @@ import android.os.Parcelable;
  * @author Rishi Raj
  */
 public class AlarmTime implements Parcelable {
-    private byte hours;
-    private byte mins;
-    private byte repeatDays;
-    private boolean active;
-
     public static final byte MONDAY = 1;
     public static final byte TUESDAY = 2;
     public static final byte WEDNESDAY = 4;
@@ -46,6 +41,22 @@ public class AlarmTime implements Parcelable {
     public static final byte FRIDAY = 16;
     public static final byte SATURDAY = 32;
     public static final byte SUNDAY = 64;
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<AlarmTime> CREATOR = new Parcelable.Creator<AlarmTime>() {
+        @Override
+        public AlarmTime createFromParcel(Parcel in) {
+            return new AlarmTime(in);
+        }
+
+        @Override
+        public AlarmTime[] newArray(int size) {
+            return new AlarmTime[size];
+        }
+    };
+    private byte hours;
+    private byte mins;
+    private byte repeatDays;
+    private boolean active;
 
     protected AlarmTime(Parcel in) {
         hours = in.readByte();
@@ -98,17 +109,4 @@ public class AlarmTime implements Parcelable {
         dest.writeByte(repeatDays);
         dest.writeByte((byte) (active ? 0x01 : 0x00));
     }
-
-    @SuppressWarnings("unused")
-    public static final Parcelable.Creator<AlarmTime> CREATOR = new Parcelable.Creator<AlarmTime>() {
-        @Override
-        public AlarmTime createFromParcel(Parcel in) {
-            return new AlarmTime(in);
-        }
-
-        @Override
-        public AlarmTime[] newArray(int size) {
-            return new AlarmTime[size];
-        }
-    };
 }

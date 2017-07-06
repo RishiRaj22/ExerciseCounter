@@ -25,7 +25,6 @@
 
 package me.itsrishi.exercisecounter.adapters;
 
-import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,8 +45,8 @@ import static me.itsrishi.exercisecounter.R.id.alarm_active;
  */
 
 public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHolder> {
-    private List<AlarmTime> alarmTimes;
     RecyclerViewClickListener clickListener;
+    private List<AlarmTime> alarmTimes;
 
     public AlarmAdapter(List<AlarmTime> alarmTimes, RecyclerViewClickListener clickListener) {
         this.alarmTimes = alarmTimes;
@@ -75,8 +74,8 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         int mins = alarmTime.getMins();
         boolean am = hours / 12 == 0;
         hours %= 12;
-        holder.currTime.setText(String.format("%d:%d",hours,mins));
-        holder.amOrPm.setText(am? "AM" : "PM");
+        holder.currTime.setText(String.format("%d:%d", hours, mins));
+        holder.amOrPm.setText(am ? "AM" : "PM");
         holder.active.setChecked(alarmTime.isActive());
         holder.position = position;
     }
@@ -84,6 +83,14 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
     @Override
     public int getItemCount() {
         return alarmTimes.size();
+    }
+
+    public List<AlarmTime> getAlarmTimes() {
+        return alarmTimes;
+    }
+
+    public void setAlarmTimes(List<AlarmTime> alarmTimes) {
+        this.alarmTimes = alarmTimes;
     }
 
     class AlarmViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -110,15 +117,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
 
         @Override
         public void onClick(View v) {
-            clickListener.onClick(position,v);
+            clickListener.onClick(position, v);
         }
-    }
-
-    public List<AlarmTime> getAlarmTimes() {
-        return alarmTimes;
-    }
-
-    public void setAlarmTimes(List<AlarmTime> alarmTimes) {
-        this.alarmTimes = alarmTimes;
     }
 }

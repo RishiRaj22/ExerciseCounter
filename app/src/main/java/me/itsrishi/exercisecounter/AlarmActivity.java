@@ -27,8 +27,6 @@ package me.itsrishi.exercisecounter;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.media.MediaBrowserCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -56,7 +54,7 @@ public class AlarmActivity extends AppCompatActivity implements RecyclerViewClic
         setContentView(R.layout.activity_alarm);
         ButterKnife.bind(this);
         alarmTimes = new ArrayList<>();// TODO: 05-07-2017 Get data from intent and bundle 
-        alarmEditList.setAdapter(new AlarmAdapter(alarmTimes,this));
+        alarmEditList.setAdapter(new AlarmAdapter(alarmTimes, this));
         ItemTouchHelper touchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
