@@ -66,6 +66,7 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
     @BindView(R.id.session_submit)
     AppCompatButton sessionSubmit;
     ExerciseAdapter exerciseAdapter;
+    ArrayList<Session> sessions;
     Session session;
     ItemTouchHelper touchHelper;
     ArrayList<Exercise> prev, temp;
@@ -81,20 +82,28 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
         ButterKnife.bind(this);
         if (savedInstanceState != null) {
             index = savedInstanceState.getInt("index");
-            session = savedInstanceState.getParcelable("session");
+            sessions = savedInstanceState.getParcelableArrayList("sessions");
         } else {
-            session = getIntent().getParcelableExtra("session");
+            sessions = getIntent().getParcelableArrayListExtra("sessions");
             index = getIntent().getIntExtra("index", 0);
         }
 
-        if (session == null) {
+        if (sessions == null) {
+            sessions = new ArrayList<>();
             session = new Session();
         } else {
-            sessionNameSet.setText(session.getName());
-            sessionGapSet.setText("" + session.getGapBetweenExercises());
+
+            if(index < sessions.size())
+                session = sessions.get(index);
+
+            if (session != null) {
+                sessionNameSet.setText(session.getName());
+                sessionGapSet.setText("" + session.getGapBetweenExercises());
+                exercises = session.getExercises();
+            }
+            else session = new Session();
         }
 
-        exercises = session.getExercises();
         if (exercises != null) {
             prev = new ArrayList<>(exercises);
             temp = new ArrayList<>(exercises);
@@ -102,7 +111,8 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
 
         ArrayList<ExerciseModificationListener> listeners = new ArrayList<>(1);
         listeners.add(this);
-        exerciseAdapter = new ExerciseAdapter(session.getExercises(), listeners, this);
+        exerciseAdapter = new ExerciseAdapter(exercises
+                , listeners, this);
         exerciseEditList.setAdapter(exerciseAdapter);
 
 
@@ -119,14 +129,18 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
                     session.setGapBetweenExercises(Integer.valueOf(sessionGapSet.getText().toString()));
                 } catch (NumberFormatException ex) {
                 }
+                if(index < sessions.size())
+                    sessions.set(index, session);
+                else sessions.add(session);
                 int position = 0;
                 if (exercises != null)
                     position = exercises.size();
+
                 Intent intent = new Intent(SessionCreateActivity.this, ExerciseCreateActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtra("index", index);
                 intent.putExtra("position", position);
-                intent.putExtra("session", session);
+                intent.putParcelableArrayListExtra("sessions", sessions);
                 startActivity(intent);
             }
         });
@@ -134,6 +148,17 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 if (saveSession()) {
+                    try {
+                        ObjectMapper mapper = new ObjectMapper();
+                        FileOutputStream outputStream = SessionCreateActivity.this.openFileOutput("sessions.json", MODE_PRIVATE);
+                        mapper.writeValue(outputStream, sessions);
+                        outputStream.close();
+                        Log.d("JSON-VAL", "sessions.json:\n" + mapper.writeValueAsString(sessions));
+                    } catch (IOException ex) {
+                        Toast.makeText(SessionCreateActivity.this, "Session couldn't be saved",
+                                Toast.LENGTH_LONG).show();
+                        ex.printStackTrace();
+                    }
                     Intent intent = new Intent(SessionCreateActivity.this, MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
@@ -156,13 +181,8 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        session.setName(sessionNameSet.getText().toString());
-        try {
-            session.setGapBetweenExercises(Integer.valueOf(sessionGapSet.getText().toString()));
-        } catch (NumberFormatException ex) {
-            session.setGapBetweenExercises(0);
-        }
-        outState.putParcelable("session", session);
+        saveSession();
+        outState.putParcelableArrayList("sessions", sessions);
         outState.putInt("index", index);
 
         super.onSaveInstanceState(outState);
@@ -190,35 +210,24 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
     }
 
     private boolean saveSession() {
-        try {
-            session.setName(sessionNameSet.getText().toString());
-            if (session.getName() == "") {
-                Toast.makeText(this, "Enter valid name for session", Toast.LENGTH_LONG).show();
-                return false;
-            }
-            try {
-                session.setGapBetweenExercises(Integer.valueOf(sessionGapSet.getText().toString()));
-            } catch (NumberFormatException ex) {
-                Toast.makeText(this, "Enter valid gap between exercises", Toast.LENGTH_LONG).show();
-                return false;
-            }
-            if (exercises == null) {
-                Toast.makeText(this, "Add exercises to the session", Toast.LENGTH_LONG).show();
-                return false;
-            }
-            session.setExercises(exercises);
-            ObjectMapper mapper = new ObjectMapper();
-            FileOutputStream outputStream = this.openFileOutput(String.format("sessions_%d.json", index), MODE_PRIVATE);
-            mapper.writeValue(outputStream, session);
-            outputStream.close();
-            Log.d("JSON-VAL", "sessions_" + index + ".json\n" + mapper.writeValueAsString(session));
-            return true;
-        } catch (IOException ex) {
-            Toast.makeText(SessionCreateActivity.this, "Session couldn't be saved",
-                    Toast.LENGTH_LONG).show();
-            ex.printStackTrace();
+        session.setName(sessionNameSet.getText().toString());
+        if (session.getName() == "") {
+            Toast.makeText(this, "Enter valid name for session", Toast.LENGTH_LONG).show();
             return false;
         }
+        try {
+            session.setGapBetweenExercises(Integer.valueOf(sessionGapSet.getText().toString()));
+        } catch (NumberFormatException ex) {
+            Toast.makeText(this, "Enter valid gap between exercises", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if (exercises == null) {
+            Toast.makeText(this, "Add exercises to the session", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        session.setExercises(exercises);
+        sessions.set(index, session);
+        return true;
     }
 
     @Override
@@ -240,7 +249,7 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("index", index);
         intent.putExtra("position", position);
-        intent.putExtra("session", session);
+        intent.putParcelableArrayListExtra("sessions", sessions);
         startActivity(intent);
     }
 }

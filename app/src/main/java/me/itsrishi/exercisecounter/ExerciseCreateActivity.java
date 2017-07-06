@@ -58,6 +58,7 @@ public class ExerciseCreateActivity extends AppCompatActivity implements Compoun
     SwitchCompat autoplay;
     private Exercise exercise;
     private Session session;
+    private ArrayList<Session> sessions;
     private int index;
     private int position;
     private boolean shouldAutoplay = true;
@@ -69,14 +70,15 @@ public class ExerciseCreateActivity extends AppCompatActivity implements Compoun
         ButterKnife.bind(this);
 
         if (savedInstanceState != null) {
-            session = savedInstanceState.getParcelable("session");
+            sessions = savedInstanceState.getParcelableArrayList("sessions");
             index = savedInstanceState.getInt("index");
             position = savedInstanceState.getInt("position");
         } else {
-            session = getIntent().getParcelableExtra("session");
+            sessions = getIntent().getParcelableArrayListExtra("sessions");
             index = getIntent().getIntExtra("index", 0);
             position = getIntent().getIntExtra("position", 0);
         }
+        session = sessions.get(index);
 
         try {
             exercise = session.getExercises().get(position);
@@ -99,39 +101,46 @@ public class ExerciseCreateActivity extends AppCompatActivity implements Compoun
         exerciseSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String exName = exerciseName.getText().toString();
-                int turnCount;
-                float gapCount;
-                float timeCount;
-                try {
-                    turnCount = Integer.valueOf(numTurns.getText().toString());
-                    gapCount = Float.valueOf(gapBetweenTurns.getText().toString());
-                    timeCount = Float.valueOf(timePerTurn.getText().toString());
-                } catch (NumberFormatException ex) {
-                    Toast.makeText(ExerciseCreateActivity.this, "Enter valid values", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (exName == "") {
-                    Toast.makeText(ExerciseCreateActivity.this, "Enter valid na", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (exercise == null) {
-                    exercise = new Exercise(exName, turnCount, timeCount, gapCount, -1, shouldAutoplay);
-                    session.getExercises().add(exercise);
-                } else {
-                    exercise = new Exercise(exName, turnCount, timeCount, gapCount, -1, shouldAutoplay);
-                    session.getExercises().add(position, exercise);
-                    session.getExercises().remove(position + 1);
-                }
+                if (updateSessions()) return;
                 Intent intent = new Intent(ExerciseCreateActivity.this, SessionCreateActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtra("index", index);
-                intent.putExtra("session", session);
+                intent.putExtra("sessions", sessions);
                 startActivity(intent);
             }
         });
 
         ButterKnife.bind(this);
+    }
+
+    /**
+     * @return If an error occurs, this flag is raised
+     */
+    private boolean updateSessions() {
+        String exName = exerciseName.getText().toString();
+        int turnCount;
+        float gapCount;
+        float timeCount;
+        try {
+            turnCount = Integer.valueOf(numTurns.getText().toString());
+            gapCount = Float.valueOf(gapBetweenTurns.getText().toString());
+            timeCount = Float.valueOf(timePerTurn.getText().toString());
+        } catch (NumberFormatException ex) {
+            Toast.makeText(ExerciseCreateActivity.this, "Enter valid values", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        if (exName == "") {
+            Toast.makeText(ExerciseCreateActivity.this, "Enter valid name", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        exercise = new Exercise(exName, turnCount, timeCount, gapCount, -1, shouldAutoplay);
+        ArrayList<Exercise> exercises = session.getExercises();
+        if(position < exercises.size())
+            exercises.set(position, exercise);
+        else exercises.add(exercise);
+        session.setExercises(exercises);
+        sessions.set(index, session);
+        return false;
     }
 
     @Override
@@ -162,8 +171,10 @@ public class ExerciseCreateActivity extends AppCompatActivity implements Compoun
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable("session", session);
+        updateSessions();
+        outState.putParcelableArrayList("sessions", sessions);
         outState.putInt("index", index);
         outState.putInt("position", position);
     }
+
 }

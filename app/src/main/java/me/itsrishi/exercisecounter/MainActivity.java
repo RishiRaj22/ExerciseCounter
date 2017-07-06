@@ -62,37 +62,13 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         fetchSessionList();
-        sessionPlusFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SessionCreateActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.putExtra("index", sessions.size());
-                startActivity(intent);
-            }
-        });
-    }
-
-    private void fetchSessionList() {
-        sessions = new ArrayList<>();
-        ObjectMapper mapper = new ObjectMapper();
-        int i = 0;
-        while (true) {
-            try {
-                FileInputStream inputStream = this.openFileInput(String.format("sessions_%d.json", i));
-                sessions.add(mapper.readValue(inputStream, Session.class));
-                inputStream.close();
-            } catch (IOException e) {
-                break;
-            }
-            i++;
-        }
         adapter = new SessionAdapter(new ArrayList<>(sessions), this);
         sessionsList.setAdapter(adapter);
         ItemTouchHelper callback = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
@@ -109,6 +85,29 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
         });
         callback.attachToRecyclerView(sessionsList);
         sessionsList.refreshDrawableState();
+        sessionPlusFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SessionCreateActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("index", sessions.size());
+                intent.putExtra("sessions", sessions);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void fetchSessionList() {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            FileInputStream fileInputStream = this.openFileInput("sessions.json");
+            sessions = mapper.readValue(fileInputStream, mapper.getTypeFactory().constructCollectionType(ArrayList.class, Session.class));
+            fileInputStream.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            sessions = new ArrayList<>();
+        }
+
     }
 
     private void play(Session session) {
@@ -118,26 +117,15 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
         startActivity(intent);
     }
 
-    private void deleteSession(int index) {
-
-        String[] files = this.fileList();
-        FileChannel source, dest;
-        int i;
-        for (i = index; i <= files.length; i++) {
-            try {
-                FileInputStream inputStream = this.openFileInput(String.format("sessions_%d.json", i + 1));
-                source = inputStream.getChannel();
-                FileOutputStream outputStream = this.openFileOutput(String.format("sessions_%d.json", i), MODE_PRIVATE);
-                dest = outputStream.getChannel();
-                dest.transferFrom(source, 0, source.size());
-                source.close();
-                dest.close();
-            } catch (IOException e) {
-                break;
-            }
+    private void savesessions() {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            FileOutputStream outputStream = this.openFileOutput("sessions.json", MODE_PRIVATE);
+            mapper.writeValue(outputStream, sessions);
+            outputStream.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
-        deleteFile(String.format("sessions_%d.json", i));
-        fetchSessionList();
     }
 
     @Override
@@ -147,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
             Intent intent = new Intent(MainActivity.this, SessionCreateActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra("index", position);
-            intent.putExtra("session", sessions.get(position));
+            intent.putParcelableArrayListExtra("sessions", sessions);
             startActivity(intent);
         }
         if (view instanceof LinearLayout)
@@ -155,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
     }
 
     public void onSwipe(final int position, View v) {
-        String sessionName = sessions.get(position).getName();
+        final String sessionName = sessions.get(position).getName();
         new AlertDialog.Builder(this)
                 .setCancelable(false)
                 .setIcon(R.drawable.ic_delete_white_24dp)
@@ -164,16 +152,20 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
                 .setPositiveButton(R.string.no, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        fetchSessionList();
+                        adapter.setSessions(sessions);
+                        MainActivity.this.sessionsList.refreshDrawableState();
                     }
                 })
                 .setNegativeButton(R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        sessions.remove(position);
                         long time = System.nanoTime();
-                        deleteSession(position);
+                        savesessions();
                         long delta = System.nanoTime() - time;
+                        adapter.setSessions(sessions);
                         double d = delta / Math.pow(10, 9);
+                        adapter.notifyItemRemoved(position);
                         Log.d("TIME_DUR", String.format("Deletion of %d took %f time", position, d));
                     }
                 })
