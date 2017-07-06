@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package me.itsrishi.exercisecounter.models;
+package me.itsrishi.exercisecounter.listeners;
 
 /**
  * @author Rishi Raj

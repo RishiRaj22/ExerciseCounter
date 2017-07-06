@@ -33,7 +33,7 @@ public interface ListChangeAdapter {
      *
      * @param fromPosition
      * @param toPosition
-     * @return If the listener was able to successfully make changes required for this move.
+     * @return If the clickListener was able to successfully make changes required for this move.
      * Never return false from a silent observer as it will abort the whole operation
      */
     public boolean onItemMove(int fromPosition, int toPosition);
@@ -42,7 +42,7 @@ public interface ListChangeAdapter {
      * Calls all the listeners to make changes for the dismissal of required item
      *
      * @param position The position of item to be dismissed
-     * @return If the listener was able to successfully make changes required for this dismissal.
+     * @return If the clickListener was able to successfully make changes required for this dismissal.
      * Never return false from a silent observer as it will abort the whole operation
      */
     public boolean onItemDismiss(int position);

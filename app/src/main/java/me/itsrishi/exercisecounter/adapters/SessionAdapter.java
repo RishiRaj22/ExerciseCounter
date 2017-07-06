@@ -30,7 +30,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import me.itsrishi.exercisecounter.R;
 import me.itsrishi.exercisecounter.listeners.RecyclerViewClickListener;
@@ -42,14 +42,14 @@ import me.itsrishi.exercisecounter.models.Session;
  */
 
 public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionHolder> {
-    List<Session> sessions;
+    ArrayList<Session> sessions;
     RecyclerViewClickListener listener;
 
-    public SessionAdapter(List<Session> sessions) {
+    public SessionAdapter(ArrayList<Session> sessions) {
         this.sessions = sessions;
     }
 
-    public SessionAdapter(List<Session> sessions, RecyclerViewClickListener listener) {
+    public SessionAdapter(ArrayList<Session> sessions, RecyclerViewClickListener listener) {
         this.sessions = sessions;
         this.listener = listener;
     }
@@ -81,6 +81,7 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionH
 
     @Override
     public int getItemCount() {
+        if (sessions == null) return 0;
         return sessions.size();
     }
 
@@ -104,8 +105,18 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionH
 
         @Override
         public void onClick(View v) {
-            listener.onClick(position, v);
+            if (listener != null)
+                listener.onClick(position, v);
         }
 
+    }
+
+    public ArrayList<Session> getSessions() {
+        return sessions;
+    }
+
+    public void setSessions(ArrayList<Session> sessions) {
+        this.sessions = sessions;
+        notifyDataSetChanged();
     }
 }

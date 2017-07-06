@@ -50,7 +50,7 @@ import java.util.Locale;
 import me.itsrishi.exercisecounter.R;
 import me.itsrishi.exercisecounter.listeners.ExerciseModificationListener;
 import me.itsrishi.exercisecounter.models.Exercise;
-import me.itsrishi.exercisecounter.models.IntegerChangeListener;
+import me.itsrishi.exercisecounter.listeners.IntegerChangeListener;
 
 /**
  * @author Rishi Raj
