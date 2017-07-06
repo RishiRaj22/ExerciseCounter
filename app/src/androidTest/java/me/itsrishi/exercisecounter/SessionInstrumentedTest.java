@@ -22,7 +22,9 @@
 
 package me.itsrishi.exercisecounter;
 
+import android.support.test.espresso.Espresso;
 import android.support.test.espresso.action.ViewActions;
+import android.support.test.espresso.assertion.ViewAssertions;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -34,18 +36,25 @@ import org.junit.runner.RunWith;
 import java.util.Random;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.swipeRight;
 import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
+import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.not;
+
 
 /**
  * @author Rishi Raj
  */
 @RunWith(AndroidJUnit4.class)
 public class SessionInstrumentedTest {
-    public static final int SIZE = 4;
+    public static final int SIZE = 5;
+    private static final String SESSION = "Session #";
+    private static final String EXERCISE = "Ex #";
 
     @Rule
     public ActivityTestRule<MainActivity> sessionCreateActivityTestRule = new ActivityTestRule<>(MainActivity.class, false, true);
@@ -53,23 +62,49 @@ public class SessionInstrumentedTest {
     @Test
     public void populateWithRandomExercises() throws Exception {
         for (int index = 0; index < SIZE; index++) {
+            int sessionGap = (int) (Math.abs(Math.sin(index) * 10));
+            String sessionName = SESSION + index;
             onView(withId(R.id.session_plus_fab)).perform(click());
-            onView(withId(R.id.session_name_set)).perform(typeText("Session #" + index));
-            onView(withId(R.id.session_gap_set)).perform(typeText("2"));
+            onView(withId(R.id.session_name_set)).perform(typeText(sessionName));
+            onView(withId(R.id.session_gap_set)).perform(typeText("" + sessionGap));
 
-            for (int j = 0; j < 3; j++) {
+            for (int j = 0; j < 4; j++) {
                 Random random = new Random();
+                String name = EXERCISE + j;
                 int turns = random.nextInt(15) + 1;
                 float tpt = random.nextFloat() * 8 + 1;
                 float gbt = random.nextFloat() * 4 + 1;
+                boolean autoplay = random.nextBoolean();
+                tpt = (float) (Math.round(tpt * 100.0) / 100.0);
+                gbt = (float) (Math.round(gbt * 100.0) / 100.0);
                 onView(withId(R.id.exercise_plus_fab)).perform(click());
-                onView(withId(R.id.exercise_name)).perform(typeText("Exercise #" + j));
+                onView(withId(R.id.exercise_name)).perform(typeText(name));
                 onView(withId(R.id.num_turns)).perform(typeText("" + turns));
                 onView(withId(R.id.time_per_turn)).perform(typeText("" + tpt));
                 onView(withId(R.id.gap_between_turns)).perform(typeText("" + gbt));
-                if (random.nextBoolean())
+                if (!autoplay)
                     onView(withId(R.id.autoplay)).perform(ViewActions.click());
                 onView(withId(R.id.exercise_submit)).perform(click());
+
+                onView(withId(R.id.session_gap_set)).check(ViewAssertions.matches(withText("" + sessionGap)));
+                onView(withId(R.id.session_name_set)).check(ViewAssertions.matches(withText(sessionName)));
+
+                //Check whether the exercise is added in displayed sessions
+                onView(withId(R.id.exercise_edit_list))
+                        .perform(RecyclerViewActions.actionOnItem(
+                                hasDescendant(withText(name)),
+                                click()));
+                if (autoplay)
+                    onView(withId(R.id.autoplay)).check(ViewAssertions.matches(isChecked()));
+                else onView(withId(R.id.autoplay)).check(ViewAssertions.matches(not(isChecked())));
+                onView(withId(R.id.exercise_name)).check(ViewAssertions.matches(withText(name)));
+                onView(withId(R.id.num_turns)).check(ViewAssertions.matches(withText("" + turns)));
+                onView(withId(R.id.time_per_turn)).check(ViewAssertions.matches(withText("" + tpt)));
+                onView(withId(R.id.gap_between_turns)).check(ViewAssertions.matches(withText("" + gbt)));
+
+                Espresso.closeSoftKeyboard();
+                Espresso.pressBack();
+                onView(withText("yes")).perform(click());
             }
             onView(withId(R.id.session_submit)).perform(click());
         }
@@ -78,9 +113,22 @@ public class SessionInstrumentedTest {
 
     @Test
     public void deleteAlExercises() throws Exception {
-        onView(withId(R.id.sessions_list)).perform(RecyclerViewActions.actionOnItemAtPosition(1, swipeRight()));
+        onView(withId(R.id.sessions_list)).perform(RecyclerViewActions.actionOnItemAtPosition(0, swipeRight()));
         onView(withText(R.string.yes)).perform(click());
         onView(withId(R.id.sessions_list)).check(RecyclerViewItemCountAssertion.withItemCount(SIZE - 1));
+
+        onView(withId(R.id.sessions_list)).perform(RecyclerViewActions.actionOnItemAtPosition(1, swipeRight()));
+        onView(withText(R.string.no)).perform(click());
+        onView(withId(R.id.sessions_list)).check(RecyclerViewItemCountAssertion.withItemCount(SIZE - 1));
+
+        for (int i = 1; i < SIZE ; i++) {
+            onView(withId(R.id.sessions_list))
+                    .perform(RecyclerViewActions.actionOnItem(
+                            hasDescendant(withText(SESSION + i)),
+                            click()));
+            pressBack();
+            onView(withText("yes")).perform(click());
+        }
     }
 
 }
