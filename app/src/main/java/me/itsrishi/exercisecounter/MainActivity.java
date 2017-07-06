@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
     protected void onResume() {
         super.onResume();
         fetchSessionList();
-        adapter = new SessionAdapter(new ArrayList<>(sessions), this);
+        adapter = new SessionAdapter(new ArrayList<>(sessions), this, true);
         sessionsList.setAdapter(adapter);
         ItemTouchHelper callback = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
             @Override

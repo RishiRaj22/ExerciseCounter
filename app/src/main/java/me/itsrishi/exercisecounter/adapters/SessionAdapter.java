@@ -47,14 +47,16 @@ import me.itsrishi.exercisecounter.models.Session;
 public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionHolder> {
     ArrayList<Session> sessions;
     RecyclerViewClickListener listener;
+    boolean isEditable;
 
     public SessionAdapter(ArrayList<Session> sessions) {
-        this.sessions = sessions;
+        this(sessions,null,false);
     }
 
-    public SessionAdapter(ArrayList<Session> sessions, RecyclerViewClickListener listener) {
+    public SessionAdapter(ArrayList<Session> sessions, RecyclerViewClickListener listener,boolean isEditable) {
         this.sessions = sessions;
         this.listener = listener;
+        this.isEditable = isEditable;
     }
 
     @Override
@@ -102,6 +104,7 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionH
             sessionEdit = (ImageView) itemView.findViewById(R.id.session_edit_button);
             sessionMetadata = (LinearLayout) itemView.findViewById(R.id.session_metadata);
 
+            sessionEdit.setVisibility(isEditable? View.VISIBLE : View.INVISIBLE);
             sessionEdit.setOnClickListener(this);
             sessionMetadata.setOnClickListener(this);
         }
