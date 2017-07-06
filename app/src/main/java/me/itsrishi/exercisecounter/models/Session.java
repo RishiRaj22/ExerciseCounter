@@ -32,40 +32,39 @@ import java.util.ArrayList;
  */
 
 public class Session implements Parcelable {
-    @SuppressWarnings("unused")
-    public static final Parcelable.Creator<Session> CREATOR = new Parcelable.Creator<Session>() {
-        @Override
-        public Session createFromParcel(Parcel in) {
-            return new Session(in);
-        }
-
-        @Override
-        public Session[] newArray(int size) {
-            return new Session[size];
-        }
-    };
     private String name;
     private int gapBetweenExercises;
     private ArrayList<Exercise> exercises;
+    private ArrayList<AlarmTime> alarmTimes;
 
-    public Session() {
-    }
-
-    public Session(String name, int gapBetweenExercises, ArrayList<Exercise> exercises) {
+    public Session(String name, int gapBetweenExercises, ArrayList<Exercise> exercises, ArrayList<AlarmTime> alarmTimes) {
         this.name = name;
         this.gapBetweenExercises = gapBetweenExercises;
         this.exercises = exercises;
+        this.alarmTimes = alarmTimes;
+    }
+
+    public Session(String name, int gapBetweenExercises, ArrayList<Exercise> exercises) {
+        this(name, gapBetweenExercises, exercises, null);
     }
 
     public Session(Parcel in) {
         name = in.readString();
         gapBetweenExercises = in.readInt();
+
+        exercises = null;
         if (in.readByte() == 0x01) {
-            exercises = new ArrayList<Exercise>();
+            exercises = new ArrayList<>();
             in.readList(exercises, Exercise.class.getClassLoader());
-        } else {
-            exercises = null;
         }
+
+        alarmTimes = null;
+        if (in.readByte() == 0x01) {
+            in.readList(alarmTimes, AlarmTime.class.getClassLoader());
+        }
+    }
+
+    public Session() {
     }
 
     public String getName() {
@@ -92,6 +91,14 @@ public class Session implements Parcelable {
         this.exercises = exercises;
     }
 
+    public ArrayList<AlarmTime> getAlarmTimes() {
+        return alarmTimes;
+    }
+
+    public void setAlarmTimes(ArrayList<AlarmTime> alarmTimes) {
+        this.alarmTimes = alarmTimes;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -108,6 +115,25 @@ public class Session implements Parcelable {
             dest.writeByte((byte) (0x01));
             dest.writeList(exercises);
         }
+        if (alarmTimes == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) 0x01);
+            dest.writeValue(alarmTimes);
+        }
     }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Session> CREATOR = new Parcelable.Creator<Session>() {
+        @Override
+        public Session createFromParcel(Parcel in) {
+            return new Session(in);
+        }
+
+        @Override
+        public Session[] newArray(int size) {
+            return new Session[size];
+        }
+    };
 
 }
