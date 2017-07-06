@@ -34,7 +34,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContentResolverCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -43,8 +42,8 @@ import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -63,12 +62,15 @@ public class ImportSessionActivity extends AppCompatActivity {
     RecyclerView sessionsList;
     @BindView(R.id.session_tick_fab)
     FloatingActionButton sessionTickFab;
+    String fileLoc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.import_session);
         ButterKnife.bind(this);
+        fileLoc = getIntent().getStringExtra("file");
+        Log.d(TAG, (fileLoc == null) ? "null" : fileLoc);
         fetchSessions();
         fetchNewSessions();
         sessionTickFab.setOnClickListener(new View.OnClickListener() {
@@ -89,54 +91,60 @@ public class ImportSessionActivity extends AppCompatActivity {
     private void backToMainActivity() {
         Intent intent = new Intent(ImportSessionActivity.this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        if(sessions != null) {
+        if (sessions != null) {
             ObjectMapper mapper = new ObjectMapper();
             try {
                 mapper.writeValue(this.openFileOutput("sessions.json", MODE_PRIVATE), sessions);
             } catch (IOException ex) {
-                Toast.makeText(this,"Error writing file",Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Error writing file", Toast.LENGTH_LONG).show();
             }
         }
         startActivity(intent);
     }
 
     private void fetchNewSessions() {
-        Uri uri = getIntent().getData();
-        if (uri != null) {
-            Log.d("IMPORT_STATUS","URI is not null.\n Path: " + uri.getPath()
-                    + "Encoded path: " + uri.getEncodedPath());
-            String scheme = uri.getScheme();
-            try {
-                InputStream inStream = null;
-                if (isStoragePermissionGranted()) {
-                    if(scheme.equals("file")) {
+        if (isStoragePermissionGranted()) {
+            Uri uri;
+            InputStream inStream = null;
+            if (fileLoc != null) {
+                try {
+                    inStream = new FileInputStream(fileLoc);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            } else if ((uri = getIntent().getData()) != null) {
+                Log.d("IMPORT_STATUS", "URI is not null.\n Path: " + uri.getPath()
+                        + "Encoded path: " + uri.getEncodedPath());
+                String scheme = uri.getScheme();
+                try {
+                    if (scheme.equals("file")) {
                         inStream = openFileInput(uri.getEncodedPath());
                     }
-                    if(scheme.equals("content")) {
+                    if (scheme.equals("content")) {
                         ContentResolver cr = getContentResolver();
                         inStream = cr.openInputStream(uri);
                     }
-                    if(inStream == null) return;
-                    Log.d("IMPORT_STATUS","Got file inputstream");
-                    ObjectMapper mapper = new ObjectMapper();
-                    newSessions =  mapper.readValue(inStream,
-                            mapper.getTypeFactory()
-                                    .constructCollectionType(ArrayList.class, Session.class));
-                    Log.d("IMPORT_STATUS","Got value from map");
-
-                    adapter = new SessionAdapter(newSessions);
-                    sessionsList.setAdapter(adapter);
-                    adapter.notifyDataSetChanged();
-                    sessionsList.refreshDrawableState();
-
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
                 }
-                else Log.d("IMPORT_STATUS","File is null");
+            }
+            try {
+                if (inStream == null) return;
+                Log.d("IMPORT_STATUS", "Got file inputstream");
+                ObjectMapper mapper = new ObjectMapper();
+                newSessions = mapper.readValue(inStream,
+                        mapper.getTypeFactory()
+                                .constructCollectionType(ArrayList.class, Session.class));
+                Log.d("IMPORT_STATUS", "Got value from map");
+                adapter = new SessionAdapter(newSessions);
+                sessionsList.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+                sessionsList.refreshDrawableState();
             } catch (Exception ex) {
                 Toast.makeText(this, "Error reading file", Toast.LENGTH_LONG).show();
                 ex.printStackTrace();
             }
         }
-        else Log.d("IMPORT_STATUS","URI is null");
     }
 
     private void fetchSessions() {
@@ -151,28 +159,29 @@ public class ImportSessionActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
     public boolean isStoragePermissionGranted() {
         if (Build.VERSION.SDK_INT >= 23) {
             if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     == PackageManager.PERMISSION_GRANTED) {
-                Log.v(TAG,"Permission is granted");
+                Log.v(TAG, "Permission is granted");
                 return true;
             } else {
-                Log.v(TAG,"Permission is revoked");
+                Log.v(TAG, "Permission is revoked");
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 return false;
             }
-        }
-        else {
-            Log.v(TAG,"Permission is granted");
+        } else {
+            Log.v(TAG, "Permission is granted");
             return true;
         }
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
-            Log.v(TAG,"Permission: "+permissions[0]+ "was "+grantResults[0]);
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Log.v(TAG, "Permission: " + permissions[0] + "was " + grantResults[0]);
             fetchNewSessions();
         }
     }

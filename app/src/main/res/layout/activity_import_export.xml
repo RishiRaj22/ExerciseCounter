@@ -23,43 +23,29 @@
   ~
   -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="me.itsrishi.exercisecounter.ImportSessionActivity">
+    android:gravity="center_horizontal"
+    tools:context="me.itsrishi.exercisecounter.ImportExportActivity">
 
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/session_import_intro"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:gravity="center_horizontal"
-        android:padding="5dp"
-        android:text="Add the following sessions"
-        android:textSize="22sp" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/new_sesions_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/session_import_intro"
-        android:background="#000000"
-        android:padding="5dp"
-        android:visibility="visible"
-        app:layoutManager="android.support.v7.widget.LinearLayoutManager"></android.support.v7.widget.RecyclerView>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/session_tick_fab"
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/import_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_margin="10dp"
-        android:src="@drawable/ic_check_white_24dp"
-        app:borderWidth="0dp"
-        app:elevation="4sp"
-        app:rippleColor="#FFFFFF" />
-</RelativeLayout>
+        android:layout_margin="5dp"
+        android:padding="16dp"
+        android:text="Import"
+        android:textSize="24sp" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/export_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:padding="16dp"
+        android:text="Export"
+        android:textSize="24sp" />
+
+</LinearLayout>

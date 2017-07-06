@@ -21,11 +21,13 @@
   ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
   ~ SOFTWARE.
   ~
-  -->
+-->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="me.itsrishi.exercisecounter">
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -52,18 +54,19 @@
             android:windowSoftInputMode="stateUnchanged" />
         <activity android:name=".AlarmActivity" />
         <activity android:name=".ImportSessionActivity">
-            <intent-filter android:icon="@mipmap/ic_launcher"
+            <intent-filter
+                android:icon="@mipmap/ic_launcher"
                 android:label="Import session"
                 android:priority="2">
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data android:scheme="file" />
-                <data android:scheme="content"/>
+                <data android:scheme="content" />
                 <data android:host="*" />
                 <data android:mimeType="*/*" />
-
                 <data android:pathPattern=".*\\.excount" />
                 <data android:pathPattern=".*\\.excount" />
                 <data android:pathPattern=".*\\..*\\.excount" />
@@ -71,6 +74,35 @@
                 <data android:pathPattern=".*\\..*\\..*\\..*\\.excount" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ImportExportActivity"
+            android:label="Import Export Sessions">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.nononsenseapps.filepicker.FilePickerActivity"
+            android:label="@string/app_name"
+            android:theme="@style/FilePickerTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.GET_CONTENT" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/nnf_provider_paths" />
+        </provider>
     </application>
+
 
 </manifest>
