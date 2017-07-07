@@ -72,10 +72,8 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionH
         int time = 0;
         for (Exercise exercise :
                 sessions.get(position).getExercises()) {
-            time += (int) (exercise.getTurns()
-                    * exercise.getTimePerTurn());
-            time += (exercise.getTurns() - 1)
-                    * exercise.getGapBetweenTurns();
+            time += (int) ((exercise.getTurns() * exercise.getTimePerTurn())
+                    + (exercise.getTurns() - 1) * exercise.getGapBetweenTurns());
         }
         time += sessions.get(position).getGapBetweenExercises()
                 * (sessions.get(position).getExercises().size() - 1);

@@ -139,8 +139,6 @@ public class PlayingView extends View implements TextToSpeech.OnInitListener, Ex
         paintTimer.setColor(playTxtColor);
         paintRest.setColor(playTxtColor);
 
-        paintTurns.setTextSize(210);
-
         buttonColorFilter = new LightingColorFilter(playButtonColor, 0);
         paintButton.setColorFilter(buttonColorFilter);
         paintButtonHover.setColorFilter(buttonColorFilter);
@@ -277,13 +275,13 @@ public class PlayingView extends View implements TextToSpeech.OnInitListener, Ex
                     0, paintButton);
 
 
-            if (deltaX > 0) canvas.drawBitmap(next, cx + outerRadius,
+            if (deltaX > 0) canvas.drawBitmap(next, (3 * cx + outerRadius - next.getWidth()) / 2,
                     cy - next.getHeight() / 2, paintButtonHover);
             else canvas.drawBitmap(next, (3 * cx + outerRadius - next.getWidth()) / 2,
                     cy - next.getHeight() / 2, paintButton);
 
 
-            if (deltaX < 0) canvas.drawBitmap(back, 0,
+            if (deltaX < 0) canvas.drawBitmap(back, (cx - outerRadius - back.getWidth()) / 2,
                     cy - back.getHeight() / 2, paintButtonHover);
             else canvas.drawBitmap(back, (cx - outerRadius - back.getWidth()) / 2,
                     cy - back.getHeight() / 2, paintButton);
@@ -449,8 +447,6 @@ public class PlayingView extends View implements TextToSpeech.OnInitListener, Ex
         Log.d(TAG, "Dimensions: " + "cx: " + cx + " cy: " + cy +
                 " outerRadius: " + outerRadius + "innerRadius: " + innerRadius);
         float scale;
-        turnsTextYpos = (int) (cy - ((paintTurns.descent() + paintTurns.ascent()) / 2)
-                - outerRadius / 9);
 
         float maxSize = Math.min(cx - outerRadius, getHeight() / 2);
 
@@ -473,9 +469,17 @@ public class PlayingView extends View implements TextToSpeech.OnInitListener, Ex
         volumeControlX = (cx - outerRadius) / 4;
         volumeControlY = getHeight() - mute.getHeight() - volumeControlX;
 
+        paintTurns.setTextSize(210);
+        float delta = (outerRadius * 0.8f) / paintTurns.measureText("32");
+        paintTurns.setTextSize(delta * paintTurns.getTextSize());
+
+
+        turnsTextYpos = (int) (cy - ((paintTurns.descent() + paintTurns.ascent()) / 2)
+                - outerRadius / 9);
+
         timerX = cx + outerRadius * 0.4f;
         paintTimer.setTextSize(100);
-        float delta = (getWidth() - timerX) / paintTimer.measureText("12:12");
+        delta = (getWidth() - timerX) / paintTimer.measureText("12:12");
         paintTimer.setTextSize(100 * 0.8f * delta);
         timerY = getHeight() - paint.ascent() - volumeControlX;
 
@@ -566,7 +570,7 @@ public class PlayingView extends View implements TextToSpeech.OnInitListener, Ex
         paintExName.setTextSize(tempFontSize);
         float textWidth = paintExName.measureText(text);
         //Now choose fontSize such that the size is reduced to 1.5 * innerRadius
-        float scaledFontSize = tempFontSize * (innerRadius * 1.5f) / textWidth;
+        float scaledFontSize = tempFontSize * (innerRadius * 1.3f) / textWidth;
         //However font size should not be very large for small texts.
         //It should be reasonably lesser than paintTurns' font size
         paintExName.setTextSize(Math.min(scaledFontSize, paintTurns.getTextSize() / 2.5f));
@@ -596,13 +600,8 @@ public class PlayingView extends View implements TextToSpeech.OnInitListener, Ex
         timeForExerciseAt = new int[exercises.size()];
         for (int i = 0; i < exercises.size(); i++) {
             Exercise exercise = exercises.get(i);
-            // Time for all turns of a exercise
-            timeForExerciseAt[i] = (int) (exercise.getTurns()
-                    * exercise.getTimePerTurn());
-
-            // Time for the gaps between exercises
-            timeForExerciseAt[i] += (exercise.getTurns() - 1)
-                    * exercise.getGapBetweenTurns();
+            timeForExerciseAt[i] = (int) (exercise.getTurns() * exercise.getTimePerTurn()
+                    + (exercise.getTurns() - 1) * exercise.getGapBetweenTurns());
         }
     }
 
