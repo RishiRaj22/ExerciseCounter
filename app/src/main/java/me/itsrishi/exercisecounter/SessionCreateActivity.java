@@ -130,6 +130,7 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
                 try {
                     session.setGapBetweenExercises(Integer.valueOf(sessionGapSet.getText().toString()));
                 } catch (NumberFormatException ex) {
+                    ex.printStackTrace();
                 }
                 if (index < sessions.size())
                     sessions.set(index, session);
@@ -149,7 +150,7 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
         sessionSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (saveSession() && saveSessionToFile()) {
+                if (saveSessionToFile()) {
                     Intent intent = new Intent(SessionCreateActivity.this, MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
@@ -188,7 +189,7 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
         alertBuilder.setNegativeButton(R.string.yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (saveSession() && saveSessionToFile()) {
+                if (saveSessionToFile()) {
                     SessionCreateActivity.super.onBackPressed();
                 }
             }
@@ -202,28 +203,31 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
         alertBuilder.show();
     }
 
-    private boolean saveSession() {
+    private void saveSession() {
         session.setName(sessionNameSet.getText().toString());
-        if (session.getName() == "") {
-            Toast.makeText(this, "Enter valid name for session", Toast.LENGTH_LONG).show();
-            return false;
-        }
         try {
             session.setGapBetweenExercises(Integer.valueOf(sessionGapSet.getText().toString()));
         } catch (NumberFormatException ex) {
-            Toast.makeText(this, "Enter valid gap between exercises", Toast.LENGTH_LONG).show();
-            return false;
-        }
-        if (exercises == null) {
-            Toast.makeText(this, "Add exercises to the session", Toast.LENGTH_LONG).show();
-            return false;
+            session.setGapBetweenExercises(-1);
         }
         session.setExercises(exercises);
         sessions.set(index, session);
-        return true;
     }
 
     private boolean saveSessionToFile() {
+        saveSession();
+        if (session.getExercises() == null) {
+            Toast.makeText(this, "Please set the exercises", Toast.LENGTH_LONG);
+            return false;
+        }
+        if (session.getName().equals("")) {
+            Toast.makeText(this, "Enter valid name for session", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if (session.getGapBetweenExercises() == -1) {
+            Toast.makeText(this, "Enter valid gap between exercises", Toast.LENGTH_LONG).show();
+            return false;
+        }
         ObjectMapper mapper = new ObjectMapper();
         try {
             FileOutputStream outputStream = SessionCreateActivity.this.openFileOutput("sessions.json", MODE_PRIVATE);
@@ -249,11 +253,7 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
 
     @Override
     public void onClick(int position, View view) {
-        session.setName(sessionNameSet.getText().toString());
-        try {
-            session.setGapBetweenExercises(Integer.valueOf(sessionGapSet.getText().toString()));
-        } catch (NumberFormatException ex) {
-        }
+        saveSession();
         Intent intent = new Intent(SessionCreateActivity.this, ExerciseCreateActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("index", index);
