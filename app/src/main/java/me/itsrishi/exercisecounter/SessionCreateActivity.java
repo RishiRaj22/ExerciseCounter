@@ -149,18 +149,7 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
         sessionSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (saveSession()) {
-                    try {
-                        ObjectMapper mapper = new ObjectMapper();
-                        FileOutputStream outputStream = SessionCreateActivity.this.openFileOutput("sessions.json", MODE_PRIVATE);
-                        mapper.writeValue(outputStream, sessions);
-                        outputStream.close();
-                        Log.d("JSON-VAL", "sessions.json:\n" + mapper.writeValueAsString(sessions));
-                    } catch (IOException ex) {
-                        Toast.makeText(SessionCreateActivity.this, "Session couldn't be saved",
-                                Toast.LENGTH_LONG).show();
-                        ex.printStackTrace();
-                    }
+                if (saveSession() && saveSessionToFile()) {
                     Intent intent = new Intent(SessionCreateActivity.this, MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
@@ -169,6 +158,7 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
         });
 
     }
+
 
     @Override
     public void onChange(boolean wasRemoval) {
@@ -195,14 +185,15 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
         alertBuilder.setMessage("Do you want to save the changes?");
         alertBuilder.setTitle("Save");
-        alertBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+        alertBuilder.setNegativeButton(R.string.yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (saveSession())
+                if (saveSession() && saveSessionToFile()) {
                     SessionCreateActivity.super.onBackPressed();
+                }
             }
         });
-        alertBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+        alertBuilder.setPositiveButton(R.string.no, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 SessionCreateActivity.super.onBackPressed();
@@ -230,6 +221,22 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
         session.setExercises(exercises);
         sessions.set(index, session);
         return true;
+    }
+
+    private boolean saveSessionToFile() {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            FileOutputStream outputStream = SessionCreateActivity.this.openFileOutput("sessions.json", MODE_PRIVATE);
+            mapper.writeValue(outputStream, sessions);
+            outputStream.close();
+            Log.d("JSON-VAL", "sessions.json:\n" + mapper.writeValueAsString(sessions));
+            return true;
+        } catch (IOException ex) {
+            Toast.makeText(SessionCreateActivity.this, "Session couldn't be saved",
+                    Toast.LENGTH_LONG).show();
+            ex.printStackTrace();
+            return false;
+        }
     }
 
     @Override

@@ -151,13 +151,13 @@ public class ExerciseCreateActivity extends AppCompatActivity implements Compoun
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
         alertBuilder.setMessage("Do you want to save the changes?");
         alertBuilder.setTitle("Save");
-        alertBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+        alertBuilder.setNegativeButton(R.string.yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 exerciseSubmit.performClick();
             }
         });
-        alertBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+        alertBuilder.setPositiveButton(R.string.no, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 ExerciseCreateActivity.super.onBackPressed();

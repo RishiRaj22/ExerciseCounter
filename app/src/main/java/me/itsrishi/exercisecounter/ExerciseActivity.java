@@ -148,13 +148,13 @@ public class ExerciseActivity extends AppCompatActivity implements IntegerChange
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
         alertBuilder.setMessage(R.string.abort_message);
         alertBuilder.setTitle("Abort");
-        alertBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+        alertBuilder.setNegativeButton(R.string.yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 ExerciseActivity.super.onBackPressed();
             }
         });
-        alertBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+        alertBuilder.setPositiveButton(R.string.no, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
             }

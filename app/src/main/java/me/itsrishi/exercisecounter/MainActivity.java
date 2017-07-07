@@ -149,14 +149,14 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
                 .setIcon(R.drawable.ic_delete_white_24dp)
                 .setTitle("Delete " + sessionName)
                 .setMessage("Are you sure you want to delete " + sessionName + "?")
-                .setPositiveButton(R.string.no, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         adapter.setSessions(sessions);
                         MainActivity.this.sessionsList.refreshDrawableState();
                     }
                 })
-                .setNegativeButton(R.string.yes, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         sessions.remove(position);
