@@ -36,5 +36,5 @@ public interface ExerciseModificationListener {
      * @param wasRemoval true: If modification was a removal and false if it was a swap
      * @return
      */
-    public void onChange(boolean wasRemoval);
+    void onChange(boolean wasRemoval);
 }

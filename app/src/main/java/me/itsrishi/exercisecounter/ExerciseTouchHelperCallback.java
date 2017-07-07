@@ -36,10 +36,10 @@ import me.itsrishi.exercisecounter.adapters.ListChangeAdapter;
  * @author Rishi Raj
  */
 
-public class ExerciseTouchHelperCallback extends ItemTouchHelper.Callback {
+class ExerciseTouchHelperCallback extends ItemTouchHelper.Callback {
     private ListChangeAdapter changeAdapter;
 
-    public ExerciseTouchHelperCallback(ListChangeAdapter changeAdapter) {
+    ExerciseTouchHelperCallback(ListChangeAdapter changeAdapter) {
         this.changeAdapter = changeAdapter;
     }
 

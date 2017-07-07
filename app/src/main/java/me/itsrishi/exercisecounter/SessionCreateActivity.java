@@ -47,6 +47,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,7 +60,6 @@ import me.itsrishi.exercisecounter.models.Session;
 public class SessionCreateActivity extends Activity implements View.OnClickListener,
         ExerciseModificationListener, RecyclerViewClickListener {
 
-    public static final String SESSION_EDIT_INDEX = "session_edit_index";
     @BindView(R.id.session_name_set)
     AppCompatEditText sessionNameSet;
     @BindView(R.id.session_gap_set)
@@ -101,7 +101,7 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
 
             if (session != null) {
                 sessionNameSet.setText(session.getName());
-                sessionGapSet.setText("" + session.getGapBetweenExercises());
+                sessionGapSet.setText(String.format(Locale.ENGLISH,"%d",session.getGapBetweenExercises()));
                 exercises = session.getExercises();
             } else session = new Session();
         }

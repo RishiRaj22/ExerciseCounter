@@ -55,7 +55,7 @@ import static org.hamcrest.Matchers.not;
  */
 @RunWith(AndroidJUnit4.class)
 public class SessionInstrumentedTest {
-    public static final int SIZE = 5;
+    private static final int SIZE = 3;
     private static final String SESSION = "Session #";
     private static final String EXERCISE = "Ex #";
 
@@ -71,7 +71,7 @@ public class SessionInstrumentedTest {
             onView(withId(R.id.session_name_set)).perform(typeText(sessionName));
             onView(withId(R.id.session_gap_set)).perform(typeText("" + sessionGap));
 
-            for (int j = 0; j < 4; j++) {
+            for (int j = 0; j < 3; j++) {
                 Random random = new Random();
                 String name = EXERCISE + j;
                 int turns = random.nextInt(15) + 1;

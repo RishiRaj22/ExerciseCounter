@@ -111,14 +111,6 @@ public class ExerciseActivity extends AppCompatActivity implements IntegerChange
         }
     }
 
-    public PlayingView getPlayingView() {
-        return playingView;
-    }
-
-    public void setPlayingView(PlayingView playingView) {
-        this.playingView = playingView;
-    }
-
     @Override
     public void onChange(boolean wasRemoval) {
         if (exercises.size() < prev.size() - 1)

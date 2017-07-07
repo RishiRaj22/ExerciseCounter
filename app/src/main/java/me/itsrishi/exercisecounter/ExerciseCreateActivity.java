@@ -39,6 +39,7 @@ import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -93,9 +94,9 @@ public class ExerciseCreateActivity extends AppCompatActivity implements Compoun
 
         if (exercise != null) {
             exerciseName.setText(exercise.getName());
-            numTurns.setText("" + exercise.getTurns());
-            timePerTurn.setText("" + exercise.getTimePerTurn());
-            gapBetweenTurns.setText("" + exercise.getGapBetweenTurns());
+            numTurns.setText(String.format(Locale.ENGLISH,"%d",exercise.getTurns()));
+            timePerTurn.setText(String.format(Locale.ENGLISH,"%f",exercise.getTimePerTurn()));
+            gapBetweenTurns.setText(String.format(Locale.ENGLISH,"%f",exercise.getGapBetweenTurns()));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
                 autoplay.setChecked(exercise.getAutoplay());
             }

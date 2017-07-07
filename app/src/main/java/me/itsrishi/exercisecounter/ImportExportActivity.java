@@ -121,9 +121,9 @@ public class ImportExportActivity extends AppCompatActivity {
                     source.close();
                     dest.close();
                     Log.d(TAG, "File written successfully");
-                    Toast.makeText(this, "Sessions exported successfully!", Toast.LENGTH_LONG);
+                    Toast.makeText(this, "Sessions exported successfully!", Toast.LENGTH_LONG).show();
                 } catch (IOException e) {
-                    Toast.makeText(this, "Sessions could not be exported", Toast.LENGTH_LONG);
+                    Toast.makeText(this, "Sessions could not be exported", Toast.LENGTH_LONG).show();
                     e.printStackTrace();
                 }
             }

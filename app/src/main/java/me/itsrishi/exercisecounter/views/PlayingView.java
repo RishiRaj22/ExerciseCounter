@@ -679,7 +679,7 @@ public class PlayingView extends View implements TextToSpeech.OnInitListener, Ex
 
     public void addIntegerChangeListener(IntegerChangeListener listener) {
         if (integerChangeListeners == null) {
-            integerChangeListeners = new LinkedList<IntegerChangeListener>();
+            integerChangeListeners = new LinkedList<>();
         }
         integerChangeListeners.add(listener);
     }
@@ -695,7 +695,7 @@ public class PlayingView extends View implements TextToSpeech.OnInitListener, Ex
     @Override
     public void onInit(int status) {
         Log.d("TTSpeechPlay", "Initialized. Status : " + status);
-        ttsEnabled = (status == TextToSpeech.SUCCESS) ? true : false;
+        ttsEnabled = status == TextToSpeech.SUCCESS;
     }
 
 }

@@ -45,9 +45,9 @@ import me.itsrishi.exercisecounter.models.Session;
  */
 
 public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionHolder> {
-    ArrayList<Session> sessions;
-    RecyclerViewClickListener listener;
-    boolean isEditable;
+    private ArrayList<Session> sessions;
+    private RecyclerViewClickListener listener;
+    private boolean isEditable;
 
     public SessionAdapter(ArrayList<Session> sessions) {
         this(sessions, null, false);
@@ -68,6 +68,7 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionH
 
     @Override
     public void onBindViewHolder(SessionHolder holder, int position) {
+        position = holder.getAdapterPosition();
         holder.sessionName.setText(sessions.get(position).getName());
         int time = 0;
         for (Exercise exercise :
@@ -78,7 +79,7 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionH
         time += sessions.get(position).getGapBetweenExercises()
                 * (sessions.get(position).getExercises().size() - 1);
         String totalTime = time / 60 + "m " + time % 60 + "s";
-        holder.sessionTime.setText("" + totalTime);
+        holder.sessionTime.setText(totalTime);
         holder.position = position;
     }
 
@@ -97,13 +98,13 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionH
         notifyDataSetChanged();
     }
 
-    public class SessionHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class SessionHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         int position;
         TextView sessionName, scheduledTime, sessionTime;
         ImageView sessionEdit;
         LinearLayout sessionMetadata;
 
-        public SessionHolder(View itemView) {
+        SessionHolder(View itemView) {
             super(itemView);
             sessionName = (TextView) itemView.findViewById(R.id.session_name);
             scheduledTime = (TextView) itemView.findViewById(R.id.scheduled_time);

@@ -38,6 +38,6 @@ public interface RecyclerViewClickListener {
      * @param position The position of the item clicked on the list
      * @param view     The view of the item clicked
      */
-    public void onClick(int position, View view);
+    void onClick(int position, View view);
 
 }

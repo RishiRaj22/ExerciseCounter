@@ -34,6 +34,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import me.itsrishi.exercisecounter.R;
 import me.itsrishi.exercisecounter.listeners.ExerciseModificationListener;
@@ -65,8 +66,8 @@ public class UpcomingExercisesAdapter extends RecyclerView.Adapter<UpcomingExerc
 
     @Override
     public void onBindViewHolder(ExerciseViewHolder holder, int position) {
-        holder.name.setText("" + exercises.get(beg + position).getName());
-        holder.reps.setText("X " + exercises.get(beg + position).getTurns());
+        holder.name.setText(exercises.get(beg + position).getName());
+        holder.reps.setText(String.format(Locale.ENGLISH,"X %d", exercises.get(beg + position).getTurns()));
     }
 
     @Override

@@ -30,5 +30,5 @@ package me.itsrishi.exercisecounter.listeners;
  */
 
 public interface IntegerChangeListener {
-    public void onChange(int val);
+    void onChange(int val);
 }

@@ -33,6 +33,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.Locale;
 
 import me.itsrishi.exercisecounter.R;
 import me.itsrishi.exercisecounter.listeners.RecyclerViewClickListener;
@@ -45,7 +46,7 @@ import static me.itsrishi.exercisecounter.R.id.alarm_active;
  */
 
 public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHolder> {
-    RecyclerViewClickListener clickListener;
+    private RecyclerViewClickListener clickListener;
     private List<AlarmTime> alarmTimes;
 
     public AlarmAdapter(List<AlarmTime> alarmTimes, RecyclerViewClickListener clickListener) {
@@ -62,6 +63,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
 
     @Override
     public void onBindViewHolder(AlarmViewHolder holder, int position) {
+        position = holder.getAdapterPosition();
         AlarmTime alarmTime = alarmTimes.get(position);
         for (int i = 0; i < 7; i++) {
             TextView textView = holder.textViews[i];
@@ -74,7 +76,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         int mins = alarmTime.getMins();
         boolean am = hours / 12 == 0;
         hours %= 12;
-        holder.currTime.setText(String.format("%d:%d", hours, mins));
+        holder.currTime.setText(String.format(Locale.ENGLISH,"%d:%d", hours, mins));
         holder.amOrPm.setText(am ? "AM" : "PM");
         holder.active.setChecked(alarmTime.isActive());
         holder.position = position;
@@ -94,12 +96,12 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
     }
 
     class AlarmViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public TextView[] textViews = new TextView[7];
-        public TextView currTime, amOrPm;
-        public CheckBox active;
+        TextView[] textViews = new TextView[7];
+        TextView currTime, amOrPm;
+        CheckBox active;
         int position;
 
-        public AlarmViewHolder(View itemView) {
+        AlarmViewHolder(View itemView) {
             super(itemView);
 
             textViews[0] = (TextView) itemView.findViewById(R.id.mon);
