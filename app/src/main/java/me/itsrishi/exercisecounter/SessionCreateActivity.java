@@ -54,6 +54,7 @@ import butterknife.ButterKnife;
 import me.itsrishi.exercisecounter.adapters.ExerciseAdapter;
 import me.itsrishi.exercisecounter.listeners.ExerciseModificationListener;
 import me.itsrishi.exercisecounter.listeners.RecyclerViewClickListener;
+import me.itsrishi.exercisecounter.misc.ExerciseTouchHelperCallback;
 import me.itsrishi.exercisecounter.models.Exercise;
 import me.itsrishi.exercisecounter.models.Session;
 
@@ -101,7 +102,8 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
 
             if (session != null) {
                 sessionNameSet.setText(session.getName());
-                sessionGapSet.setText(String.format(Locale.ENGLISH,"%d",session.getGapBetweenExercises()));
+                if (session.getGapBetweenExercises() != -1)
+                    sessionGapSet.setText(String.format(Locale.ENGLISH, "%d", session.getGapBetweenExercises()));
                 exercises = session.getExercises();
             } else session = new Session();
         }
@@ -211,7 +213,9 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
             session.setGapBetweenExercises(-1);
         }
         session.setExercises(exercises);
-        sessions.set(index, session);
+        if (index < sessions.size())
+            sessions.set(index, session);
+        else sessions.add(session);
     }
 
     private boolean saveSessionToFile() {

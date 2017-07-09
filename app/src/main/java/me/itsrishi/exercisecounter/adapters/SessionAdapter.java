@@ -35,6 +35,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import me.itsrishi.exercisecounter.R;
 import me.itsrishi.exercisecounter.listeners.RecyclerViewClickListener;
 import me.itsrishi.exercisecounter.models.Exercise;
@@ -100,18 +102,20 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionH
 
     class SessionHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         int position;
-        TextView sessionName, scheduledTime, sessionTime;
+        @BindView(R.id.session_name)
+        TextView sessionName;
+        @BindView(R.id.scheduled_time)
+        TextView scheduledTime;
+        @BindView(R.id.session_time)
+        TextView sessionTime;
+        @BindView(R.id.session_edit_button)
         ImageView sessionEdit;
+        @BindView(R.id.session_metadata)
         LinearLayout sessionMetadata;
 
         SessionHolder(View itemView) {
             super(itemView);
-            sessionName = (TextView) itemView.findViewById(R.id.session_name);
-            scheduledTime = (TextView) itemView.findViewById(R.id.scheduled_time);
-            sessionTime = (TextView) itemView.findViewById(R.id.session_time);
-            sessionEdit = (ImageView) itemView.findViewById(R.id.session_edit_button);
-            sessionMetadata = (LinearLayout) itemView.findViewById(R.id.session_metadata);
-
+            ButterKnife.bind(this,itemView);
             sessionEdit.setVisibility(isEditable ? View.VISIBLE : View.INVISIBLE);
             sessionEdit.setOnClickListener(this);
             sessionMetadata.setOnClickListener(this);

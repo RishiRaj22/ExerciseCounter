@@ -23,7 +23,7 @@
  *
  */
 
-package me.itsrishi.exercisecounter;
+package me.itsrishi.exercisecounter.misc;
 
 import android.graphics.Canvas;
 import android.os.Build;
@@ -36,10 +36,10 @@ import me.itsrishi.exercisecounter.adapters.ListChangeAdapter;
  * @author Rishi Raj
  */
 
-class ExerciseTouchHelperCallback extends ItemTouchHelper.Callback {
+public class ExerciseTouchHelperCallback extends ItemTouchHelper.Callback {
     private ListChangeAdapter changeAdapter;
 
-    ExerciseTouchHelperCallback(ListChangeAdapter changeAdapter) {
+    public ExerciseTouchHelperCallback(ListChangeAdapter changeAdapter) {
         this.changeAdapter = changeAdapter;
     }
 

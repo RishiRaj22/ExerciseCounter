@@ -36,6 +36,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import me.itsrishi.exercisecounter.R;
 import me.itsrishi.exercisecounter.listeners.ExerciseModificationListener;
 import me.itsrishi.exercisecounter.listeners.RecyclerViewClickListener;
@@ -70,7 +72,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     public void onBindViewHolder(ExerciseViewHolder holder, int position) {
         position = holder.getAdapterPosition();
         holder.name.setText(exercises.get(position).getName());
-        holder.reps.setText(String.format(Locale.ENGLISH,"X %d",exercises.get(position).getTurns()));
+        holder.reps.setText(String.format(Locale.ENGLISH, "X %d", exercises.get(position).getTurns()));
         holder.position = position;
     }
 
@@ -120,12 +122,14 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
     class ExerciseViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         int position;
-        TextView name, reps;
+        @BindView(R.id.exercise_name)
+        TextView name;
+        @BindView(R.id.exercise_reps)
+        TextView reps;
 
         ExerciseViewHolder(View itemView) {
             super(itemView);
-            name = (TextView) itemView.findViewById(R.id.exercise_name);
-            reps = (TextView) itemView.findViewById(R.id.exercise_reps);
+            ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
         }
 

@@ -26,14 +26,21 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="me.itsrishi.exercisecounter.MainActivity">
+
+    <include
+        android:id="@+id/main_activity_toolbar"
+        layout="@layout/toolbar"
+        ></include>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/sessions_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/main_activity_toolbar"
         android:background="#000000"
         android:visibility="visible"
         app:layoutManager="android.support.v7.widget.LinearLayoutManager"></android.support.v7.widget.RecyclerView>
@@ -46,10 +53,11 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_margin="10dp"
-        android:src="@drawable/ic_add_white_24dp"
+        app:srcCompat="@drawable/ic_add_white_24dp"
         app:borderWidth="0dp"
         app:elevation="4sp"
         app:rippleColor="#FFFFFF" />
+
 
 
 </RelativeLayout>

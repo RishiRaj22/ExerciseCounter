@@ -32,11 +32,15 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -58,13 +62,15 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
     RecyclerView sessionsList;
     @BindView(R.id.session_plus_fab)
     FloatingActionButton sessionPlusFab;
+    @BindView(R.id.main_activity_toolbar)
+    Toolbar toolBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
+        setSupportActionBar(toolBar);
     }
 
     @Override
@@ -149,14 +155,14 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
                 .setIcon(R.drawable.ic_delete_white_24dp)
                 .setTitle("Delete " + sessionName)
                 .setMessage("Are you sure you want to delete " + sessionName + "?")
-                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.no, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         adapter.setSessions(sessions);
                         MainActivity.this.sessionsList.refreshDrawableState();
                     }
                 })
-                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         sessions.remove(position);
@@ -170,5 +176,29 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
                     }
                 })
                 .show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.action_favorite:
+                Toast.makeText(this,"Fav pressed",Toast.LENGTH_LONG).show();
+                break;
+            case R.id.action_settings:
+                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                break;
+            case R.id.action_stat:
+                Toast.makeText(this,"Stats pressed",Toast.LENGTH_LONG).show();
+                break;
+        }
+        return true;
     }
 }

@@ -36,6 +36,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import me.itsrishi.exercisecounter.R;
 import me.itsrishi.exercisecounter.listeners.ExerciseModificationListener;
 import me.itsrishi.exercisecounter.models.Exercise;
@@ -67,7 +69,7 @@ public class UpcomingExercisesAdapter extends RecyclerView.Adapter<UpcomingExerc
     @Override
     public void onBindViewHolder(ExerciseViewHolder holder, int position) {
         holder.name.setText(exercises.get(beg + position).getName());
-        holder.reps.setText(String.format(Locale.ENGLISH,"X %d", exercises.get(beg + position).getTurns()));
+        holder.reps.setText(String.format(Locale.ENGLISH, "X %d", exercises.get(beg + position).getTurns()));
     }
 
     @Override
@@ -110,12 +112,15 @@ public class UpcomingExercisesAdapter extends RecyclerView.Adapter<UpcomingExerc
     }
 
     class ExerciseViewHolder extends RecyclerView.ViewHolder {
-        TextView name, reps;
+
+        @BindView(R.id.exercise_name)
+        TextView name;
+        @BindView(R.id.exercise_reps)
+        TextView reps;
 
         ExerciseViewHolder(View itemView) {
             super(itemView);
-            name = (TextView) itemView.findViewById(R.id.exercise_name);
-            reps = (TextView) itemView.findViewById(R.id.exercise_reps);
+            ButterKnife.bind(this,itemView);
         }
     }
 }

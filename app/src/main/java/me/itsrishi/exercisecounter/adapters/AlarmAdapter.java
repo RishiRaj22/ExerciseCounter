@@ -35,11 +35,12 @@ import android.widget.TextView;
 import java.util.List;
 import java.util.Locale;
 
+import butterknife.BindView;
+import butterknife.BindViews;
+import butterknife.ButterKnife;
 import me.itsrishi.exercisecounter.R;
 import me.itsrishi.exercisecounter.listeners.RecyclerViewClickListener;
 import me.itsrishi.exercisecounter.models.AlarmTime;
-
-import static me.itsrishi.exercisecounter.R.id.alarm_active;
 
 /**
  * @author Rishi Raj
@@ -76,7 +77,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         int mins = alarmTime.getMins();
         boolean am = hours / 12 == 0;
         hours %= 12;
-        holder.currTime.setText(String.format(Locale.ENGLISH,"%d:%d", hours, mins));
+        holder.currTime.setText(String.format(Locale.ENGLISH, "%d:%d", hours, mins));
         holder.amOrPm.setText(am ? "AM" : "PM");
         holder.active.setChecked(alarmTime.isActive());
         holder.position = position;
@@ -96,25 +97,19 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
     }
 
     class AlarmViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView[] textViews = new TextView[7];
-        TextView currTime, amOrPm;
+        @BindViews({R.id.mon, R.id.tue, R.id.wed, R.id.thu, R.id.fri, R.id.sat, R.id.sun})
+        TextView[] textViews;
+        @BindView(R.id.set_time)
+        TextView currTime;
+        @BindView(R.id.set_am_or_pm)
+        TextView amOrPm;
+        @BindView(R.id.alarm_active)
         CheckBox active;
         int position;
 
         AlarmViewHolder(View itemView) {
             super(itemView);
-
-            textViews[0] = (TextView) itemView.findViewById(R.id.mon);
-            textViews[1] = (TextView) itemView.findViewById(R.id.tue);
-            textViews[2] = (TextView) itemView.findViewById(R.id.wed);
-            textViews[3] = (TextView) itemView.findViewById(R.id.thu);
-            textViews[4] = (TextView) itemView.findViewById(R.id.fri);
-            textViews[5] = (TextView) itemView.findViewById(R.id.sat);
-            textViews[6] = (TextView) itemView.findViewById(R.id.sun);
-
-            currTime = (TextView) itemView.findViewById(R.id.set_time);
-            amOrPm = (TextView) itemView.findViewById(R.id.set_am_or_pm);
-            active = (CheckBox) itemView.findViewById(alarm_active);
+            ButterKnife.bind(this, itemView);
         }
 
         @Override
