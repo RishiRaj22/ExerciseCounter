@@ -49,9 +49,9 @@ public class SettingsActivity extends AppCompatActivity {
     public static final String PREFS = "PREFERENCES";
     private static boolean mute,tts,countdown,log,notifs;
     private static final String MUTE_TAG = "mute";
-    private static final String TTS_TAG = "mute";
-    private static final String COUNTDOWN_TAG = "mute";
-    private static final String LOG_TAG = "mute";
+    private static final String TTS_TAG = "tts";
+    private static final String COUNTDOWN_TAG = "countdown";
+    private static final String LOG_TAG = "log";
     private static final String NOTIFS_TAG = "notif";
     private static final String TIME_BEF_NOT_TAG = "timeBefNotif";
 
