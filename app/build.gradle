@@ -32,8 +32,8 @@ android {
         applicationId "me.itsrishi.exercisecounter"
         minSdkVersion 11
         targetSdkVersion 25
-        versionCode 1
-        versionName "0.0.1-alpha"
+        versionCode 2
+        versionName "0.0.2-alpha"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -63,8 +63,6 @@ dependencies {
         exclude module: 'recyclerview-v7'
     }
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.0.1'
-
-
 
     compile 'com.android.support:support-core-utils:25.4.0'
     compile 'com.android.support:support-core-utils:25.4.0'

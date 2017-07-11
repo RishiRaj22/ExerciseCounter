@@ -109,6 +109,7 @@ public class PlayingView extends View implements TextToSpeech.OnInitListener, Ex
         init();
     }
 
+    /*        Initialisation code begins        */
     private void init() {
         initSounds();
         initPaints();
@@ -180,6 +181,7 @@ public class PlayingView extends View implements TextToSpeech.OnInitListener, Ex
         sounds[9] = soundPool.load(getContext(), R.raw.track_9, 2);
         sounds[10] = soundPool.load(getContext(), R.raw.track_10, 2);
     }
+    /*        Initialisation code ends        */
 
 
     /*        Drawing code begins        */
@@ -401,14 +403,6 @@ public class PlayingView extends View implements TextToSpeech.OnInitListener, Ex
         }
     }
 
-    private void speak(String text) {
-        if(!soundMute && ttsEnabled) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, text + (Math.random() * 100));
-            } else textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null);
-        }
-    }
-
     private void updateTimers() {
         int currSec = (int) ((1 - Math.max(0, timePassed)
                 / exercises.get(index).getTimePerTurn()) * 10);
@@ -551,21 +545,23 @@ public class PlayingView extends View implements TextToSpeech.OnInitListener, Ex
         }
         return false;
     }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-    }
-
     /*        Overriden view methods end        */
 
 
     /*        Utility methods begin        */
     private void playSound(int n) {
-        if(!soundMute) {
+        if (!soundMute) {
             if (soundPool == null || sounds == null)
                 initSounds();
             soundPool.play(sounds[(n + 1) % 11], countdownVolume, countdownVolume, 2, 0, 1);
+        }
+    }
+
+    private void speak(String text) {
+        if (!soundMute && ttsEnabled) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, text + (Math.random() * 100));
+            } else textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null);
         }
     }
 
@@ -596,7 +592,51 @@ public class PlayingView extends View implements TextToSpeech.OnInitListener, Ex
         //It should be reasonably lesser than paintTurns' font size
         paintExName.setTextSize(Math.min(scaledFontSize, paintTurns.getTextSize() / 2.5f));
     }
+
+    private void speakOutForIndexChange(int val) {
+        if (val == exercises.size()) {
+            speak("Session complete");
+        }
+        if (val >= 0 && val < exercises.size()) {
+            final Handler handler = new Handler();
+            final String text = exercises.get(val).getName();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (ttsEnabled) {
+                        speak(text);
+                    } else {
+                        soundPool.play(nextSound, countdownVolume, countdownVolume, 2, 0, 1);
+                    }
+                }
+            }, 400);
+        }
+    }
+
+    private void calcTimeForExercises() {
+        timeForExerciseAt = new int[exercises.size()];
+        for (int i = 0; i < exercises.size(); i++) {
+            Exercise exercise = exercises.get(i);
+            timeForExerciseAt[i] = (int) (exercise.getTurns() * exercise.getTimePerTurn()
+                    + (exercise.getTurns() - 1) * exercise.getGapBetweenTurns());
+        }
+    }
     /*        Utility methods end        */
+
+
+    /*        Implementation of interfaces begins        */
+    @Override
+    public void onInit(int status) {
+        Log.d("TTSpeechPlay", "Initialized. Status : " + status);
+        ttsEnabled = status == TextToSpeech.SUCCESS;
+    }
+
+    @Override
+    public void onChange(boolean wasRemoval) {
+        calcTimeForExercises();
+        calculateTimeLeftAfterCurrentExercise(index);
+    }
+    /*        Implementation of interfaces ends        */
 
 
     /*        Getters,setters,etc begin       */
@@ -615,21 +655,6 @@ public class PlayingView extends View implements TextToSpeech.OnInitListener, Ex
 
     public void setGapBetweenExercises(int gapBetweenExercises) {
         this.gapBetweenExercises = gapBetweenExercises;
-    }
-
-    private void calcTimeForExercises() {
-        timeForExerciseAt = new int[exercises.size()];
-        for (int i = 0; i < exercises.size(); i++) {
-            Exercise exercise = exercises.get(i);
-            timeForExerciseAt[i] = (int) (exercise.getTurns() * exercise.getTimePerTurn()
-                    + (exercise.getTurns() - 1) * exercise.getGapBetweenTurns());
-        }
-    }
-
-    @Override
-    public void onChange(boolean wasRemoval) {
-        calcTimeForExercises();
-        calculateTimeLeftAfterCurrentExercise(index);
     }
 
     public int getIndex() {
@@ -657,34 +682,11 @@ public class PlayingView extends View implements TextToSpeech.OnInitListener, Ex
                 setRingFontFor("Start");
             } else {
                 setRingFontFor("Success!");
-                if(SettingsActivity.isLog()) {
-
-                }
             }
             Log.e(TAG, "index out of bounds. Font size adjusted for \"Success!\"");
         }
         for (IntegerChangeListener listener : integerChangeListeners) {
             listener.onChange(index);
-        }
-    }
-
-    private void speakOutForIndexChange(int val) {
-        if (val == exercises.size()) {
-            speak("Session complete");
-        }
-        if (val >= 0 && val < exercises.size()) {
-            final Handler handler = new Handler();
-            final String text = exercises.get(val).getName();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (ttsEnabled) {
-                        speak(text);
-                    } else {
-                        soundPool.play(nextSound, countdownVolume, countdownVolume, 2, 0, 1);
-                    }
-                }
-            }, 400);
         }
     }
 
@@ -698,15 +700,6 @@ public class PlayingView extends View implements TextToSpeech.OnInitListener, Ex
     public void removeIntegerChangeListener(IntegerChangeListener listener) {
         integerChangeListeners.add(listener);
     }
-
-
     /*        Getters,setters,etc end       */
-
-
-    @Override
-    public void onInit(int status) {
-        Log.d("TTSpeechPlay", "Initialized. Status : " + status);
-        ttsEnabled = status == TextToSpeech.SUCCESS;
-    }
 
 }
