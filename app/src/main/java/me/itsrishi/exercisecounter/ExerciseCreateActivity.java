@@ -65,7 +65,7 @@ public class ExerciseCreateActivity extends AppCompatActivity implements Compoun
     private ArrayList<Session> sessions;
     private int index;
     private int position;
-    private boolean shouldAutoplay = true;
+    private boolean shouldAutoplay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +98,7 @@ public class ExerciseCreateActivity extends AppCompatActivity implements Compoun
             timePerTurn.setText(String.format(Locale.ENGLISH,"%f",exercise.getTimePerTurn()));
             gapBetweenTurns.setText(String.format(Locale.ENGLISH,"%f",exercise.getGapBetweenTurns()));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+                shouldAutoplay = exercise.getAutoplay();
                 autoplay.setChecked(exercise.getAutoplay());
             }
         }
