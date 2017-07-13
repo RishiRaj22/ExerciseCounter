@@ -221,7 +221,7 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
     private boolean saveSessionToFile() {
         saveSession();
         if (session.getExercises() == null) {
-            Toast.makeText(this, "Please set the exercises", Toast.LENGTH_LONG);
+            Toast.makeText(this, "Add exercises by tapping plus button", Toast.LENGTH_LONG).show();
             return false;
         }
         if (session.getName().equals("")) {

@@ -186,17 +186,21 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
         switch(item.getItemId()) {
             case R.id.action_favorite:
                 Toast.makeText(this,"Fav pressed",Toast.LENGTH_LONG).show();
                 break;
             case R.id.action_settings:
-                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                intent = new Intent(MainActivity.this, SettingsActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 break;
             case R.id.action_stat:
-                Toast.makeText(this,"Stats pressed",Toast.LENGTH_LONG).show();
+                intent = new Intent(MainActivity.this, StatsActivity.class);
+                intent.putExtra("sessions",sessions);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
                 break;
         }
         return true;

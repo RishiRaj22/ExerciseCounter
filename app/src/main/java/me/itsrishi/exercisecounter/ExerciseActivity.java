@@ -35,9 +35,15 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.View;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.LinkedList;
 
@@ -53,6 +59,7 @@ import me.itsrishi.exercisecounter.views.PlayingView;
 
 public class ExerciseActivity extends AppCompatActivity implements IntegerChangeListener, ExerciseModificationListener, View.OnClickListener {
 
+    private static final String TAG = "EXACTIVITY";
     public static Session session;
     @BindView(R.id.playing_view)
     PlayingView playingView;
@@ -107,8 +114,8 @@ public class ExerciseActivity extends AppCompatActivity implements IntegerChange
         adapter.setBeg(index);
         adapter.notifyDataSetChanged();
         recyclerView.refreshDrawableState();
-        if (index >= exercises.size()) {
-            // TODO: 02-07-2017 Log time of session
+        if (index >= exercises.size() && SettingsActivity.isLog()) {
+            logSession();
         }
     }
 
@@ -160,6 +167,103 @@ public class ExerciseActivity extends AppCompatActivity implements IntegerChange
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList("exercises", exercises);
         outState.putParcelable("session_exercise", session);
+    }
+
+    private void logSession() {
+        String fileName = "session_" + session.getName();
+        Calendar lastUpdated = Calendar.getInstance();
+        Calendar currentDate = Calendar.getInstance();
+        RandomAccessFile file = null;
+        try {
+            file = new RandomAccessFile(new File(getFilesDir(), fileName), "rw");
+        } catch (FileNotFoundException e) {
+            Log.d(TAG, "File not found");
+            e.printStackTrace();
+        }
+        byte day = 0;
+        byte month = 0;
+        byte bYear = 0;
+        int year, days;
+        try {
+            day = file.readByte();
+            month = file.readByte();
+            bYear = file.readByte();
+            year = 2000 + bYear;
+            lastUpdated.set(year, month, day);
+        } catch (IOException e) {
+            Log.d(TAG, "File did not have day, month or year attribute");
+            e.printStackTrace();
+        }
+        try {
+            file.seek(0);
+            file.writeByte(currentDate.get(Calendar.DAY_OF_MONTH));
+            file.writeByte(currentDate.get(Calendar.MONTH));
+            file.writeByte(currentDate.get(Calendar.YEAR) - 2000);
+            days = daysBetween(currentDate, lastUpdated);
+            long len = file.length();
+            file.seek(len);
+            while (days > 1) {
+                file.writeByte(0);
+                days--;
+            }
+            if (days == 1)
+                file.writeByte(1);
+            if (days == 0) {
+                if (len < 4) { // If file is just made
+                    file.seek(len);
+                    file.writeByte(1);
+                } else {
+                    file.seek(len - 1);
+                    byte turns = file.readByte();
+                    file.seek(len - 1);
+                    file.writeByte(turns + 1);
+
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                file.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Get days between two dates if day1 > day2 else false
+     *
+     * @param day1 The bigger date
+     * @param day2 The smaller date
+     * @return -1 if day1 < day2 else days between them
+     */
+    private int daysBetween(Calendar day1, Calendar day2) {
+        Calendar dayOne = (Calendar) day1.clone(),
+                dayTwo = (Calendar) day2.clone();
+
+        if (dayOne.get(Calendar.YEAR) == dayTwo.get(Calendar.YEAR)) {
+            int ret = dayOne.get(Calendar.DAY_OF_YEAR) - dayTwo.get(Calendar.DAY_OF_YEAR);
+            if (ret < 0)
+                return -1;
+            else return ret;
+        } else {
+            if (dayTwo.get(Calendar.YEAR) > dayOne.get(Calendar.YEAR)) {
+                return -1;
+            }
+            int extraDays = 0;
+
+            int dayOneOriginalYearDays = dayOne.get(Calendar.DAY_OF_YEAR);
+
+            while (dayOne.get(Calendar.YEAR) > dayTwo.get(Calendar.YEAR)) {
+                dayOne.add(Calendar.YEAR, -1);
+                // getActualMaximum() important for leap years
+                extraDays += dayOne.getActualMaximum(Calendar.DAY_OF_YEAR);
+            }
+
+            return extraDays - dayTwo.get(Calendar.DAY_OF_YEAR) + dayOneOriginalYearDays;
+        }
     }
 
 }

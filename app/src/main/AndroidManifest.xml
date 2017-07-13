@@ -96,8 +96,10 @@
                 android:resource="@xml/nnf_provider_paths" />
         </provider>
 
-        <activity android:name=".SettingsActivity"
-            android:windowSoftInputMode="stateHidden"></activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:windowSoftInputMode="stateHidden" />
+        <activity android:name=".StatsActivity"></activity>
     </application>
 
 </manifest>
