@@ -44,6 +44,7 @@ import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -165,6 +166,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
                 .setNegativeButton(R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        File file = new File(getFilesDir(),"session_"+sessions.get(position).getName());
+                        Log.d("DEL_STATUS",""+file.delete());
                         sessions.remove(position);
                         long time = System.nanoTime();
                         saveSessions();

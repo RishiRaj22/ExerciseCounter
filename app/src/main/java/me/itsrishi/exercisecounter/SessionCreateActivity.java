@@ -43,8 +43,11 @@ import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Locale;
@@ -220,18 +223,8 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
 
     private boolean saveSessionToFile() {
         saveSession();
-        if (session.getExercises() == null) {
-            Toast.makeText(this, "Add exercises by tapping plus button", Toast.LENGTH_LONG).show();
-            return false;
-        }
-        if (session.getName().equals("")) {
-            Toast.makeText(this, "Enter valid name for session", Toast.LENGTH_LONG).show();
-            return false;
-        }
-        if (session.getGapBetweenExercises() == -1) {
-            Toast.makeText(this, "Enter valid gap between exercises", Toast.LENGTH_LONG).show();
-            return false;
-        }
+        if (isSessionInconsistent()) return false;
+        transferStatsForSession();
         ObjectMapper mapper = new ObjectMapper();
         try {
             FileOutputStream outputStream = SessionCreateActivity.this.openFileOutput("sessions.json", MODE_PRIVATE);
@@ -244,6 +237,62 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
                     Toast.LENGTH_LONG).show();
             ex.printStackTrace();
             return false;
+        }
+    }
+
+    private boolean isSessionInconsistent() {
+        if (session.getExercises() == null) {
+            Toast.makeText(this, "Add exercises by tapping plus button", Toast.LENGTH_LONG).show();
+            return true;
+        }
+        if (session.getName().equals("")) {
+            Toast.makeText(this, "Enter valid name for session", Toast.LENGTH_LONG).show();
+            return true;
+        }
+        if (session.getGapBetweenExercises() == -1) {
+            Toast.makeText(this, "Enter valid gap between exercises", Toast.LENGTH_LONG).show();
+            return true;
+        }
+        for (int i = 0; i != index && i < sessions.size(); i++) {
+            if(sessions.get(i).getName().equals(session.getName())) {
+                Toast.makeText(this, "Session name already exists", Toast.LENGTH_LONG).show();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * When the session is renamed,it transfers the stats
+     * from old session file to a newly created one
+     */
+    private void transferStatsForSession() {
+        String oldName = getOldSessionName();
+        if (oldName != null) {
+            String oldFile = "session_" + oldName;
+            String newFile = "session_" + session.getName();
+            try {
+                FileInputStream inputStream = this.openFileInput(oldFile);
+                FileChannel source = inputStream.getChannel();
+                File initFile = new File(this.getFilesDir(), newFile);
+                FileOutputStream outputStream = new FileOutputStream(initFile);
+                // Write arbitrary value to new file. Thus, it prevents the
+                // FileChannel from being empty and causing IOException
+                outputStream.write((byte) 22);
+                outputStream.close();
+                outputStream = new FileOutputStream(initFile);
+                FileChannel dest = outputStream.getChannel();
+                dest.transferFrom(source, 0, source.size());
+                source.close();
+                dest.close();
+                File file = new File(oldFile);
+                boolean delStatus = file.delete();
+                Log.d("RENAME SESSION", "New file written. Old file deleted : " + delStatus);
+            } catch (IOException e) {
+                Log.d("RENAME SESSION", "Data could not be transferred while renaming");
+                e.printStackTrace();
+            }
+
         }
     }
 
@@ -264,5 +313,21 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
         intent.putExtra("position", position);
         intent.putParcelableArrayListExtra("sessions", sessions);
         startActivity(intent);
+    }
+
+    private String getOldSessionName() {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            FileInputStream fileInputStream = this.openFileInput("sessions.json");
+            ArrayList<Session> sessionList = mapper.readValue(fileInputStream, mapper.getTypeFactory().constructCollectionType(ArrayList.class, Session.class));
+            fileInputStream.close();
+            if (sessionList == null || sessionList.size() == index) {
+                return null;
+            } else return sessionList.get(index).getName();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            sessions = new ArrayList<>();
+        }
+        return null;
     }
 }

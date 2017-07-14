@@ -94,8 +94,11 @@ public class StatsView extends View implements OnScaleGestureListener, GestureDe
      * @param currentView The currentView, which is either DAY_VIEW or WEEK_VIEW
      */
     public void addValues(int[] dayValues, Calendar startDay, int currentView) {
-        if(dayValues == null)
+        if(dayValues == null) {
+            init = false;
+            postInvalidate();
             return;
+        }
         if(this.dayValues != dayValues)
             init = false;
         this.dayValues = dayValues;
@@ -108,7 +111,6 @@ public class StatsView extends View implements OnScaleGestureListener, GestureDe
      * All the initialisation work is done here
      */
     private void init() {
-        cameraX = getWidth();
         initTouch();
         paint = new Paint();
         paint.setColor(Color.WHITE);
@@ -126,18 +128,18 @@ public class StatsView extends View implements OnScaleGestureListener, GestureDe
         Calendar startDay = (Calendar) lastDay.clone();
         startDay.add(Calendar.DATE, -dayValues.length + 1);
         int beginDay = startDay.get(Calendar.DAY_OF_WEEK);
-        weekValues = new int[dayValues.length / 7 + 2];
         int firstWeekDays = 8 - beginDay;
         int weeks = (int) Math.ceil((double)(dayValues.length - firstWeekDays)/7) + 1;
+        int count = 0;
         weekValues = new int[weeks];
-        for (int i = 0; i < firstWeekDays && dataPoints < dayValues.length; i++) {
-            weekValues[0] += dayValues[dataPoints];
-            dataPoints++;
+        for (int i = 0; i < firstWeekDays && count < dayValues.length; i++) {
+            weekValues[0] += dayValues[count];
+            count++;
         }
-        for (int i = 1; dataPoints < dayValues.length; i++) {
-            for (int j = 0; j < 7 && dataPoints < dayValues.length; j++) {
-                weekValues[i] += dayValues[dataPoints];
-                dataPoints++;
+        for (int i = 1; count < dayValues.length; i++) {
+            for (int j = 0; j < 7 && count < dayValues.length; j++) {
+                weekValues[i] += dayValues[count];
+                count++;
             }
         }
     }
@@ -186,9 +188,10 @@ public class StatsView extends View implements OnScaleGestureListener, GestureDe
                 }
                 break;
             default:
-                Log.e(TAG, "Stats for required view " + viewToSet + " not implemented yet");
+                Log.e(TAG, "Max calculation for required view " + viewToSet + " not implemented yet");
         }
         calculateDataPoints();
+        calculateSizes();
         invalidate();
     }
 
@@ -210,16 +213,18 @@ public class StatsView extends View implements OnScaleGestureListener, GestureDe
 
     @Override
     protected void onDraw(Canvas canvas) {
+        clearScreen(canvas);
         if (!init) {
             postInvalidateDelayed(50);
             Log.e(TAG, "Data not set");
             return;
         }
-        clearScreen(canvas);
         drawGraph(canvas);
     }
 
     private void clearScreen(Canvas canvas) {
+        if(paint == null)
+            paint = new Paint();
         int prevColor = paint.getColor();
         paint.setColor(bgColor);
         canvas.drawRect(0, 0, getRight(), getBottom(), paint);
@@ -333,18 +338,18 @@ public class StatsView extends View implements OnScaleGestureListener, GestureDe
         paint.setColor(prevColor);
     }
 
-    private void calculateFontSize(boolean shouldValBeAdded) {
+    private void calculateFontSize(boolean isOverlay) {
         paint.setTextSize(40);
         String txt = null;
         switch (currentView) {
             case DAY_VIEW:
                 txt = "20/07";
-                if (shouldValBeAdded)
+                if (isOverlay)
                     txt = "20/";
                 break;
             case WEEK_VIEW:
                 txt = "20/07 -> 26/07";
-                if (shouldValBeAdded)
+                if (isOverlay)
                     txt = "20/07 -"; /*If val is added, then it is the main display text,
                      whose size should be bigger*/
                 break;
@@ -408,6 +413,10 @@ public class StatsView extends View implements OnScaleGestureListener, GestureDe
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
+        calculateSizes();
+    }
+
+    private void calculateSizes() {
         marginHeight = getHeight() * MARGIN_RATIO;
         int visiblePoints;
         if (dataPoints < MAX_POINTS)
@@ -416,7 +425,7 @@ public class StatsView extends View implements OnScaleGestureListener, GestureDe
         space = getWidth() / (visiblePoints + 1);
         drawingHeight = getHeight() - 2 * marginHeight;
         marginWidth = getWidth() * WIDTH_MARGIN_RATIO;
-        cameraX = getWidth();
+        cameraX = space * zoom * (dataPoints - 1) - getWidth()/2;
     }
 
     @Override

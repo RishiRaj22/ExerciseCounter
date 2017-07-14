@@ -33,6 +33,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -65,6 +66,10 @@ public class StatsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_stats);
         ButterKnife.bind(this);
         sessions = getIntent().getParcelableArrayListExtra("sessions");
+        if(sessions == null || sessions.size() <= 0 || sessions.get(0) == null) {
+            Toast.makeText(this,"No stats available",Toast.LENGTH_LONG).show();
+            return;
+        }
         String name = sessions.get(0).getName();
         final String[] sessionNameList = new String[sessions.size()];
         for (int i = 0; i < sessions.size(); i++) {
@@ -129,6 +134,7 @@ public class StatsActivity extends AppCompatActivity {
             }
             statsView.addValues(values, calendar, statsView.getCurrentView());
         } catch (IOException e) {
+            statsView.addValues(null,null,StatsView.DAY_VIEW);
             e.printStackTrace();
         }
     }
