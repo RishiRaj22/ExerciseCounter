@@ -32,6 +32,7 @@ import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.hamcrest.Matchers;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,7 +48,10 @@ import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.startsWith;
 
 
 /**
@@ -55,7 +59,7 @@ import static org.hamcrest.Matchers.not;
  */
 @RunWith(AndroidJUnit4.class)
 public class SessionInstrumentedTest {
-    private static final int SIZE = 3;
+    private static final int SIZE = 3; // Keep it single digit
     private static final String SESSION = "Session #";
     private static final String EXERCISE = "Ex #";
 
@@ -94,16 +98,14 @@ public class SessionInstrumentedTest {
 
                 //Check whether the exercise is added in displayed sessions
                 onView(withId(R.id.exercise_edit_list))
-                        .perform(RecyclerViewActions.actionOnItem(
-                                hasDescendant(withText(name)),
-                                click()));
+                        .perform(RecyclerViewActions.actionOnItemAtPosition(j,click()));
                 if (autoplay)
                     onView(withId(R.id.autoplay)).check(ViewAssertions.matches(isChecked()));
                 else onView(withId(R.id.autoplay)).check(ViewAssertions.matches(not(isChecked())));
                 onView(withId(R.id.exercise_name)).check(ViewAssertions.matches(withText(name)));
-                onView(withId(R.id.num_turns)).check(ViewAssertions.matches(withText("" + turns)));
-                onView(withId(R.id.time_per_turn)).check(ViewAssertions.matches(withText("" + tpt)));
-                onView(withId(R.id.gap_between_turns)).check(ViewAssertions.matches(withText("" + gbt)));
+                onView(withId(R.id.num_turns)).check(ViewAssertions.matches(withText(Matchers.startsWith("" + turns))));
+                onView(withId(R.id.time_per_turn)).check(ViewAssertions.matches(withText(Matchers.startsWith("" + tpt))));
+                onView(withId(R.id.gap_between_turns)).check(ViewAssertions.matches(withText(Matchers.startsWith("" + gbt))));
 
                 Espresso.closeSoftKeyboard();
                 Espresso.pressBack();
@@ -123,15 +125,6 @@ public class SessionInstrumentedTest {
         onView(withId(R.id.sessions_list)).perform(RecyclerViewActions.actionOnItemAtPosition(1, swipeRight()));
         onView(withText(R.string.no)).perform(click());
         onView(withId(R.id.sessions_list)).check(RecyclerViewItemCountAssertion.withItemCount(SIZE - 1));
-
-        for (int i = 1; i < SIZE ; i++) {
-            onView(withId(R.id.sessions_list))
-                    .perform(RecyclerViewActions.actionOnItem(
-                            hasDescendant(withText(SESSION + i)),
-                            click()));
-            pressBack();
-            onView(withText("yes")).perform(click());
-        }
     }
 
 }
