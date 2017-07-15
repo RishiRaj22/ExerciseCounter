@@ -54,6 +54,8 @@ public class StatsView extends View implements OnScaleGestureListener, GestureDe
     private static final String TAG = "STATS_VIEW";
     private static final float MARGIN_RATIO = 0.1f;
     private static final int VISIBLE_LABELS = 3;
+    private static final int GRID_WIDTH = 5;
+    private static final int LINE_WIDTH = 20;
     Calendar lastDay;
     int[] dayValues;
     int[] weekValues;
@@ -89,17 +91,18 @@ public class StatsView extends View implements OnScaleGestureListener, GestureDe
 
     /**
      * The values from the activity/fragment is added to the view from here
-     * @param dayValues The values of array containing sessions completed per day
-     * @param startDay The day the first session was performed
+     *
+     * @param dayValues   The values of array containing sessions completed per day
+     * @param startDay    The day the first session was performed
      * @param currentView The currentView, which is either DAY_VIEW or WEEK_VIEW
      */
     public void addValues(int[] dayValues, Calendar startDay, int currentView) {
-        if(dayValues == null) {
+        if (dayValues == null) {
             init = false;
             postInvalidate();
             return;
         }
-        if(this.dayValues != dayValues)
+        if (this.dayValues != dayValues)
             init = false;
         this.dayValues = dayValues;
         this.lastDay = startDay;
@@ -113,6 +116,7 @@ public class StatsView extends View implements OnScaleGestureListener, GestureDe
     private void init() {
         initTouch();
         paint = new Paint();
+        paint.setAntiAlias(true);
         paint.setColor(Color.WHITE);
         initWeekValues();
         Log.d(TAG, "Initialised");
@@ -129,7 +133,7 @@ public class StatsView extends View implements OnScaleGestureListener, GestureDe
         startDay.add(Calendar.DATE, -dayValues.length + 1);
         int beginDay = startDay.get(Calendar.DAY_OF_WEEK);
         int firstWeekDays = 8 - beginDay;
-        int weeks = (int) Math.ceil((double)(dayValues.length - firstWeekDays)/7) + 1;
+        int weeks = (int) Math.ceil((double) (dayValues.length - firstWeekDays) / 7) + 1;
         int count = 0;
         weekValues = new int[weeks];
         for (int i = 0; i < firstWeekDays && count < dayValues.length; i++) {
@@ -166,36 +170,6 @@ public class StatsView extends View implements OnScaleGestureListener, GestureDe
     }
 
     /**
-     * Used to change view from DAY_VIEW to WEEK_VIEW and vice versa
-     * @param viewToSet The view to be set
-     */
-    public void setCurrentView(int viewToSet) {
-        if(dayValues == null)
-            return;
-        this.currentView = viewToSet;
-        max = 0;
-        switch (viewToSet) {
-            case DAY_VIEW:
-                for (int b : dayValues) {
-                    if (b > max)
-                        max = b;
-                }
-                break;
-            case WEEK_VIEW:
-                for (int b : weekValues) {
-                    if (b > max)
-                        max = b;
-                }
-                break;
-            default:
-                Log.e(TAG, "Max calculation for required view " + viewToSet + " not implemented yet");
-        }
-        calculateDataPoints();
-        calculateSizes();
-        invalidate();
-    }
-
-    /**
      * Used to set value of dataPoints when changing currentView
      */
     private void calculateDataPoints() {
@@ -207,7 +181,7 @@ public class StatsView extends View implements OnScaleGestureListener, GestureDe
                 dataPoints = weekValues.length;
                 break;
             default:
-                Log.e(TAG,"Data point calculation not implemented yet");
+                Log.e(TAG, "Data point calculation not implemented yet");
         }
     }
 
@@ -223,8 +197,10 @@ public class StatsView extends View implements OnScaleGestureListener, GestureDe
     }
 
     private void clearScreen(Canvas canvas) {
-        if(paint == null)
+        if (paint == null) {
             paint = new Paint();
+            paint.setAntiAlias(true);
+        }
         int prevColor = paint.getColor();
         paint.setColor(bgColor);
         canvas.drawRect(0, 0, getRight(), getBottom(), paint);
@@ -253,11 +229,13 @@ public class StatsView extends View implements OnScaleGestureListener, GestureDe
             drawLineFrom(canvas, i);
             drawPoint(canvas, i);
         }
+        drawOverlay(canvas,focussed);
     }
 
     private void drawMarkings(Canvas canvas) {
         int prevColor = paint.getColor();
         paint.setColor(Color.DKGRAY);
+        paint.setStrokeWidth(GRID_WIDTH);
         paint.setTextSize(marginWidth / 1.2f);
         if (max > GRAPH_PLOTS) {
             for (int i = 0; i <= GRAPH_PLOTS; i++) {
@@ -277,42 +255,58 @@ public class StatsView extends View implements OnScaleGestureListener, GestureDe
     }
 
     private void drawLineFrom(Canvas canvas, int pos) {
+        if(pos >= dataPoints - 1)
+            return;
         int prevColor = paint.getColor();
-        float startX = space * zoom * (pos) - cameraX;
-        float endX = space * zoom * (pos + 1) - cameraX;
-        float startY = 0, endY = 0;
-        switch (currentView) {
-            case DAY_VIEW:
-                if (pos + 1 >= dataPoints) {
-                    Log.d(TAG, "Line not drawn from last index");
-                    return;
-                }
-                startY = dayValues[pos] * drawingHeight / max;
-                endY = dayValues[pos + 1] * drawingHeight / max;
-                break;
-            case WEEK_VIEW:
-                if (pos + 1 >= dataPoints) {
-                    Log.d(TAG, "Line not drawn from last index");
-                    return;
-                }
-                startY = weekValues[pos] * drawingHeight / max;
-                endY = weekValues[pos + 1] * drawingHeight / max;
-                break;
-            default:
-                Log.e(TAG, "Draw line for required view " + currentView + "not implemented yet");
-        }
+        paint.setStrokeWidth(LINE_WIDTH);
+        float startX = getXForPosition(pos);
+        float endX = getXForPosition(pos + 1);
+        float startY = getYForPosition(pos);
+        float endY = getYForPosition(pos + 1);
         paint.setColor(lineColor);
-        canvas.drawLine(startX, getHeight() - marginHeight - startY, endX, getHeight() - marginHeight - endY, paint);
+        canvas.drawLine(startX, startY, endX, endY, paint);
         paint.setColor(prevColor);
     }
 
-
     private void drawPoint(Canvas canvas, int pos) {
+        if(pos >= dataPoints) return;
         int prevColor = paint.getColor();
         paint.setColor(accentColor);
         float x, y;
+        x = getXForPosition(pos);
+        y = getYForPosition(pos);
+        canvas.drawCircle(x, y, marginHeight / (3 / zoom), paint);
+
+        if (pos % labelGap == 0) {
+            drawLabel(canvas, pos);
+        }
+        paint.setColor(prevColor);
+    }
+
+    private void drawLabel(Canvas canvas, int pos) {
+        float x = getXForPosition(pos);
+        int col = paint.getColor();
+        paint.setColor(Color.GRAY);
+        String txt = getDateTextForPosition(pos, false);
+        float desiredSize = labelGap * space * zoom * 0.7f;
+        paint.setTextSize(paint.getTextSize() * desiredSize / paint.measureText(txt));
+        if (-paint.ascent() > marginHeight) {
+            desiredSize = (marginHeight * 0.7f);
+            paint.setTextSize(paint.getTextSize() * desiredSize / -paint.ascent());
+        }
+        canvas.drawText(getDateTextForPosition(pos, false), x - desiredSize / 2,
+                getHeight(), paint);
+        paint.setColor(col);
+    }
+
+    private float getXForPosition(int pos) {
+        float x;
         x = space * zoom * (pos) - cameraX;
-        y = 0;
+        return x;
+    }
+
+    private float getYForPosition(int pos) {
+        float y = 0;
         switch (currentView) {
             case DAY_VIEW:
                 y = dayValues[pos] * drawingHeight / max;
@@ -323,45 +317,37 @@ public class StatsView extends View implements OnScaleGestureListener, GestureDe
             default:
                 Log.e(TAG, "Draw point for required view " + currentView + "not implemented yet");
         }
-        canvas.drawCircle(x, getHeight() - marginHeight - y, marginHeight / (3 / zoom), paint);
-
-        if (pos % labelGap == 0) {
-            calculateFontSize(false);
-            String txt = getDateTextForPosition(pos, false);
-            canvas.drawText(txt, x - paint.measureText(txt) / 2, getHeight(), paint);
-        }
-        if (focussed == pos) {
-            calculateFontSize(true);
-            String txt = getDateTextForPosition(pos, true);
-            canvas.drawText(txt, (getWidth() - paint.measureText(txt)) / 2, marginHeight, paint);
-        }
-        paint.setColor(prevColor);
+        y = getHeight() - marginHeight - y;
+        return y;
     }
 
-    private void calculateFontSize(boolean isOverlay) {
-        paint.setTextSize(40);
-        String txt = null;
-        switch (currentView) {
-            case DAY_VIEW:
-                txt = "20/07";
-                if (isOverlay)
-                    txt = "20/";
-                break;
-            case WEEK_VIEW:
-                txt = "20/07 -> 26/07";
-                if (isOverlay)
-                    txt = "20/07 -"; /*If val is added, then it is the main display text,
-                     whose size should be bigger*/
-                break;
-            default:
-                Log.e(TAG, "Calculate font size not implemented for view " + currentView);
-        }
-        paint.setTextSize(40 * (space * zoom * (labelGap * 0.6f)) / paint.measureText(txt));
+    /**
+     * Draws the overlay text for current selected date graph point
+     *
+     * @param canvas The canvas on which the overlay will be drawn
+     * @param pos    The position of the item for which the text is drawn
+     */
+    private void drawOverlay(Canvas canvas, int pos) {
+        if(pos < 0 || pos >= dataPoints)
+            return;
+        float x = getXForPosition(pos);
+        float y = getYForPosition(pos);
+        String txt = getDateTextForPosition(pos, true);
+        float desiredSize = space * zoom * labelGap;
+        paint.setTextSize(paint.getTextSize() * desiredSize / paint.measureText(txt));
+        if (x > getWidth() / 2)
+            x -= desiredSize;
+        paint.setColor(Color.GRAY);
+        canvas.drawRect(x - 5, y + paint.ascent(), x + desiredSize + 5, y + paint.descent(), paint);
+        paint.setColor(Color.BLACK);
+        canvas.drawText(txt, x, y, paint);
+
     }
 
     /**
      * Gets the text which can be used to mark a date
-     * @param pos The position for which the text is to be found out
+     *
+     * @param pos     The position for which the text is to be found out
      * @param withVal If the value at that position is to be added at the end of the date
      * @return
      */
@@ -371,7 +357,7 @@ public class StatsView extends View implements OnScaleGestureListener, GestureDe
         SimpleDateFormat dateFormat;
         String ret;
         int val;
-        dateFormat = new SimpleDateFormat("dd/MM");
+        dateFormat = new SimpleDateFormat("dd/MM/yy");
         switch (currentView) {
             case DAY_VIEW:
                 val = dayValues[pos];
@@ -402,12 +388,42 @@ public class StatsView extends View implements OnScaleGestureListener, GestureDe
             ret += " : " + val;
         Log.d(TAG, "LABEL GAP:" + labelGap);
         Log.d(TAG, "TEXT SIZE:" + paint.getTextSize());
-        paint.setColor(Color.GRAY);
         return ret;
     }
 
     public int getCurrentView() {
         return currentView;
+    }
+
+    /**
+     * Used to change view from DAY_VIEW to WEEK_VIEW and vice versa
+     *
+     * @param viewToSet The view to be set
+     */
+    public void setCurrentView(int viewToSet) {
+        if (dayValues == null)
+            return;
+        this.currentView = viewToSet;
+        max = 0;
+        switch (viewToSet) {
+            case DAY_VIEW:
+                for (int b : dayValues) {
+                    if (b > max)
+                        max = b;
+                }
+                break;
+            case WEEK_VIEW:
+                for (int b : weekValues) {
+                    if (b > max)
+                        max = b;
+                }
+                break;
+            default:
+                Log.e(TAG, "Max calculation for required view " + viewToSet + " not implemented yet");
+        }
+        calculateDataPoints();
+        calculateSizes();
+        invalidate();
     }
 
     @Override
@@ -425,7 +441,7 @@ public class StatsView extends View implements OnScaleGestureListener, GestureDe
         space = getWidth() / (visiblePoints + 1);
         drawingHeight = getHeight() - 2 * marginHeight;
         marginWidth = getWidth() * WIDTH_MARGIN_RATIO;
-        cameraX = space * zoom * (dataPoints - 1) - getWidth()/2;
+        cameraX = space * zoom * (dataPoints - 1) - getWidth() / 2;
     }
 
     @Override
@@ -444,7 +460,7 @@ public class StatsView extends View implements OnScaleGestureListener, GestureDe
         zoom *= detector.getScaleFactor();
         focusX = detector.getFocusX() + cameraX;
         cameraX += focusX * (detector.getScaleFactor() - 1);
-        Log.d(TAG,"FOCUS X : "+ focusX);
+        Log.d(TAG, "FOCUS X : " + focusX);
         postInvalidate();
         return true;
     }

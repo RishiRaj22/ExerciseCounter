@@ -271,6 +271,8 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
         if (oldName != null) {
             String oldFile = "session_" + oldName;
             String newFile = "session_" + session.getName();
+            if(oldFile.equals(newFile))
+                return;
             try {
                 FileInputStream inputStream = this.openFileInput(oldFile);
                 FileChannel source = inputStream.getChannel();
