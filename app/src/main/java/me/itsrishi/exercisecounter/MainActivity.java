@@ -201,7 +201,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
                 break;
             case R.id.action_stat:
                 intent = new Intent(MainActivity.this, StatsActivity.class);
-                intent.putExtra("sessions",sessions);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 break;

@@ -25,7 +25,6 @@
 
 package me.itsrishi.exercisecounter;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -33,11 +32,15 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -61,7 +64,7 @@ import me.itsrishi.exercisecounter.misc.ExerciseTouchHelperCallback;
 import me.itsrishi.exercisecounter.models.Exercise;
 import me.itsrishi.exercisecounter.models.Session;
 
-public class SessionCreateActivity extends Activity implements View.OnClickListener,
+public class SessionCreateActivity extends AppCompatActivity implements View.OnClickListener,
         ExerciseModificationListener, RecyclerViewClickListener {
 
     @BindView(R.id.session_name_set)
@@ -81,12 +84,16 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
     int index;
     @BindView(R.id.exercise_plus_fab)
     FloatingActionButton exercisePlusFab;
+    @BindView(R.id.session_create_activity_toolbar)
+    Toolbar toolBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_session_create);
         ButterKnife.bind(this);
+        setSupportActionBar(toolBar);
+
         if (savedInstanceState != null) {
             index = savedInstanceState.getInt("index");
             sessions = savedInstanceState.getParcelableArrayList("sessions");
@@ -114,7 +121,8 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
         if (exercises != null) {
             prev = new ArrayList<>(exercises);
             temp = new ArrayList<>(exercises);
-        }
+            setTitle(R.string.title_activity_session_edit);
+        } else setTitle(R.string.title_activity_session_create);
 
         ArrayList<ExerciseModificationListener> listeners = new ArrayList<>(1);
         listeners.add(this);
@@ -254,7 +262,7 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
             return true;
         }
         for (int i = 0; i != index && i < sessions.size(); i++) {
-            if(sessions.get(i).getName().equals(session.getName())) {
+            if (sessions.get(i).getName().equals(session.getName())) {
                 Toast.makeText(this, "Session name already exists", Toast.LENGTH_LONG).show();
                 return true;
             }
@@ -271,7 +279,7 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
         if (oldName != null) {
             String oldFile = "session_" + oldName;
             String newFile = "session_" + session.getName();
-            if(oldFile.equals(newFile))
+            if (oldFile.equals(newFile))
                 return;
             try {
                 FileInputStream inputStream = this.openFileInput(oldFile);
@@ -330,5 +338,31 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
             ex.printStackTrace();
         }
         return null;
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
+        switch(item.getItemId()) {
+            case R.id.action_favorite:
+                Toast.makeText(this,"Fav pressed",Toast.LENGTH_LONG).show();
+                break;
+            case R.id.action_settings:
+                intent = new Intent(SessionCreateActivity.this, SettingsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                break;
+            case R.id.action_stat:
+                intent = new Intent(SessionCreateActivity.this, StatsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                break;
+        }
+        return true;
     }
 }

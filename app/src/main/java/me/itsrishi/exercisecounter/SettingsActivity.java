@@ -96,6 +96,7 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
         ButterKnife.bind(this);
         setSupportActionBar(toolBar);
+        setTitle(R.string.title_activity_settings);
         editor = getSharedPreferences(PREFS,MODE_PRIVATE).edit();
         if(mute) {
             tts = false;
@@ -330,17 +331,22 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu,menu);
+        MenuItem currItem = menu.findItem(R.id.action_settings);
+        currItem.setVisible(false);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent = new Intent();
         switch(item.getItemId()) {
             case R.id.action_favorite:
                 Toast.makeText(this,"Fav pressed",Toast.LENGTH_LONG).show();
                 break;
             case R.id.action_stat:
-                Toast.makeText(this,"Stats pressed",Toast.LENGTH_LONG).show();
+                intent = new Intent(SettingsActivity.this, StatsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
                 break;
         }
         return true;

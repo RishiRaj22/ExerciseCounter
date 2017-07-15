@@ -36,7 +36,10 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -64,12 +67,16 @@ public class ImportSessionActivity extends AppCompatActivity {
     @BindView(R.id.session_tick_fab)
     FloatingActionButton sessionTickFab;
     String fileLoc;
+    @BindView(R.id.import_activity_toolbar)
+    Toolbar toolBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.import_session);
         ButterKnife.bind(this);
+        setSupportActionBar(toolBar);
+        setTitle(getString(R.string.title_import_session_activity));
         fileLoc = getIntent().getStringExtra("file");
         Log.d(TAG, (fileLoc == null) ? "null" : fileLoc);
         fetchSessions();
@@ -163,7 +170,7 @@ public class ImportSessionActivity extends AppCompatActivity {
 
     public boolean isStoragePermissionGranted() {
         if (Build.VERSION.SDK_INT >= 23) {
-            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     == PackageManager.PERMISSION_GRANTED) {
                 Log.v(TAG, "Permission is granted");
                 return true;
@@ -185,5 +192,32 @@ public class ImportSessionActivity extends AppCompatActivity {
             Log.v(TAG, "Permission: " + permissions[0] + "was " + grantResults[0]);
             fetchNewSessions();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
+        switch (item.getItemId()) {
+            case R.id.action_favorite:
+                Toast.makeText(this, "Fav pressed", Toast.LENGTH_LONG).show();
+                break;
+            case R.id.action_settings:
+                intent = new Intent(ImportSessionActivity.this, SettingsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                break;
+            case R.id.action_stat:
+                intent = new Intent(ImportSessionActivity.this, StatsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                break;
+        }
+        return true;
     }
 }

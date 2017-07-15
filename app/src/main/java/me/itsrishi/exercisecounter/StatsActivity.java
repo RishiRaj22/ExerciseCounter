@@ -25,20 +25,24 @@
 
 package me.itsrishi.exercisecounter;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -49,7 +53,7 @@ import me.itsrishi.exercisecounter.models.Session;
 import me.itsrishi.exercisecounter.views.StatsView;
 
 public class StatsActivity extends AppCompatActivity {
-//
+    //
 //    @BindView(R.id.debugTxt)
 //    TextView debugTxt;
     @BindView(R.id.stats_view)
@@ -59,15 +63,29 @@ public class StatsActivity extends AppCompatActivity {
     Spinner statSessionChooser;
     @BindView(R.id.stat_view_chooser)
     Spinner statViewChooser;
+    @BindView(R.id.stats_activity_toolbar)
+    Toolbar toolBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stats);
         ButterKnife.bind(this);
-        sessions = getIntent().getParcelableArrayListExtra("sessions");
-        if(sessions == null || sessions.size() <= 0 || sessions.get(0) == null) {
-            Toast.makeText(this,"No stats available",Toast.LENGTH_LONG).show();
+        setSupportActionBar(toolBar);
+        setTitle(R.string.title_activity_stats);
+
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            FileInputStream fileInputStream = this.openFileInput("sessions.json");
+            sessions = mapper.readValue(fileInputStream, mapper.getTypeFactory().constructCollectionType(ArrayList.class, Session.class));
+            fileInputStream.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return;
+        }
+
+        if (sessions == null || sessions.size() <= 0 || sessions.get(0) == null) {
+            Toast.makeText(this, "No stats available", Toast.LENGTH_LONG).show();
             return;
         }
         String name = sessions.get(0).getName();
@@ -101,6 +119,7 @@ public class StatsActivity extends AppCompatActivity {
                         Log.e("StatsActivity", "View chooser spinner given bad value");
                 }
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
@@ -134,8 +153,31 @@ public class StatsActivity extends AppCompatActivity {
             }
             statsView.addValues(values, calendar, statsView.getCurrentView());
         } catch (IOException e) {
-            statsView.addValues(null,null,StatsView.DAY_VIEW);
+            statsView.addValues(null, null, StatsView.DAY_VIEW);
             e.printStackTrace();
         }
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu,menu);
+        MenuItem currItem = menu.findItem(R.id.action_stat);
+        currItem.setVisible(false);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
+        switch(item.getItemId()) {
+            case R.id.action_favorite:
+                Toast.makeText(this,"Fav pressed",Toast.LENGTH_LONG).show();
+                break;
+            case R.id.action_settings:
+                intent = new Intent(StatsActivity.this, SettingsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                break;
+        }
+        return true;
     }
 }

@@ -34,6 +34,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.SwitchCompat;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Toast;
@@ -60,18 +63,22 @@ public class ExerciseCreateActivity extends AppCompatActivity implements Compoun
     AppCompatEditText exerciseName;
     @BindView(R.id.autoplay)
     SwitchCompat autoplay;
+    @BindView(R.id.ex_create_activity_toolbar)
+    Toolbar toolBar;
     private Exercise exercise;
     private Session session;
     private ArrayList<Session> sessions;
     private int index;
     private int position;
-    private boolean shouldAutoplay;
+    private boolean shouldAutoplay = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercise_create);
         ButterKnife.bind(this);
+        setSupportActionBar(toolBar);
+        setTitle(R.string.title_activity_exercise_create);
 
         if (savedInstanceState != null) {
             sessions = savedInstanceState.getParcelableArrayList("sessions");
@@ -93,6 +100,7 @@ public class ExerciseCreateActivity extends AppCompatActivity implements Compoun
         }
 
         if (exercise != null) {
+            setTitle(R.string.title_activity_session_edit);
             exerciseName.setText(exercise.getName());
             numTurns.setText(String.format(Locale.ENGLISH,"%d",exercise.getTurns()));
             timePerTurn.setText(String.format(Locale.ENGLISH,"%f",exercise.getTimePerTurn()));
@@ -180,6 +188,32 @@ public class ExerciseCreateActivity extends AppCompatActivity implements Compoun
         outState.putParcelableArrayList("sessions", sessions);
         outState.putInt("index", index);
         outState.putInt("position", position);
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
+        switch(item.getItemId()) {
+            case R.id.action_favorite:
+                Toast.makeText(this,"Fav pressed",Toast.LENGTH_LONG).show();
+                break;
+            case R.id.action_settings:
+                intent = new Intent(ExerciseCreateActivity.this, SettingsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                break;
+            case R.id.action_stat:
+                intent = new Intent(ExerciseCreateActivity.this, StatsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                break;
+        }
+        return true;
     }
 
 }

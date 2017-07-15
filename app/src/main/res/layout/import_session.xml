@@ -30,6 +30,11 @@
     android:layout_height="match_parent"
     tools:context="me.itsrishi.exercisecounter.ImportSessionActivity">
 
+    <include
+        android:id="@+id/import_activity_toolbar"
+        layout="@layout/toolbar"
+        ></include>
+
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/session_import_intro"
         android:layout_width="match_parent"
