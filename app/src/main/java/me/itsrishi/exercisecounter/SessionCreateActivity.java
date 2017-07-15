@@ -328,7 +328,6 @@ public class SessionCreateActivity extends Activity implements View.OnClickListe
             } else return sessionList.get(index).getName();
         } catch (IOException ex) {
             ex.printStackTrace();
-            sessions = new ArrayList<>();
         }
         return null;
     }

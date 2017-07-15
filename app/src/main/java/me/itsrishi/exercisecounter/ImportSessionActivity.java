@@ -42,6 +42,7 @@ import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -118,7 +119,7 @@ public class ImportSessionActivity extends AppCompatActivity {
                 String scheme = uri.getScheme();
                 try {
                     if (scheme.equals("file")) {
-                        inStream = openFileInput(uri.getEncodedPath());
+                        inStream = new FileInputStream(uri.getEncodedPath());
                     }
                     if (scheme.equals("content")) {
                         ContentResolver cr = getContentResolver();
@@ -150,8 +151,8 @@ public class ImportSessionActivity extends AppCompatActivity {
     private void fetchSessions() {
         ObjectMapper mapper = new ObjectMapper();
         try {
-
-            FileInputStream fileInputStream = this.openFileInput("sessions.json");
+            File file = new File("sessions.json");
+            FileInputStream fileInputStream = new FileInputStream(file);
             sessions = mapper.readValue(fileInputStream, mapper.getTypeFactory()
                     .constructCollectionType(ArrayList.class, Session.class));
             fileInputStream.close();

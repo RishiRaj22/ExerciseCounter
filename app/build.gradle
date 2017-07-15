@@ -32,8 +32,8 @@ android {
         applicationId "me.itsrishi.exercisecounter"
         minSdkVersion 11
         targetSdkVersion 25
-        versionCode 4
-        versionName "0.1.1-alpha"
+        versionCode 5
+        versionName "0.1.2-alpha"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }

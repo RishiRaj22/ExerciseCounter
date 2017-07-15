@@ -120,12 +120,16 @@ public class SettingsActivity extends AppCompatActivity {
             List<Uri> files = Utils.getSelectedFilesFromResult(intent);
             for (Uri uri : files) {
                 try {
-                    File file = Utils.getFileForUri(uri);
-                    // TODO: 09-07-2017 Get this name as a user input
-                    file = new File(file, "sessions.excount");
+                    File given = Utils.getFileForUri(uri);
+                    File file = new File(given.getPath()+".excount");
+                    given.delete();
                     FileInputStream inputStream = this.openFileInput("sessions.json");
                     FileChannel source = inputStream.getChannel();
+                    // To prevent destination FileChannel from being empty
                     FileOutputStream outputStream = new FileOutputStream(file);
+                    outputStream.write(255);
+                    outputStream.close();
+                    outputStream = new FileOutputStream(file);
                     FileChannel dest = outputStream.getChannel();
                     dest.transferFrom(source, 0, source.size());
                     source.close();
@@ -247,9 +251,8 @@ public class SettingsActivity extends AppCompatActivity {
                 Intent intent = new Intent(SettingsActivity.this, FilePickerActivity.class);
                 intent.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, false);
                 intent.putExtra(FilePickerActivity.EXTRA_ALLOW_CREATE_DIR, true);
-                intent.putExtra(FilePickerActivity.EXTRA_MODE, FilePickerActivity.MODE_DIR);
+                intent.putExtra(FilePickerActivity.EXTRA_MODE, FilePickerActivity.MODE_NEW_FILE);
                 intent.putExtra(FilePickerActivity.EXTRA_START_PATH, Environment.getExternalStorageDirectory().getPath());
-
                 startActivityForResult(intent, EXPORT_CODE);
                 break;
             case R.id.settings_entry_remove_all:
@@ -260,8 +263,9 @@ public class SettingsActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 File dir = getFilesDir();
-                                File file = new File(dir, "sessions.json");
-                                file.delete();
+                                for(File file: dir.listFiles()) {
+                                    file.delete();
+                                }
                             }
                         })
                         .setPositiveButton(R.string.no, new DialogInterface.OnClickListener() {

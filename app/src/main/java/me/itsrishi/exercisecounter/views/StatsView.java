@@ -236,13 +236,15 @@ public class StatsView extends View implements OnScaleGestureListener, GestureDe
         int prevColor = paint.getColor();
         paint.setColor(Color.DKGRAY);
         paint.setStrokeWidth(GRID_WIDTH);
-        paint.setTextSize(marginWidth / 1.2f);
+        float desiredHeight = Math.min(marginHeight - 5,drawingHeight / max);
+        float currentHeight = paint.descent() - paint.ascent();
+        paint.setTextSize(paint.getTextSize() * desiredHeight / currentHeight);
         if (max > GRAPH_PLOTS) {
             for (int i = 0; i <= GRAPH_PLOTS; i++) {
                 float ratio = (float) (max * i / GRAPH_PLOTS) / max;
                 float y = marginHeight + drawingHeight * ratio;
                 canvas.drawLine(0, y, getWidth(), y, paint);
-                canvas.drawText((int) (max - ratio * max) + "", 0, y, paint);
+                canvas.drawText((int) (max - ratio * max) + "", 0, y - 5, paint);
             }
         } else {
             for (int i = 0; i <= max; i++) {
@@ -258,7 +260,7 @@ public class StatsView extends View implements OnScaleGestureListener, GestureDe
         if(pos >= dataPoints - 1)
             return;
         int prevColor = paint.getColor();
-        paint.setStrokeWidth(LINE_WIDTH);
+        paint.setStrokeWidth(LINE_WIDTH * zoom);
         float startX = getXForPosition(pos);
         float endX = getXForPosition(pos + 1);
         float startY = getYForPosition(pos);
@@ -333,15 +335,16 @@ public class StatsView extends View implements OnScaleGestureListener, GestureDe
         float x = getXForPosition(pos);
         float y = getYForPosition(pos);
         String txt = getDateTextForPosition(pos, true);
-        float desiredSize = space * zoom * labelGap;
+        float desiredSize = Math.max(getWidth()/5,space * zoom * labelGap * 0.8f);
         paint.setTextSize(paint.getTextSize() * desiredSize / paint.measureText(txt));
         if (x > getWidth() / 2)
             x -= desiredSize;
+        if(y < getHeight()/2)
+            y += paint.descent();
         paint.setColor(Color.GRAY);
         canvas.drawRect(x - 5, y + paint.ascent(), x + desiredSize + 5, y + paint.descent(), paint);
         paint.setColor(Color.BLACK);
         canvas.drawText(txt, x, y, paint);
-
     }
 
     /**
