@@ -71,6 +71,7 @@
 
             <TextView
                 android:id="@+id/gap_label"
+                android:labelFor="@+id/session_gap_set"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="25dp"
@@ -88,12 +89,26 @@
 
         </LinearLayout>
 
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/session_submit"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:imeOptions="actionSend"
-            android:text="Submit" />
+            android:orientation="horizontal"
+            >
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/alarms_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:backgroundTint="@color/colorPrimary"
+                app:srcCompat="@drawable/ic_access_alarms_white_40dp" />
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/session_submit"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:imeOptions="actionSend"
+                android:text="Submit" />
+        </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/exercise_edit_list"
@@ -113,9 +128,9 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_margin="10dp"
-        app:srcCompat="@drawable/ic_add_white_24dp"
         app:borderWidth="0dp"
         app:elevation="4sp"
-        app:rippleColor="#FFFFFF" />
+        app:rippleColor="#FFFFFF"
+        app:srcCompat="@drawable/ic_add_white_24dp" />
 
 </RelativeLayout>

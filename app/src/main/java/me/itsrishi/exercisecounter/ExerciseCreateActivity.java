@@ -175,7 +175,6 @@ public class ExerciseCreateActivity extends AppCompatActivity implements Compoun
         });
         alertBuilder.show();
     }
-
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         this.shouldAutoplay = isChecked;

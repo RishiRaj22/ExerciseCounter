@@ -25,15 +25,14 @@
 
 package me.itsrishi.exercisecounter.listeners;
 
+import me.itsrishi.exercisecounter.models.AlarmTime;
+
 /**
+ * A listener which listens to the state of a dialog
  * @author Rishi Raj
  */
 
-public interface ExerciseModificationListener {
-    /**
-     * Called to notify about modification in exercises through the Recycler view
-     *
-     * @param wasRemoval true: If modification was a removal and false if it was a swap
-     */
-    void onChange(boolean wasRemoval);
+public interface AlarmDialogStateListener {
+    void onSubmit(int index, AlarmTime alarmTime);
+    void onCancel();
 }

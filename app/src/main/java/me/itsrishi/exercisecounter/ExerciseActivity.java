@@ -76,10 +76,8 @@ public class ExerciseActivity extends AppCompatActivity implements IntegerChange
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             session = savedInstanceState.getParcelable("session_exercise");
-            exercises = savedInstanceState.getParcelableArrayList("exercises");
         } else session = getIntent().getParcelableExtra("session_exercise");
-        if (exercises == null)
-            exercises = new ArrayList<>(session.getExercises());
+        exercises = new ArrayList<>(session.getExercises());
 
         setContentView(R.layout.activity_exercise);
         ButterKnife.bind(this);

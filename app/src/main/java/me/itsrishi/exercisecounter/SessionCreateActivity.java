@@ -35,6 +35,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -86,6 +87,8 @@ public class SessionCreateActivity extends AppCompatActivity implements View.OnC
     FloatingActionButton exercisePlusFab;
     @BindView(R.id.session_create_activity_toolbar)
     Toolbar toolBar;
+    @BindView(R.id.alarms_button)
+    AppCompatImageButton alarmsButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,15 +142,7 @@ public class SessionCreateActivity extends AppCompatActivity implements View.OnC
         exercisePlusFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                session.setName(sessionNameSet.getText().toString());
-                try {
-                    session.setGapBetweenExercises(Integer.valueOf(sessionGapSet.getText().toString()));
-                } catch (NumberFormatException ex) {
-                    ex.printStackTrace();
-                }
-                if (index < sessions.size())
-                    sessions.set(index, session);
-                else sessions.add(session);
+                saveSession();
                 int position = 0;
                 if (exercises != null)
                     position = exercises.size();
@@ -168,6 +163,18 @@ public class SessionCreateActivity extends AppCompatActivity implements View.OnC
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                 }
+            }
+        });
+        alarmsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveSession();
+                Intent intent = new Intent(SessionCreateActivity.this, AlarmActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("index", index);
+                intent.putParcelableArrayListExtra("alarms",sessions.get(index).getAlarmTimes());
+                intent.putParcelableArrayListExtra("sessions", sessions);
+                startActivity(intent);
             }
         });
 
@@ -339,18 +346,19 @@ public class SessionCreateActivity extends AppCompatActivity implements View.OnC
         }
         return null;
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu,menu);
+        getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.action_favorite:
-                Toast.makeText(this,"Fav pressed",Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Fav pressed", Toast.LENGTH_LONG).show();
                 break;
             case R.id.action_settings:
                 intent = new Intent(SessionCreateActivity.this, SettingsActivity.class);

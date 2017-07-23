@@ -68,16 +68,16 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         AlarmTime alarmTime = alarmTimes.get(position);
         for (int i = 0; i < 7; i++) {
             TextView textView = holder.textViews[i];
-            int val = 1 >>> i;
+            int val = 1 << i;
             if ((val & alarmTime.getRepeatDays()) == 0)
-                textView.setVisibility(View.INVISIBLE);
+                textView.setVisibility(View.GONE);
             else textView.setVisibility(View.VISIBLE);
         }
         int hours = alarmTime.getHours();
         int mins = alarmTime.getMins();
         boolean am = hours / 12 == 0;
         hours %= 12;
-        holder.currTime.setText(String.format(Locale.ENGLISH, "%d:%d", hours, mins));
+        holder.currTime.setText(String.format(Locale.ENGLISH, "%02d:%02d", hours, mins));
         holder.amOrPm.setText(am ? "AM" : "PM");
         holder.active.setChecked(alarmTime.isActive());
         holder.position = position;
@@ -111,7 +111,6 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
-
         @Override
         public void onClick(View v) {
             clickListener.onClick(position, v);

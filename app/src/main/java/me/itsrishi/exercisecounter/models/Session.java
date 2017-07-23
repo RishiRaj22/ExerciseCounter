@@ -75,6 +75,7 @@ public class Session implements Parcelable {
 
         alarmTimes = null;
         if (in.readByte() == 0x01) {
+            alarmTimes = new ArrayList<>();
             in.readList(alarmTimes, AlarmTime.class.getClassLoader());
         }
     }
@@ -134,7 +135,7 @@ public class Session implements Parcelable {
             dest.writeByte((byte) (0x00));
         } else {
             dest.writeByte((byte) 0x01);
-            dest.writeValue(alarmTimes);
+            dest.writeList(alarmTimes);
         }
     }
 
