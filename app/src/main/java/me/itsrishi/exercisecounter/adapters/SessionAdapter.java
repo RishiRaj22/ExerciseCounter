@@ -88,21 +88,34 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionH
         holder.position = position;
         Calendar calendar = Calendar.getInstance();
         if (sessions.get(position).getAlarmTimes() != null) {
+            int earliestHour = 25, earliestMinute = 61;
             for (AlarmTime alarmTime : sessions.get(position).getAlarmTimes()) {
                 byte val = (byte) (calendar.get(Calendar.DAY_OF_WEEK) - 2);
                 if (val < 0) val += 7;
+                //If alarm is active today
                 if (alarmTime.isActive() && (1 << val & alarmTime.getRepeatDays()) != 0) {
-                    if (calendar.get(Calendar.HOUR_OF_DAY) <= alarmTime.getHours()) {
-                        if (calendar.get(Calendar.MINUTE) <= alarmTime.getMins()) {
-                            holder.scheduledTime.setText(
-                                    String.format(Locale.ENGLISH,
-                                            "%02d:%02d",
-                                            alarmTime.getHours(),
-                                            alarmTime.getMins()));
-                            break;
+                    //If alarm is scheduled for a time ahead of current time, take it in consideration
+                    if (calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE)
+                            <= alarmTime.getHours() * 60 + alarmTime.getMins()) {
+                        //Set earliest hour depending upon values in alarmTime and current earliestHour
+                        if (earliestHour > alarmTime.getHours()) {
+                            earliestHour = alarmTime.getHours();
+                            earliestMinute = alarmTime.getMins();
+                        } else if (earliestHour == alarmTime.getHours()) {
+                            if (earliestMinute > alarmTime.getMins()) {
+                                earliestMinute = alarmTime.getMins();
+                            }
                         }
                     }
                 }
+            }
+            //If earliestHour has a valid value, display it
+            if (earliestHour <= 24) {
+                holder.scheduledTime.setText(
+                        String.format(Locale.ENGLISH,
+                                "%02d:%02d",
+                                earliestHour,
+                                earliestMinute));
             }
         }
     }
