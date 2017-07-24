@@ -25,8 +25,12 @@
 
 package me.itsrishi.exercisecounter;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -62,6 +66,8 @@ import me.itsrishi.exercisecounter.adapters.ExerciseAdapter;
 import me.itsrishi.exercisecounter.listeners.ExerciseModificationListener;
 import me.itsrishi.exercisecounter.listeners.RecyclerViewClickListener;
 import me.itsrishi.exercisecounter.misc.ExerciseTouchHelperCallback;
+import me.itsrishi.exercisecounter.misc.NotificationPublisher;
+import me.itsrishi.exercisecounter.misc.NotificationRefresher;
 import me.itsrishi.exercisecounter.models.Exercise;
 import me.itsrishi.exercisecounter.models.Session;
 
@@ -246,6 +252,14 @@ public class SessionCreateActivity extends AppCompatActivity implements View.OnC
             mapper.writeValue(outputStream, sessions);
             outputStream.close();
             Log.d("JSON-VAL", "sessions.json:\n" + mapper.writeValueAsString(sessions));
+            SharedPreferences prefs = getSharedPreferences(SettingsActivity.PREFS,MODE_PRIVATE);
+            int val = prefs.getInt(NotificationPublisher.ITERATION_COUNT,0) + 1;
+            prefs.edit().putInt(NotificationPublisher.ITERATION_COUNT,val).apply();
+            Intent intent = new Intent(this,NotificationRefresher.class);
+            PendingIntent pi = PendingIntent.getBroadcast(this,0,intent,PendingIntent.FLAG_ONE_SHOT);
+            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
+                    + (100), pi);
             return true;
         } catch (IOException ex) {
             Toast.makeText(SessionCreateActivity.this, "Session couldn't be saved",

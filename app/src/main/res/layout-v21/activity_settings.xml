@@ -192,13 +192,13 @@
                     <android.support.v7.widget.AppCompatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Remind time "
+                        android:text="Minute before session "
                         android:textSize="18sp" />
 
                     <android.support.v7.widget.AppCompatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Time before reminder comes " />
+                        android:text="Remind x minutes before session " />
                 </LinearLayout>
 
                 <android.support.v7.widget.AppCompatEditText

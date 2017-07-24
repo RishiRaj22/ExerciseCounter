@@ -48,12 +48,12 @@ public class SettingsActivity extends AppCompatActivity {
     private static final String TAG = "SETTINGS";
     public static final String PREFS = "PREFERENCES";
     private static boolean mute,tts,countdown,log,notifs;
-    private static final String MUTE_TAG = "mute";
-    private static final String TTS_TAG = "tts";
-    private static final String COUNTDOWN_TAG = "countdown";
-    private static final String LOG_TAG = "log";
-    private static final String NOTIFS_TAG = "notif";
-    private static final String TIME_BEF_NOT_TAG = "timeBefNotif";
+    public static final String MUTE_TAG = "mute";
+    public static final String TTS_TAG = "tts";
+    public static final String COUNTDOWN_TAG = "countdown";
+    public static final String LOG_TAG = "log";
+    public static final String NOTIFS_TAG = "notif";
+    public static final String TIME_BEF_NOT_TAG = "timeBefNotif";
 
     private static boolean init = false;
     private static int timeBefNotif;
@@ -112,6 +112,7 @@ public class SettingsActivity extends AppCompatActivity {
             settingsSwitchNotif.setChecked(notifs);
             settingsSwitchLog.setChecked(log);
         }
+        settingsSwitchNotifTime.setText(""+timeBefNotif);
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -280,6 +281,8 @@ public class SettingsActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
+        timeBefNotif = Integer.parseInt(settingsSwitchNotifTime.getText().toString());
+        editor.putInt(TIME_BEF_NOT_TAG,timeBefNotif);
         editor.commit();
         Log.d(TAG,"Preferences commited");
         super.onPause();
@@ -319,7 +322,7 @@ public class SettingsActivity extends AppCompatActivity {
         if(init)
             return timeBefNotif;
         Log.e(TAG,"SETTINGS NOT INITIALISED");
-        return 10;
+        return 5;
     }
 
     public static boolean isNotifs() {

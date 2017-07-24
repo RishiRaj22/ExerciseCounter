@@ -49,12 +49,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.itsrishi.exercisecounter.adapters.AlarmAdapter;
 import me.itsrishi.exercisecounter.listeners.AlarmDialogStateListener;
+import me.itsrishi.exercisecounter.listeners.RecyclerViewCheckedListener;
 import me.itsrishi.exercisecounter.listeners.RecyclerViewClickListener;
 import me.itsrishi.exercisecounter.models.AlarmTime;
 import me.itsrishi.exercisecounter.models.Session;
 import me.itsrishi.exercisecounter.views.AlarmDialogFragment;
 
-public class AlarmActivity extends AppCompatActivity implements RecyclerViewClickListener, AlarmDialogStateListener {
+public class AlarmActivity extends AppCompatActivity implements RecyclerViewClickListener, AlarmDialogStateListener, RecyclerViewCheckedListener {
 
     @BindView(R.id.alarm_edit_list)
     RecyclerView alarmEditList;
@@ -89,7 +90,7 @@ public class AlarmActivity extends AppCompatActivity implements RecyclerViewClic
         if (alarmTimes == null) {
             alarmTimes = new ArrayList<>();
         }
-        alarmAdapter = new AlarmAdapter(alarmTimes, this);
+        alarmAdapter = new AlarmAdapter(alarmTimes, this,this);
         alarmEditList.setAdapter(alarmAdapter);
         ItemTouchHelper touchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
             @Override
@@ -206,5 +207,11 @@ public class AlarmActivity extends AppCompatActivity implements RecyclerViewClic
             }
         });
         alertBuilder.show();
+    }
+
+    @Override
+    public void onChecked(int position, boolean isChecked) {
+        Log.d("alarm","alarm at "+position + " is "+isChecked);
+        alarmTimes.get(position).setActive(isChecked);
     }
 }

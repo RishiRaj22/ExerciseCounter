@@ -23,37 +23,17 @@
  *
  */
 
-package me.itsrishi.exercisecounter;
-
-import android.app.AlarmManager;
-import android.app.Application;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Intent;
-import android.os.Build;
-import android.os.SystemClock;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-
-import me.itsrishi.exercisecounter.misc.NotificationPublisher;
-import me.itsrishi.exercisecounter.models.AlarmTime;
-import me.itsrishi.exercisecounter.models.Session;
+package me.itsrishi.exercisecounter.listeners;
 
 /**
  * @author Rishi Raj
  */
 
-public class ExerciseApplication extends Application {
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        SettingsActivity.init(this);
-    }
+public interface RecyclerViewCheckedListener {
+    /**
+     * Used to communicate check events from recycler view to listener
+     * @param position The position of the checkbox clicked
+     * @param isChecked The current state of the checkbox
+     */
+    void onChecked(int position, boolean isChecked);
 }

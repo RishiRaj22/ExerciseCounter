@@ -25,11 +25,14 @@
 
 package me.itsrishi.exercisecounter.adapters;
 
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import java.util.List;
@@ -38,7 +41,9 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
 import me.itsrishi.exercisecounter.R;
+import me.itsrishi.exercisecounter.listeners.RecyclerViewCheckedListener;
 import me.itsrishi.exercisecounter.listeners.RecyclerViewClickListener;
 import me.itsrishi.exercisecounter.models.AlarmTime;
 
@@ -48,11 +53,13 @@ import me.itsrishi.exercisecounter.models.AlarmTime;
 
 public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHolder> {
     private RecyclerViewClickListener clickListener;
+    private RecyclerViewCheckedListener checkListener;
     private List<AlarmTime> alarmTimes;
 
-    public AlarmAdapter(List<AlarmTime> alarmTimes, RecyclerViewClickListener clickListener) {
+    public AlarmAdapter(List<AlarmTime> alarmTimes, RecyclerViewClickListener clickListener, RecyclerViewCheckedListener checkListener) {
         this.alarmTimes = alarmTimes;
         this.clickListener = clickListener;
+        this.checkListener = checkListener;
     }
 
     @Override
@@ -105,14 +112,22 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         TextView amOrPm;
         @BindView(R.id.alarm_active)
         CheckBox active;
+        @BindView(R.id.alarm_card_container)
+        CardView container;
         int position;
 
         AlarmViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            container.setOnClickListener(this);
         }
-        @Override
+        @OnCheckedChanged(R.id.alarm_active)
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            checkListener.onChecked(position,isChecked);
+        }
+            @Override
         public void onClick(View v) {
+            Log.d("Alarm Adapter", "onClick: "+ v);
             clickListener.onClick(position, v);
         }
     }

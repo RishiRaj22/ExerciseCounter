@@ -27,6 +27,7 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:name=".ExerciseApplication"
@@ -100,6 +101,15 @@
             android:name=".SettingsActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".StatsActivity"></activity>
+
+        <receiver android:name=".misc.NotificationPublisher" />
+
+        <receiver android:name=".misc.NotificationRefresher">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

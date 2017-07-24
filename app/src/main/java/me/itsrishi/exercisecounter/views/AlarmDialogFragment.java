@@ -100,14 +100,13 @@ public class AlarmDialogFragment extends DialogFragment implements CompoundButto
         days[4] = (AppCompatCheckBox) view.findViewById(R.id.checkbox_friday);
         days[5] = (AppCompatCheckBox) view.findViewById(R.id.checkbox_saturday);
         days[6] = (AppCompatCheckBox) view.findViewById(R.id.checkbox_sunday);
+        Log.d("day", "Alarm Repeat days: " + alarm.getRepeatDays());
         for (int i = 0; i < 7; i++) {
-            int val = 1 >>> i;
+            int val = 1 << i;
+            Log.d("day", "Val: " + val);
+            if ((val & alarm.getRepeatDays()) == 0)
+                days[i].setChecked(false);
             days[i].setOnCheckedChangeListener(this);
-            if ((val & alarm.getRepeatDays()) == 0) {
-                days[i].setChecked(true);
-                Log.d("day","ya");
-            }
-            else days[i].setChecked(false);
         }
     }
 
