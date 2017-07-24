@@ -25,10 +25,7 @@
 
 package me.itsrishi.exercisecounter.adapters;
 
-import android.app.NotificationManager;
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,20 +87,22 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionH
         holder.sessionTime.setText(totalTime);
         holder.position = position;
         Calendar calendar = Calendar.getInstance();
-        for (AlarmTime alarmTime : sessions.get(position).getAlarmTimes()) {
-            byte val = (byte) (calendar.get(Calendar.DAY_OF_WEEK) - 2);
-            if (val < 0) val += 7;
-            if (alarmTime.isActive() && (1 << val & alarmTime.getRepeatDays()) != 0) {
-                if(calendar.get(Calendar.HOUR_OF_DAY)<= alarmTime.getHours()) {
-                if(calendar.get(Calendar.MINUTE) <= alarmTime.getMins()) {
-                    holder.scheduledTime.setText(
-                            String.format(Locale.ENGLISH,
-                                    "%02d:%02d",
-                                    alarmTime.getHours(),
-                                    alarmTime.getMins()));
-                    break;
+        if (sessions.get(position).getAlarmTimes() != null) {
+            for (AlarmTime alarmTime : sessions.get(position).getAlarmTimes()) {
+                byte val = (byte) (calendar.get(Calendar.DAY_OF_WEEK) - 2);
+                if (val < 0) val += 7;
+                if (alarmTime.isActive() && (1 << val & alarmTime.getRepeatDays()) != 0) {
+                    if (calendar.get(Calendar.HOUR_OF_DAY) <= alarmTime.getHours()) {
+                        if (calendar.get(Calendar.MINUTE) <= alarmTime.getMins()) {
+                            holder.scheduledTime.setText(
+                                    String.format(Locale.ENGLISH,
+                                            "%02d:%02d",
+                                            alarmTime.getHours(),
+                                            alarmTime.getMins()));
+                            break;
+                        }
+                    }
                 }
-            }
             }
         }
     }
@@ -138,7 +137,7 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionH
 
         SessionHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
             sessionEdit.setVisibility(isEditable ? View.VISIBLE : View.INVISIBLE);
             sessionEdit.setOnClickListener(this);
             sessionMetadata.setOnClickListener(this);
