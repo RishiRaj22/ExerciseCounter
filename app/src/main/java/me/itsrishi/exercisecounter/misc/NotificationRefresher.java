@@ -75,7 +75,10 @@ public class NotificationRefresher extends BroadcastReceiver {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 5);
         long futureInMillis = calendar.getTimeInMillis() + 24 * 60 * 60 * 1000;
+        //Change from currentTimeMillis to elapsedRealTime for alarmManager
+        futureInMillis -= (System.currentTimeMillis() - SystemClock.elapsedRealtime());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pi);
         } else alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pi);
@@ -89,6 +92,8 @@ public class NotificationRefresher extends BroadcastReceiver {
         int i = 0,j = 0;
         for (Session session : sessions) {
             ArrayList<AlarmTime> alarmTimes = session.getAlarmTimes();
+            if(alarmTimes == null)
+                continue;
             for (AlarmTime alarmTime : alarmTimes) {
                 NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                 Log.d(TAG,"Canceled " + (i * 100 + j));
@@ -140,7 +145,8 @@ public class NotificationRefresher extends BroadcastReceiver {
         long delta = alarmCal.getTimeInMillis()
                 - System.currentTimeMillis()
                 - timeBeforeNotif;
-        if (delta < 0) return;
+        if (delta < - timeBeforeNotif) return; //If time has already passed then return
+        if(delta < 0) delta = 0; //However, if time has not yet passed, show alarm immediately
         long futureInMillis = SystemClock.elapsedRealtime() + delta;
         Log.d(TAG, "Creating notification ID "+ id + " for session: " + session.getName()
                 + " hour: " + alarmCal.get(Calendar.HOUR)
