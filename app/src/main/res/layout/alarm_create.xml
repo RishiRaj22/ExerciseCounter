@@ -58,49 +58,49 @@
                         android:checked="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Monday" />
+                        android:text="@string/monday" />
 
                     <android.support.v7.widget.AppCompatCheckBox
                         android:id="@+id/checkbox_tuesday"
                         android:checked="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Tuesday" />
+                        android:text="@string/tuesday" />
 
                     <android.support.v7.widget.AppCompatCheckBox
                         android:id="@+id/checkbox_wednesday"
                         android:checked="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Wednesday" />
+                        android:text="@string/wednesday" />
 
                     <android.support.v7.widget.AppCompatCheckBox
                         android:id="@+id/checkbox_thursday"
                         android:checked="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Thursday" />
+                        android:text="@string/thursday" />
 
                     <android.support.v7.widget.AppCompatCheckBox
                         android:id="@+id/checkbox_friday"
                         android:checked="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Friday" />
+                        android:text="@string/friday" />
 
                     <android.support.v7.widget.AppCompatCheckBox
                         android:id="@+id/checkbox_saturday"
                         android:checked="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Saturday" />
+                        android:text="@string/saturday" />
 
                     <android.support.v7.widget.AppCompatCheckBox
                         android:id="@+id/checkbox_sunday"
                         android:checked="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Sunday" />
+                        android:text="@string/sunday" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -113,13 +113,13 @@
                         android:id="@+id/days_clear"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Clear all" />
+                        android:text="@string/clear_all" />
 
                     <android.support.v7.widget.AppCompatButton
                         android:id="@+id/days_mark"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Mark all" />
+                        android:text="@string/mark_all" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -132,14 +132,14 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Submit" />
+                    android:text="@string/submit" />
 
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/cancel_button"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Cancel" />
+                    android:text="@string/cancel" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

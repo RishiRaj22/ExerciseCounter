@@ -47,7 +47,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/alarm_edit_list"
-        android:text="Submit" />
+        android:text="@string/submit" />
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/alarm_plus_fab"
         android:layout_width="wrap_content"

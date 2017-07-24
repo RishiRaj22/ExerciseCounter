@@ -82,7 +82,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
                         android:clickable="true"
-                        android:text="MON"
+                        android:text="@string/monday_short"
                         android:textSize="14sp" />
 
                     <TextView
@@ -91,7 +91,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
                         android:clickable="true"
-                        android:text="TUE"
+                        android:text="@string/tuesday_short"
                         android:textSize="14sp" />
 
                     <TextView
@@ -100,7 +100,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
                         android:clickable="true"
-                        android:text="WED"
+                        android:text="@string/wednesday_short"
                         android:textSize="14sp" />
 
                     <TextView
@@ -109,7 +109,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
                         android:clickable="true"
-                        android:text="THU"
+                        android:text="@string/thursday_short"
                         android:textSize="14sp" />
 
                     <TextView
@@ -118,7 +118,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
                         android:clickable="true"
-                        android:text="FRI"
+                        android:text="@string/friday_short"
                         android:textSize="14sp" />
 
                     <TextView
@@ -127,7 +127,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
                         android:clickable="true"
-                        android:text="SAT"
+                        android:text="@string/saturday_short"
                         android:textSize="14sp" />
 
                     <TextView
@@ -136,7 +136,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
                         android:clickable="true"
-                        android:text="SUN"
+                        android:text="@string/sunday_short"
                         android:textSize="14sp" />
 
                 </LinearLayout>

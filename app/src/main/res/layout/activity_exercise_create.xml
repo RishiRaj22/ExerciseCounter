@@ -81,7 +81,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Number of turns"
+                android:text="@string/number_of_turns"
                 android:textAlignment="center"
                 android:textSize="18sp" />
 
@@ -105,7 +105,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Time per turn (sec)"
+                android:text="@string/tpt_sec"
                 android:textAlignment="center"
                 android:textSize="18sp" />
 
@@ -129,7 +129,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Gap after turn (sec)"
+                android:text="@string/gbt_sec"
                 android:textAlignment="center"
                 android:textSize="18sp" />
 
@@ -151,7 +151,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:imeOptions="actionSend"
-        android:text="Submit" />
+        android:text="@string/submit" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -161,7 +161,7 @@
         <android.support.v7.widget.AppCompatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Autoplay" />
+            android:text="@string/autoplay" />
 
         <android.support.v7.widget.SwitchCompat
             android:id="@+id/autoplay"

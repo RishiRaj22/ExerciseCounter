@@ -25,7 +25,10 @@
 
 package me.itsrishi.exercisecounter.adapters;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,11 +37,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.itsrishi.exercisecounter.R;
 import me.itsrishi.exercisecounter.listeners.RecyclerViewClickListener;
+import me.itsrishi.exercisecounter.models.AlarmTime;
 import me.itsrishi.exercisecounter.models.Exercise;
 import me.itsrishi.exercisecounter.models.Session;
 
@@ -83,6 +89,23 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionH
         String totalTime = time / 60 + "m " + time % 60 + "s";
         holder.sessionTime.setText(totalTime);
         holder.position = position;
+        Calendar calendar = Calendar.getInstance();
+        for (AlarmTime alarmTime : sessions.get(position).getAlarmTimes()) {
+            byte val = (byte) (calendar.get(Calendar.DAY_OF_WEEK) - 2);
+            if (val < 0) val += 7;
+            if (alarmTime.isActive() && (1 << val & alarmTime.getRepeatDays()) != 0) {
+                if(calendar.get(Calendar.HOUR_OF_DAY)<= alarmTime.getHours()) {
+                if(calendar.get(Calendar.MINUTE) <= alarmTime.getMins()) {
+                    holder.scheduledTime.setText(
+                            String.format(Locale.ENGLISH,
+                                    "%02d:%02d",
+                                    alarmTime.getHours(),
+                                    alarmTime.getMins()));
+                    break;
+                }
+            }
+            }
+        }
     }
 
     @Override

@@ -42,7 +42,7 @@
         android:layout_margin="5dp"
         android:gravity="center_horizontal"
         android:padding="5dp"
-        android:text="Add the following sessions"
+        android:text="@string/session_add_banner"
         android:textSize="22sp" />
 
     <android.support.v7.widget.RecyclerView

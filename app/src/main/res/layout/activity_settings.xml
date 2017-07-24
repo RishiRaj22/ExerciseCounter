@@ -53,7 +53,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Sound" />
+                android:text="@string/sound" />
 
             <View
                 android:layout_width="match_parent"
@@ -75,7 +75,7 @@
                     <android.support.v7.widget.AppCompatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Mute"
+                        android:text="@string/mute"
                         android:textSize="18sp" />
                 </LinearLayout>
 
@@ -101,13 +101,13 @@
                     <android.support.v7.widget.AppCompatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Speak exercise name"
+                        android:text="@string/tts"
                         android:textSize="18sp" />
 
                     <android.support.v7.widget.AppCompatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Use text to speech" />
+                        android:text="@string/tts_details" />
                 </LinearLayout>
 
                 <android.support.v7.widget.SwitchCompat
@@ -127,7 +127,7 @@
                 <android.support.v7.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Play countdown"
+                    android:text="@string/play_countdown"
                     android:textSize="18sp" />
 
                 <android.support.v7.widget.SwitchCompat
@@ -142,7 +142,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Notifications" />
+                android:text="@string/notifs" />
 
             <View
                 android:layout_width="match_parent"
@@ -164,13 +164,13 @@
                     <android.support.v7.widget.AppCompatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Session Alert"
+                        android:text="@string/session_alert"
                         android:textSize="18sp" />
 
                     <android.support.v7.widget.AppCompatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Alert for upcoming sessions" />
+                        android:text="@string/session_alert_details" />
                 </LinearLayout>
 
                 <android.support.v7.widget.SwitchCompat
@@ -194,13 +194,13 @@
                     <android.support.v7.widget.AppCompatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Minute before session "
+                        android:text="@string/minute_before_session"
                         android:textSize="18sp" />
 
                     <android.support.v7.widget.AppCompatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Remind x minutes before session " />
+                        android:text="@string/min_before_session_metadata" />
                 </LinearLayout>
 
                 <android.support.v7.widget.AppCompatEditText
@@ -216,7 +216,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Save &amp; Restore" />
+                android:text="@string/save_amp_restore" />
 
             <View
                 android:layout_width="match_parent"
@@ -239,13 +239,13 @@
                     <android.support.v7.widget.AppCompatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Log sessions"
+                        android:text="@string/log_sessions"
                         android:textSize="18sp" />
 
                     <android.support.v7.widget.AppCompatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Keep record of sessions completed" />
+                        android:text="@string/log_sessions_details" />
                 </LinearLayout>
 
                 <android.support.v7.widget.SwitchCompat
@@ -266,13 +266,13 @@
                 <android.support.v7.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Import"
+                    android:text="@string/import_sessions"
                     android:textSize="18sp" />
 
                 <android.support.v7.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Restore from a backup of sessions" />
+                    android:text="@string/restore_from_backup" />
             </LinearLayout>
 
             <LinearLayout
@@ -291,13 +291,13 @@
                     <android.support.v7.widget.AppCompatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Export"
+                        android:text="@string/export_sessions"
                         android:textSize="18sp" />
 
                     <android.support.v7.widget.AppCompatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Make a backup of sessions" />
+                        android:text="@string/backup_sessions" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -317,13 +317,13 @@
                     <android.support.v7.widget.AppCompatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Remove all"
+                        android:text="@string/remove_all"
                         android:textSize="18sp" />
 
                     <android.support.v7.widget.AppCompatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Delete all the sessions and start afresh" />
+                        android:text="@string/remove_all_details" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

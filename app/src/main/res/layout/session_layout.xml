@@ -70,7 +70,7 @@
                         android:id="@+id/scheduled_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="NA"
+                        android:text="@string/na"
                         android:textSize="15sp" />
 
                     <TextView
@@ -85,7 +85,7 @@
                         android:id="@+id/session_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="NA"
+                        android:text="@string/na"
                         android:textSize="15sp" />
                 </LinearLayout>
             </LinearLayout>

@@ -74,7 +74,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="25dp"
-                android:text="Gap Between Exercises (secs)"
+                android:text="@string/gbt_sec"
                 android:textSize="18sp" />
 
             <android.support.v7.widget.AppCompatEditText
@@ -106,7 +106,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:imeOptions="actionSend"
-                android:text="Submit" />
+                android:text="@string/submit" />
         </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
