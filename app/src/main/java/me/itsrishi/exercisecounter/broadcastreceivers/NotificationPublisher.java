@@ -23,7 +23,7 @@
  *
  */
 
-package me.itsrishi.exercisecounter.misc;
+package me.itsrishi.exercisecounter.broadcastreceivers;
 
 import android.app.Notification;
 import android.app.NotificationManager;

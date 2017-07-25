@@ -23,7 +23,7 @@
  *
  */
 
-package me.itsrishi.exercisecounter.adapters;
+package me.itsrishi.exercisecounter.misc;
 
 /**
  * @author Rishi Raj

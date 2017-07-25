@@ -25,26 +25,7 @@
 
 package me.itsrishi.exercisecounter;
 
-import android.app.AlarmManager;
 import android.app.Application;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Intent;
-import android.os.Build;
-import android.os.SystemClock;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-
-import me.itsrishi.exercisecounter.misc.NotificationPublisher;
-import me.itsrishi.exercisecounter.models.AlarmTime;
-import me.itsrishi.exercisecounter.models.Session;
 
 /**
  * @author Rishi Raj

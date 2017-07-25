@@ -102,9 +102,9 @@
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".StatsActivity"></activity>
 
-        <receiver android:name=".misc.NotificationPublisher" />
+        <receiver android:name=".broadcastreceivers.NotificationPublisher" />
 
-        <receiver android:name=".misc.NotificationRefresher">
+        <receiver android:name=".broadcastreceivers.NotificationRefresher">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.TIMEZONE_CHANGED" />

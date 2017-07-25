@@ -41,6 +41,7 @@ import butterknife.ButterKnife;
 import me.itsrishi.exercisecounter.R;
 import me.itsrishi.exercisecounter.listeners.ExerciseModificationListener;
 import me.itsrishi.exercisecounter.listeners.RecyclerViewClickListener;
+import me.itsrishi.exercisecounter.misc.ListChangeAdapter;
 import me.itsrishi.exercisecounter.models.Exercise;
 
 /**

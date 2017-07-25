@@ -27,10 +27,8 @@ package me.itsrishi.exercisecounter;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -66,8 +64,7 @@ import me.itsrishi.exercisecounter.adapters.ExerciseAdapter;
 import me.itsrishi.exercisecounter.listeners.ExerciseModificationListener;
 import me.itsrishi.exercisecounter.listeners.RecyclerViewClickListener;
 import me.itsrishi.exercisecounter.misc.ExerciseTouchHelperCallback;
-import me.itsrishi.exercisecounter.misc.NotificationPublisher;
-import me.itsrishi.exercisecounter.misc.NotificationRefresher;
+import me.itsrishi.exercisecounter.broadcastreceivers.NotificationRefresher;
 import me.itsrishi.exercisecounter.models.Exercise;
 import me.itsrishi.exercisecounter.models.Session;
 

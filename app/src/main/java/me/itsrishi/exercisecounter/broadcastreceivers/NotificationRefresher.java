@@ -23,7 +23,7 @@
  *
  */
 
-package me.itsrishi.exercisecounter.misc;
+package me.itsrishi.exercisecounter.broadcastreceivers;
 
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -55,7 +55,6 @@ import me.itsrishi.exercisecounter.models.AlarmTime;
 import me.itsrishi.exercisecounter.models.Session;
 
 import static android.content.Context.ALARM_SERVICE;
-import static me.itsrishi.exercisecounter.misc.NotificationPublisher.ITERATION_COUNT;
 
 /**
  * @author Rishi Raj
@@ -150,7 +149,7 @@ public class NotificationRefresher extends BroadcastReceiver {
         notificationBuilder.setContentIntent(resultPendingIntent);
         Intent notificationIntent = new Intent(context, NotificationPublisher.class);
         int current = context.getSharedPreferences(SettingsActivity.PREFS, Context.MODE_PRIVATE)
-                .getInt(ITERATION_COUNT, 0);
+                .getInt(NotificationPublisher.ITERATION_COUNT, 0);
         notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, id);
         notificationIntent.putExtra(NotificationPublisher.ITERATION_COUNT, current);
         notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notificationBuilder.build());

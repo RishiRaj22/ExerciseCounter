@@ -30,8 +30,6 @@ import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
-import me.itsrishi.exercisecounter.adapters.ListChangeAdapter;
-
 /**
  * @author Rishi Raj
  */
