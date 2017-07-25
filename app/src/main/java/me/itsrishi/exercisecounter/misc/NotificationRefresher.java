@@ -131,6 +131,7 @@ public class NotificationRefresher extends BroadcastReceiver {
                 .setContentTitle("Time for " + session.getName() + " session")
                 .setContentText("Start your session now")
                 .setSmallIcon(R.drawable.ic_notif)
+                .setWhen(alarmCal.getTimeInMillis())
                 .setPriority(Notification.PRIORITY_HIGH)
                 .setAutoCancel(true)
                 .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
