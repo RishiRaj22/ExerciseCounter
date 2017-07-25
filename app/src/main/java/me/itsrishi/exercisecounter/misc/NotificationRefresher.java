@@ -32,6 +32,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.os.Build;
 import android.os.SystemClock;
@@ -67,6 +68,7 @@ public class NotificationRefresher extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         this.context = context;
+        expireOldNotifs();
         refreshNotifications();
         Intent nextIntent = new Intent(context, NotificationRefresher.class);
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, nextIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -82,6 +84,17 @@ public class NotificationRefresher extends BroadcastReceiver {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pi);
         } else alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pi);
+    }
+
+    /**
+     * Increment val so that if older notification is not cancelled,
+     * as it got deleted or due to some unexpected situations, then the {@link NotificationPublisher}
+     * will not show the notification.
+     */
+    private void expireOldNotifs() {
+        SharedPreferences prefs = context.getSharedPreferences(SettingsActivity.PREFS,Context.MODE_PRIVATE);
+        int val = prefs.getInt(NotificationPublisher.ITERATION_COUNT,0) + 1;
+        prefs.edit().putInt(NotificationPublisher.ITERATION_COUNT,val).apply();
     }
 
     public void refreshNotifications() {

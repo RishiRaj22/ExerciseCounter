@@ -252,9 +252,6 @@ public class SessionCreateActivity extends AppCompatActivity implements View.OnC
             mapper.writeValue(outputStream, sessions);
             outputStream.close();
             Log.d("JSON-VAL", "sessions.json:\n" + mapper.writeValueAsString(sessions));
-            SharedPreferences prefs = getSharedPreferences(SettingsActivity.PREFS,MODE_PRIVATE);
-            int val = prefs.getInt(NotificationPublisher.ITERATION_COUNT,0) + 1;
-            prefs.edit().putInt(NotificationPublisher.ITERATION_COUNT,val).apply();
             Intent intent = new Intent(this,NotificationRefresher.class);
             PendingIntent pi = PendingIntent.getBroadcast(this,0,intent,PendingIntent.FLAG_ONE_SHOT);
             AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
