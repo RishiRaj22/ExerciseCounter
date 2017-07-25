@@ -23,7 +23,7 @@
  *
  */
 
-package me.itsrishi.exercisecounter;
+package me.itsrishi.exercisecounter.activities;
 
 import android.app.Application;
 

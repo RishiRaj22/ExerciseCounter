@@ -23,7 +23,7 @@
  *
  */
 
-package me.itsrishi.exercisecounter;
+package me.itsrishi.exercisecounter.activities;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -60,6 +60,7 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import me.itsrishi.exercisecounter.R;
 import me.itsrishi.exercisecounter.adapters.ExerciseAdapter;
 import me.itsrishi.exercisecounter.listeners.ExerciseModificationListener;
 import me.itsrishi.exercisecounter.listeners.RecyclerViewClickListener;

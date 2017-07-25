@@ -28,7 +28,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="me.itsrishi.exercisecounter.AlarmActivity">
+    tools:context="me.itsrishi.exercisecounter.activities.AlarmActivity">
 
     <include
         android:id="@+id/alarm_activity_toolbar"

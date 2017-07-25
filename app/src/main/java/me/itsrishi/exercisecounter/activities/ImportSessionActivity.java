@@ -23,7 +23,7 @@
  *
  */
 
-package me.itsrishi.exercisecounter;
+package me.itsrishi.exercisecounter.activities;
 
 import android.Manifest;
 import android.content.ContentResolver;
@@ -54,6 +54,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import me.itsrishi.exercisecounter.R;
 import me.itsrishi.exercisecounter.adapters.SessionAdapter;
 import me.itsrishi.exercisecounter.models.Session;
 

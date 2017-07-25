@@ -34,7 +34,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/colorPrimaryDark"
-    tools:context="me.itsrishi.exercisecounter.SettingsActivity">
+    tools:context="me.itsrishi.exercisecounter.activities.SettingsActivity">
 
     <include
         android:id="@+id/settings_activity_toolbar"

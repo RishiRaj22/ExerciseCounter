@@ -28,7 +28,6 @@ package me.itsrishi.exercisecounter.views;
 import android.app.DialogFragment;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.CalendarContract;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatCheckBox;
@@ -39,7 +38,6 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.TimePicker;
 
-import me.itsrishi.exercisecounter.AlarmActivity;
 import me.itsrishi.exercisecounter.R;
 import me.itsrishi.exercisecounter.listeners.AlarmDialogStateListener;
 import me.itsrishi.exercisecounter.models.AlarmTime;

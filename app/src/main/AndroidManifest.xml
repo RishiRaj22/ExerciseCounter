@@ -30,14 +30,14 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
-        android:name=".ExerciseApplication"
+        android:name=".activities.ExerciseApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -45,17 +45,17 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ExerciseActivity"
+            android:name=".activities.ExerciseActivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".SessionCreateActivity"
+            android:name=".activities.SessionCreateActivity"
             android:label="@string/title_activity_session_create" />
         <activity
-            android:name=".ExerciseCreateActivity"
+            android:name=".activities.ExerciseCreateActivity"
             android:label="@string/title_activity_exercise_create"
             android:windowSoftInputMode="stateUnchanged" />
-        <activity android:name=".AlarmActivity" />
-        <activity android:name=".ImportSessionActivity">
+        <activity android:name=".activities.AlarmActivity" />
+        <activity android:name=".activities.ImportSessionActivity">
             <intent-filter
                 android:icon="@mipmap/ic_launcher"
                 android:label="Import session"
@@ -98,9 +98,9 @@
         </provider>
 
         <activity
-            android:name=".SettingsActivity"
+            android:name=".activities.SettingsActivity"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".StatsActivity"></activity>
+        <activity android:name=".activities.StatsActivity"></activity>
 
         <receiver android:name=".broadcastreceivers.NotificationPublisher" />
 

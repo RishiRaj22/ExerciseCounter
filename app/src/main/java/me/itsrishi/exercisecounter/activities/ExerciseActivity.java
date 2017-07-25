@@ -23,7 +23,7 @@
  *
  */
 
-package me.itsrishi.exercisecounter;
+package me.itsrishi.exercisecounter.activities;
 
 import android.app.ActivityManager;
 import android.content.DialogInterface;
@@ -49,6 +49,7 @@ import java.util.LinkedList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import me.itsrishi.exercisecounter.R;
 import me.itsrishi.exercisecounter.adapters.UpcomingExercisesAdapter;
 import me.itsrishi.exercisecounter.listeners.ExerciseModificationListener;
 import me.itsrishi.exercisecounter.listeners.IntegerChangeListener;

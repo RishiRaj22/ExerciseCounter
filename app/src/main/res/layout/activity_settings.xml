@@ -33,7 +33,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="me.itsrishi.exercisecounter.SettingsActivity">
+    tools:context="me.itsrishi.exercisecounter.activities.SettingsActivity">
 
     <include
         android:id="@+id/settings_activity_toolbar"

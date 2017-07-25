@@ -29,7 +29,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark"
-    tools:context="me.itsrishi.exercisecounter.SessionCreateActivity">
+    tools:context="me.itsrishi.exercisecounter.activities.SessionCreateActivity">
 
     <include
         android:id="@+id/session_create_activity_toolbar"

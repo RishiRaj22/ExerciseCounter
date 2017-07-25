@@ -23,7 +23,7 @@
  *
  */
 
-package me.itsrishi.exercisecounter;
+package me.itsrishi.exercisecounter.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -46,6 +46,7 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import me.itsrishi.exercisecounter.R;
 import me.itsrishi.exercisecounter.models.Exercise;
 import me.itsrishi.exercisecounter.models.Session;
 

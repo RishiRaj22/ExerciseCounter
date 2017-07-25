@@ -29,7 +29,7 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="me.itsrishi.exercisecounter.MainActivity">
+    tools:context="me.itsrishi.exercisecounter.activities.MainActivity">
 
     <include
         android:id="@+id/main_activity_toolbar"

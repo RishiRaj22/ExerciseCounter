@@ -47,10 +47,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import me.itsrishi.exercisecounter.ExerciseActivity;
-import me.itsrishi.exercisecounter.MainActivity;
+import me.itsrishi.exercisecounter.activities.ExerciseActivity;
+import me.itsrishi.exercisecounter.activities.MainActivity;
 import me.itsrishi.exercisecounter.R;
-import me.itsrishi.exercisecounter.SettingsActivity;
+import me.itsrishi.exercisecounter.activities.SettingsActivity;
 import me.itsrishi.exercisecounter.models.AlarmTime;
 import me.itsrishi.exercisecounter.models.Session;
 

@@ -23,9 +23,8 @@
  *
  */
 
-package me.itsrishi.exercisecounter;
+package me.itsrishi.exercisecounter.activities;
 
-import android.app.AlarmManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -47,6 +46,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import me.itsrishi.exercisecounter.R;
 import me.itsrishi.exercisecounter.adapters.AlarmAdapter;
 import me.itsrishi.exercisecounter.listeners.AlarmDialogStateListener;
 import me.itsrishi.exercisecounter.listeners.RecyclerViewCheckedListener;

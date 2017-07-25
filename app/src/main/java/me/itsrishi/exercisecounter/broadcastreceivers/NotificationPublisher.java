@@ -33,7 +33,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import me.itsrishi.exercisecounter.SettingsActivity;
+import me.itsrishi.exercisecounter.activities.SettingsActivity;
 
 public class NotificationPublisher extends BroadcastReceiver {
 
