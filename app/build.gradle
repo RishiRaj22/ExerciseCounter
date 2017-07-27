@@ -78,6 +78,7 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.6.0'
     compile 'com.nononsenseapps:filepicker:4.1.0'
     compile 'com.github.marcoscgdev:EasyLicensesDialog:2.0.0'
+    compile 'com.stephentuso:welcome:1.4.1'
 
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'

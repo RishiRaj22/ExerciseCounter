@@ -48,7 +48,6 @@ import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
 
@@ -96,7 +95,7 @@ public class SessionInstrumentedTest {
 
                 //Check whether the exercise is added in displayed sessions
                 onView(withId(R.id.exercise_edit_list))
-                        .perform(RecyclerViewActions.actionOnItemAtPosition(j,click()));
+                        .perform(RecyclerViewActions.actionOnItemAtPosition(j, click()));
                 if (autoplay)
                     onView(withId(R.id.autoplay)).check(ViewAssertions.matches(isChecked()));
                 else onView(withId(R.id.autoplay)).check(ViewAssertions.matches(not(isChecked())));

@@ -20,5 +20,9 @@
         android:id="@+id/action_settings"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_license"
+        android:title="@string/open_source_licenses"
+        app:showAsAction="never" />
 
 </menu>

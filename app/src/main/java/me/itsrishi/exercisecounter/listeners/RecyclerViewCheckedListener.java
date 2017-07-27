@@ -32,7 +32,8 @@ package me.itsrishi.exercisecounter.listeners;
 public interface RecyclerViewCheckedListener {
     /**
      * Used to communicate check events from recycler view to listener
-     * @param position The position of the checkbox clicked
+     *
+     * @param position  The position of the checkbox clicked
      * @param isChecked The current state of the checkbox
      */
     void onChecked(int position, boolean isChecked);

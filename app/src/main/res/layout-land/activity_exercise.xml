@@ -33,15 +33,15 @@
     <me.itsrishi.exercisecounter.views.PlayingView
         android:id="@+id/playing_view"
         android:layout_width="0dp"
-        android:layout_weight="1"
         android:layout_height="match_parent"
+        android:layout_weight="1"
         android:keepScreenOn="true"></me.itsrishi.exercisecounter.views.PlayingView>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/upcoming_exercises"
         android:layout_width="0dp"
-        android:layout_weight="1"
         android:layout_height="match_parent"
+        android:layout_weight="1"
         android:background="#000000"
         app:layoutManager="android.support.v7.widget.LinearLayoutManager">>
         android:id="@+id/upcoming_exercises">

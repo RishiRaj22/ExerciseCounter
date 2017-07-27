@@ -30,6 +30,7 @@ import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -48,6 +49,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.marcoscg.easylicensesdialog.EasyLicensesDialogCompat;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -62,10 +64,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.itsrishi.exercisecounter.R;
 import me.itsrishi.exercisecounter.adapters.ExerciseAdapter;
+import me.itsrishi.exercisecounter.broadcastreceivers.NotificationRefresher;
 import me.itsrishi.exercisecounter.listeners.ExerciseModificationListener;
 import me.itsrishi.exercisecounter.listeners.RecyclerViewClickListener;
 import me.itsrishi.exercisecounter.misc.ExerciseTouchHelperCallback;
-import me.itsrishi.exercisecounter.broadcastreceivers.NotificationRefresher;
 import me.itsrishi.exercisecounter.models.Exercise;
 import me.itsrishi.exercisecounter.models.Session;
 
@@ -176,7 +178,7 @@ public class SessionCreateActivity extends AppCompatActivity implements View.OnC
                 Intent intent = new Intent(SessionCreateActivity.this, AlarmActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtra("index", index);
-                intent.putParcelableArrayListExtra("alarms",sessions.get(index).getAlarmTimes());
+                intent.putParcelableArrayListExtra("alarms", sessions.get(index).getAlarmTimes());
                 intent.putParcelableArrayListExtra("sessions", sessions);
                 startActivity(intent);
             }
@@ -250,8 +252,8 @@ public class SessionCreateActivity extends AppCompatActivity implements View.OnC
             mapper.writeValue(outputStream, sessions);
             outputStream.close();
             Log.d("JSON-VAL", "sessions.json:\n" + mapper.writeValueAsString(sessions));
-            Intent intent = new Intent(this,NotificationRefresher.class);
-            PendingIntent pi = PendingIntent.getBroadcast(this,0,intent,PendingIntent.FLAG_ONE_SHOT);
+            Intent intent = new Intent(this, NotificationRefresher.class);
+            PendingIntent pi = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
             AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
             alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
                     + (100), pi);
@@ -366,8 +368,10 @@ public class SessionCreateActivity extends AppCompatActivity implements View.OnC
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
         switch (item.getItemId()) {
-            case R.id.action_favorite:
-                Toast.makeText(this, "Fav pressed", Toast.LENGTH_LONG).show();
+            case (R.id.action_favorite):
+                intent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("https://play.google.com/store/apps/details?id=" + "me.itsrishi.exercisecounter"));
+                startActivity(intent);
                 break;
             case R.id.action_settings:
                 intent = new Intent(SessionCreateActivity.this, SettingsActivity.class);
@@ -378,6 +382,16 @@ public class SessionCreateActivity extends AppCompatActivity implements View.OnC
                 intent = new Intent(SessionCreateActivity.this, StatsActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+                break;
+            case R.id.action_about:
+                intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://itsrishi.me"));
+                startActivity(intent);
+                break;
+            case R.id.action_license:
+                new EasyLicensesDialogCompat(this)
+                        .setTitle("Open source licenses")
+                        .setPositiveButton(android.R.string.ok, null)
+                        .show();
                 break;
         }
         return true;

@@ -44,6 +44,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.marcoscg.easylicensesdialog.EasyLicensesDialogCompat;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -205,8 +206,10 @@ public class ImportSessionActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
         switch (item.getItemId()) {
-            case R.id.action_favorite:
-                Toast.makeText(this, "Fav pressed", Toast.LENGTH_LONG).show();
+            case (R.id.action_favorite):
+                intent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("https://play.google.com/store/apps/details?id=" + "me.itsrishi.exercisecounter"));
+                startActivity(intent);
                 break;
             case R.id.action_settings:
                 intent = new Intent(ImportSessionActivity.this, SettingsActivity.class);
@@ -217,6 +220,16 @@ public class ImportSessionActivity extends AppCompatActivity {
                 intent = new Intent(ImportSessionActivity.this, StatsActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+                break;
+            case R.id.action_about:
+                intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://itsrishi.me"));
+                startActivity(intent);
+                break;
+            case R.id.action_license:
+                new EasyLicensesDialogCompat(this)
+                        .setTitle("Open source licenses")
+                        .setPositiveButton(android.R.string.ok, null)
+                        .show();
                 break;
         }
         return true;

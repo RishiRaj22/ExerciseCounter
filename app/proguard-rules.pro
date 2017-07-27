@@ -31,3 +31,7 @@
  -keepclassmembers public final enum org.codehaus.jackson.annotate.JsonAutoDetect$Visibility {
  public static final org.codehaus.jackson.annotate.JsonAutoDetect$Visibility *; } 
 -keepclassmembers class me.itsrishi.exercisecounter.models.** { *;}
+
+-keepclassmembers class * extends com.stephentuso.welcome.WelcomeActivity {
+    public static java.lang.String welcomeKey();
+}

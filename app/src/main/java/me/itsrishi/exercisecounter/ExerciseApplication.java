@@ -23,9 +23,11 @@
  *
  */
 
-package me.itsrishi.exercisecounter.activities;
+package me.itsrishi.exercisecounter;
 
 import android.app.Application;
+
+import me.itsrishi.exercisecounter.activities.SettingsActivity;
 
 /**
  * @author Rishi Raj

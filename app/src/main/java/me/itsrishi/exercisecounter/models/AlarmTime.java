@@ -62,7 +62,7 @@ public class AlarmTime implements Parcelable {
     public AlarmTime() {
     }
 
-    public AlarmTime(byte mins,byte hours,byte repeatDays, boolean active) {
+    public AlarmTime(byte mins, byte hours, byte repeatDays, boolean active) {
         this.mins = mins;
         this.hours = hours;
         this.repeatDays = repeatDays;

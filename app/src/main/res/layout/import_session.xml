@@ -32,8 +32,7 @@
 
     <include
         android:id="@+id/import_activity_toolbar"
-        layout="@layout/toolbar"
-        ></include>
+        layout="@layout/toolbar"></include>
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/session_import_intro"
@@ -63,8 +62,8 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_margin="10dp"
-        app:srcCompat="@drawable/ic_check_white_24dp"
         app:borderWidth="0dp"
         app:elevation="4sp"
-        app:rippleColor="#FFFFFF" />
+        app:rippleColor="#FFFFFF"
+        app:srcCompat="@drawable/ic_check_white_24dp" />
 </RelativeLayout>

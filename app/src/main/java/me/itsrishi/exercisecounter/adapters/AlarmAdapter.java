@@ -121,13 +121,15 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
             ButterKnife.bind(this, itemView);
             container.setOnClickListener(this);
         }
+
         @OnCheckedChanged(R.id.alarm_active)
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            checkListener.onChecked(position,isChecked);
+            checkListener.onChecked(position, isChecked);
         }
-            @Override
+
+        @Override
         public void onClick(View v) {
-            Log.d("Alarm Adapter", "onClick: "+ v);
+            Log.d("Alarm Adapter", "onClick: " + v);
             clickListener.onClick(position, v);
         }
     }

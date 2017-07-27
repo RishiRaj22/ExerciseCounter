@@ -47,9 +47,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import me.itsrishi.exercisecounter.R;
 import me.itsrishi.exercisecounter.activities.ExerciseActivity;
 import me.itsrishi.exercisecounter.activities.MainActivity;
-import me.itsrishi.exercisecounter.R;
 import me.itsrishi.exercisecounter.activities.SettingsActivity;
 import me.itsrishi.exercisecounter.models.AlarmTime;
 import me.itsrishi.exercisecounter.models.Session;
@@ -91,9 +91,9 @@ public class NotificationRefresher extends BroadcastReceiver {
      * will not show the notification.
      */
     private void expireOldNotifs() {
-        SharedPreferences prefs = context.getSharedPreferences(SettingsActivity.PREFS,Context.MODE_PRIVATE);
-        int val = prefs.getInt(NotificationPublisher.ITERATION_COUNT,0) + 1;
-        prefs.edit().putInt(NotificationPublisher.ITERATION_COUNT,val).apply();
+        SharedPreferences prefs = context.getSharedPreferences(SettingsActivity.PREFS, Context.MODE_PRIVATE);
+        int val = prefs.getInt(NotificationPublisher.ITERATION_COUNT, 0) + 1;
+        prefs.edit().putInt(NotificationPublisher.ITERATION_COUNT, val).apply();
     }
 
     public void refreshNotifications() {
@@ -101,14 +101,14 @@ public class NotificationRefresher extends BroadcastReceiver {
         if (sessions == null)
             return;
         Calendar cal = Calendar.getInstance();
-        int i = 0,j = 0;
+        int i = 0, j = 0;
         for (Session session : sessions) {
             ArrayList<AlarmTime> alarmTimes = session.getAlarmTimes();
-            if(alarmTimes == null)
+            if (alarmTimes == null)
                 continue;
             for (AlarmTime alarmTime : alarmTimes) {
                 NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                Log.d(TAG,"Canceled " + (i * 100 + j));
+                Log.d(TAG, "Canceled " + (i * 100 + j));
                 notificationManager.cancel(i * 100 + j);
                 byte val = (byte) (cal.get(Calendar.DAY_OF_WEEK) - 2);
                 if (val < 0) val += 7;
@@ -116,7 +116,7 @@ public class NotificationRefresher extends BroadcastReceiver {
                     Calendar alarmCal = Calendar.getInstance();
                     alarmCal.set(Calendar.HOUR_OF_DAY, alarmTime.getHours());
                     alarmCal.set(Calendar.MINUTE, alarmTime.getMins());
-                    alarmCal.set(Calendar.SECOND,0);
+                    alarmCal.set(Calendar.SECOND, 0);
                     notifyFor(session, alarmCal, i * 100 + j);
                 }
                 j++;
@@ -125,7 +125,7 @@ public class NotificationRefresher extends BroadcastReceiver {
         }
     }
 
-    private void notifyFor(Session session, Calendar alarmCal,int id) {
+    private void notifyFor(Session session, Calendar alarmCal, int id) {
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context)
                 .setContentTitle("Time for " + session.getName() + " session")
                 .setContentText("Start your session now")
@@ -158,10 +158,10 @@ public class NotificationRefresher extends BroadcastReceiver {
         long delta = alarmCal.getTimeInMillis()
                 - System.currentTimeMillis()
                 - timeBeforeNotif;
-        if (delta < - timeBeforeNotif) return; //If time has already passed then return
-        if(delta < 0) delta = 0; //However, if time has not yet passed, show alarm immediately
+        if (delta < -timeBeforeNotif) return; //If time has already passed then return
+        if (delta < 0) delta = 0; //However, if time has not yet passed, show alarm immediately
         long futureInMillis = SystemClock.elapsedRealtime() + delta;
-        Log.d(TAG, "Creating notification ID "+ id + " for session: " + session.getName()
+        Log.d(TAG, "Creating notification ID " + id + " for session: " + session.getName()
                 + " hour: " + alarmCal.get(Calendar.HOUR)
                 + " minute: " + alarmCal.get(Calendar.MINUTE)
                 + " iteration " + current

@@ -50,6 +50,7 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.marcoscg.easylicensesdialog.EasyLicensesDialogCompat;
 import com.nononsenseapps.filepicker.FilePickerActivity;
 import com.nononsenseapps.filepicker.Utils;
 
@@ -68,21 +69,19 @@ import me.itsrishi.exercisecounter.R;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    private static final int EXPORT_CODE = 10;
-    private static final int IMPORT_CODE = 20;
-    private static final String TAG = "SETTINGS";
     public static final String PREFS = "PREFERENCES";
-    private static boolean mute,tts,countdown,log,notifs;
     public static final String MUTE_TAG = "mute";
     public static final String TTS_TAG = "tts";
     public static final String COUNTDOWN_TAG = "countdown";
     public static final String LOG_TAG = "log";
     public static final String NOTIFS_TAG = "notif";
     public static final String TIME_BEF_NOT_TAG = "timeBefNotif";
-
+    private static final int EXPORT_CODE = 10;
+    private static final int IMPORT_CODE = 20;
+    private static final String TAG = "SETTINGS";
+    private static boolean mute, tts, countdown, log, notifs;
     private static boolean init = false;
     private static int timeBefNotif;
-    private SharedPreferences.Editor editor;
     @BindView(R.id.settings_switch_mute)
     SwitchCompat settingsSwitchMute;
     @BindView(R.id.settings_switch_tts)
@@ -103,18 +102,64 @@ public class SettingsActivity extends AppCompatActivity {
     LinearLayout settingsEntryRemoveAll;
     @BindView(R.id.settings_activity_toolbar)
     Toolbar toolBar;
+    private SharedPreferences.Editor editor;
     private int clicked = 0;
 
     public static void init(Context context) {
-        SharedPreferences preferences = context.getSharedPreferences(PREFS,MODE_PRIVATE);
-        mute = preferences.getBoolean(MUTE_TAG,false);
-        tts = preferences.getBoolean(TTS_TAG,true);
-        countdown = preferences.getBoolean(COUNTDOWN_TAG,true);
-        log = preferences.getBoolean(LOG_TAG,true);
-        notifs = preferences.getBoolean(NOTIFS_TAG,true);
-        timeBefNotif = preferences.getInt(TIME_BEF_NOT_TAG,5);
+        SharedPreferences preferences = context.getSharedPreferences(PREFS, MODE_PRIVATE);
+        mute = preferences.getBoolean(MUTE_TAG, false);
+        tts = preferences.getBoolean(TTS_TAG, true);
+        countdown = preferences.getBoolean(COUNTDOWN_TAG, true);
+        log = preferences.getBoolean(LOG_TAG, true);
+        notifs = preferences.getBoolean(NOTIFS_TAG, true);
+        timeBefNotif = preferences.getInt(TIME_BEF_NOT_TAG, 5);
         init = true;
     }
+
+    public static boolean isMute() {
+        if (init)
+            return mute;
+        Log.e(TAG, "SETTINGS NOT INITIALISED");
+        return false;
+
+    }
+
+    public static boolean isTts() {
+        if (init)
+            return tts;
+        Log.e(TAG, "SETTINGS NOT INITIALISED");
+        return true;
+    }
+
+    public static boolean isCountdown() {
+        if (init)
+            return countdown;
+        Log.e(TAG, "SETTINGS NOT INITIALISED");
+        return true;
+
+    }
+
+    public static boolean isLog() {
+        if (init)
+            return log;
+        Log.e(TAG, "SETTINGS NOT INITIALISED");
+        return true;
+    }
+
+    public static int getTimeBefNotif() {
+        if (init)
+            return timeBefNotif;
+        Log.e(TAG, "SETTINGS NOT INITIALISED");
+        return 5;
+    }
+
+    public static boolean isNotifs() {
+        if (init)
+            return notifs;
+        Log.e(TAG, "SETTINGS NOT INITIALISED");
+        return true;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,8 +167,8 @@ public class SettingsActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setSupportActionBar(toolBar);
         setTitle(R.string.title_activity_settings);
-        editor = getSharedPreferences(PREFS,MODE_PRIVATE).edit();
-        if(mute) {
+        editor = getSharedPreferences(PREFS, MODE_PRIVATE).edit();
+        if (mute) {
             tts = false;
             countdown = false;
             settingsSwitchTts.setEnabled(false);
@@ -137,7 +182,7 @@ public class SettingsActivity extends AppCompatActivity {
             settingsSwitchNotif.setChecked(notifs);
             settingsSwitchLog.setChecked(log);
         }
-        settingsSwitchNotifTime.setText(""+timeBefNotif);
+        settingsSwitchNotifTime.setText("" + timeBefNotif);
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -148,7 +193,7 @@ public class SettingsActivity extends AppCompatActivity {
             for (Uri uri : files) {
                 try {
                     File given = Utils.getFileForUri(uri);
-                    File file = new File(given.getPath()+".excount");
+                    File file = new File(given.getPath() + ".excount");
                     given.delete();
                     FileInputStream inputStream = this.openFileInput("sessions.json");
                     FileChannel source = inputStream.getChannel();
@@ -213,12 +258,12 @@ public class SettingsActivity extends AppCompatActivity {
 
     }
 
-    @OnCheckedChanged({R.id.settings_switch_countdown,R.id.settings_switch_log,R.id.settings_switch_mute,R.id.settings_switch_notif,R.id.settings_switch_tts})
+    @OnCheckedChanged({R.id.settings_switch_countdown, R.id.settings_switch_log, R.id.settings_switch_mute, R.id.settings_switch_notif, R.id.settings_switch_tts})
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        switch(buttonView.getId()) {
+        switch (buttonView.getId()) {
             case R.id.settings_switch_mute:
                 mute = isChecked;
-                if(mute) {
+                if (mute) {
                     tts = false;
                     countdown = false;
                     settingsSwitchTts.setEnabled(false);
@@ -227,33 +272,33 @@ public class SettingsActivity extends AppCompatActivity {
                         settingsSwitchTts.setChecked(false);
                         settingsSwitchCountdown.setChecked(false);
                     }
-                }
-                else {
+                } else {
                     settingsSwitchTts.setEnabled(true);
                     settingsSwitchCountdown.setEnabled(true);
                 }
-                editor.putBoolean(MUTE_TAG,isChecked);
+                editor.putBoolean(MUTE_TAG, isChecked);
                 break;
             case R.id.settings_switch_tts:
                 tts = isChecked;
-                editor.putBoolean(TTS_TAG,isChecked);
+                editor.putBoolean(TTS_TAG, isChecked);
                 break;
             case R.id.settings_switch_countdown:
                 countdown = isChecked;
-                editor.putBoolean(COUNTDOWN_TAG,isChecked);
+                editor.putBoolean(COUNTDOWN_TAG, isChecked);
                 break;
             case R.id.settings_switch_notif:
                 notifs = isChecked;
-                editor.putBoolean(NOTIFS_TAG,isChecked);
+                editor.putBoolean(NOTIFS_TAG, isChecked);
                 break;
             case R.id.settings_switch_log:
                 log = isChecked;
-                editor.putBoolean(LOG_TAG,isChecked);
+                editor.putBoolean(LOG_TAG, isChecked);
                 break;
             default:
-                Log.e(TAG,"Implement on checked changed for the view");
+                Log.e(TAG, "Implement on checked changed for the view");
         }
     }
+
     @OnClick({R.id.settings_entry_import, R.id.settings_entry_export, R.id.settings_entry_remove_all})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -290,7 +335,7 @@ public class SettingsActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 File dir = getFilesDir();
-                                for(File file: dir.listFiles()) {
+                                for (File file : dir.listFiles()) {
                                     file.delete();
                                 }
                             }
@@ -307,58 +352,15 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         timeBefNotif = Integer.parseInt(settingsSwitchNotifTime.getText().toString());
-        editor.putInt(TIME_BEF_NOT_TAG,timeBefNotif);
+        editor.putInt(TIME_BEF_NOT_TAG, timeBefNotif);
         editor.commit();
-        Log.d(TAG,"Preferences commited");
+        Log.d(TAG, "Preferences commited");
         super.onPause();
     }
 
-    public static boolean isMute() {
-        if(init)
-            return mute;
-        Log.e(TAG,"SETTINGS NOT INITIALISED");
-        return false;
-
-    }
-
-    public static boolean isTts() {
-        if(init)
-            return tts;
-        Log.e(TAG,"SETTINGS NOT INITIALISED");
-        return true;
-    }
-
-    public static boolean isCountdown() {
-        if(init)
-            return countdown;
-        Log.e(TAG,"SETTINGS NOT INITIALISED");
-        return true;
-
-    }
-
-    public static boolean isLog() {
-        if(init)
-            return log;
-        Log.e(TAG,"SETTINGS NOT INITIALISED");
-        return true;
-    }
-
-    public static int getTimeBefNotif() {
-        if(init)
-            return timeBefNotif;
-        Log.e(TAG,"SETTINGS NOT INITIALISED");
-        return 5;
-    }
-
-    public static boolean isNotifs() {
-        if(init)
-            return notifs;
-        Log.e(TAG,"SETTINGS NOT INITIALISED");
-        return true;
-    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu,menu);
+        getMenuInflater().inflate(R.menu.menu, menu);
         MenuItem currItem = menu.findItem(R.id.action_settings);
         currItem.setVisible(false);
         return true;
@@ -367,14 +369,26 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent = new Intent();
-        switch(item.getItemId()) {
-            case R.id.action_favorite:
-                Toast.makeText(this,"Fav pressed",Toast.LENGTH_LONG).show();
+        switch (item.getItemId()) {
+            case (R.id.action_favorite):
+                intent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("https://play.google.com/store/apps/details?id=" + "me.itsrishi.exercisecounter"));
+                startActivity(intent);
                 break;
             case R.id.action_stat:
                 intent = new Intent(SettingsActivity.this, StatsActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+                break;
+            case R.id.action_about:
+                intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://itsrishi.me"));
+                startActivity(intent);
+                break;
+            case R.id.action_license:
+                new EasyLicensesDialogCompat(this)
+                        .setTitle("Open source licenses")
+                        .setPositiveButton(android.R.string.ok, null)
+                        .show();
                 break;
         }
         return true;

@@ -27,6 +27,7 @@ package me.itsrishi.exercisecounter.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -40,9 +41,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.marcoscg.easylicensesdialog.EasyLicensesDialogCompat;
+import com.stephentuso.welcome.WelcomeHelper;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -67,11 +69,15 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
     @BindView(R.id.main_activity_toolbar)
     Toolbar toolBar;
 
+    WelcomeHelper welcomeScreen;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        welcomeScreen = new WelcomeHelper(this, MyWelcomeActivity.class);
+        welcomeScreen.show(savedInstanceState);
         setSupportActionBar(toolBar);
     }
 
@@ -167,8 +173,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
                 .setNegativeButton(R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        File file = new File(getFilesDir(),"session_"+sessions.get(position).getName());
-                        Log.d("DEL_STATUS",""+file.delete());
+                        File file = new File(getFilesDir(), "session_" + sessions.get(position).getName());
+                        Log.d("DEL_STATUS", "" + file.delete());
                         sessions.remove(position);
                         long time = System.nanoTime();
                         saveSessions();
@@ -183,17 +189,32 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        welcomeScreen.onSaveInstanceState(outState);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu,menu);
+        getMenuInflater().inflate(R.menu.menu, menu);
+        menu.add("Tutorial").setIcon(R.drawable.ic_help_outline_white_24dp).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                welcomeScreen.forceShow();
+                return false;
+            }
+        }).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
-        switch(item.getItemId()) {
-            case R.id.action_favorite:
-                Toast.makeText(this,"Fav pressed",Toast.LENGTH_LONG).show();
+        switch (item.getItemId()) {
+            case (R.id.action_favorite):
+                intent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("https://play.google.com/store/apps/details?id=" + "me.itsrishi.exercisecounter"));
+                startActivity(intent);
                 break;
             case R.id.action_settings:
                 intent = new Intent(MainActivity.this, SettingsActivity.class);
@@ -204,6 +225,16 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewClick
                 intent = new Intent(MainActivity.this, StatsActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+                break;
+            case R.id.action_about:
+                intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://itsrishi.me"));
+                startActivity(intent);
+                break;
+            case R.id.action_license:
+                new EasyLicensesDialogCompat(this)
+                        .setTitle("Open source licenses")
+                        .setPositiveButton(android.R.string.ok, null)
+                        .show();
                 break;
         }
         return true;

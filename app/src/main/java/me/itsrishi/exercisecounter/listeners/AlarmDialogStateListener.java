@@ -29,10 +29,12 @@ import me.itsrishi.exercisecounter.models.AlarmTime;
 
 /**
  * A listener which listens to the state of a dialog
+ *
  * @author Rishi Raj
  */
 
 public interface AlarmDialogStateListener {
     void onSubmit(int index, AlarmTime alarmTime);
+
     void onCancel();
 }

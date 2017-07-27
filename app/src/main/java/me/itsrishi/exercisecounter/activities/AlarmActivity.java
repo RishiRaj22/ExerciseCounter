@@ -27,6 +27,7 @@ package me.itsrishi.exercisecounter.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -39,7 +40,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
+
+import com.marcoscg.easylicensesdialog.EasyLicensesDialogCompat;
 
 import java.util.ArrayList;
 
@@ -90,7 +92,7 @@ public class AlarmActivity extends AppCompatActivity implements RecyclerViewClic
         if (alarmTimes == null) {
             alarmTimes = new ArrayList<>();
         }
-        alarmAdapter = new AlarmAdapter(alarmTimes, this,this);
+        alarmAdapter = new AlarmAdapter(alarmTimes, this, this);
         alarmEditList.setAdapter(alarmAdapter);
         ItemTouchHelper touchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
             @Override
@@ -140,8 +142,10 @@ public class AlarmActivity extends AppCompatActivity implements RecyclerViewClic
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
         switch (item.getItemId()) {
-            case R.id.action_favorite:
-                Toast.makeText(this, "Fav pressed", Toast.LENGTH_LONG).show();
+            case (R.id.action_favorite):
+                intent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("https://play.google.com/store/apps/details?id=" + "me.itsrishi.exercisecounter"));
+                startActivity(intent);
                 break;
             case R.id.action_settings:
                 intent = new Intent(AlarmActivity.this, SettingsActivity.class);
@@ -152,6 +156,16 @@ public class AlarmActivity extends AppCompatActivity implements RecyclerViewClic
                 intent = new Intent(AlarmActivity.this, StatsActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+                break;
+            case R.id.action_about:
+                intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://itsrishi.me"));
+                startActivity(intent);
+                break;
+            case R.id.action_license:
+                new EasyLicensesDialogCompat(this)
+                        .setTitle("Open source licenses")
+                        .setPositiveButton(android.R.string.ok, null)
+                        .show();
                 break;
         }
         return true;
@@ -182,9 +196,9 @@ public class AlarmActivity extends AppCompatActivity implements RecyclerViewClic
 
     @OnClick(R.id.alarms_submit)
     public void onViewClicked() {
-        Intent intent = new Intent(AlarmActivity.this,SessionCreateActivity.class);
-        intent.putParcelableArrayListExtra("sessions",sessions);
-        intent.putExtra("index",index);
+        Intent intent = new Intent(AlarmActivity.this, SessionCreateActivity.class);
+        intent.putParcelableArrayListExtra("sessions", sessions);
+        intent.putExtra("index", index);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
@@ -211,7 +225,7 @@ public class AlarmActivity extends AppCompatActivity implements RecyclerViewClic
 
     @Override
     public void onChecked(int position, boolean isChecked) {
-        Log.d("alarm","alarm at "+position + " is "+isChecked);
+        Log.d("alarm", "alarm at " + position + " is " + isChecked);
         alarmTimes.get(position).setActive(isChecked);
     }
 }

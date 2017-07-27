@@ -27,6 +27,7 @@ package me.itsrishi.exercisecounter.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -40,6 +41,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Toast;
+
+import com.marcoscg.easylicensesdialog.EasyLicensesDialogCompat;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -103,9 +106,9 @@ public class ExerciseCreateActivity extends AppCompatActivity implements Compoun
         if (exercise != null) {
             setTitle(R.string.title_activity_session_edit);
             exerciseName.setText(exercise.getName());
-            numTurns.setText(String.format(Locale.ENGLISH,"%d",exercise.getTurns()));
-            timePerTurn.setText(String.format(Locale.ENGLISH,"%f",exercise.getTimePerTurn()));
-            gapBetweenTurns.setText(String.format(Locale.ENGLISH,"%f",exercise.getGapBetweenTurns()));
+            numTurns.setText(String.format(Locale.ENGLISH, "%d", exercise.getTurns()));
+            timePerTurn.setText(String.format(Locale.ENGLISH, "%f", exercise.getTimePerTurn()));
+            gapBetweenTurns.setText(String.format(Locale.ENGLISH, "%f", exercise.getGapBetweenTurns()));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
                 shouldAutoplay = exercise.getAutoplay();
                 autoplay.setChecked(exercise.getAutoplay());
@@ -176,6 +179,7 @@ public class ExerciseCreateActivity extends AppCompatActivity implements Compoun
         });
         alertBuilder.show();
     }
+
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         this.shouldAutoplay = isChecked;
@@ -189,18 +193,21 @@ public class ExerciseCreateActivity extends AppCompatActivity implements Compoun
         outState.putInt("index", index);
         outState.putInt("position", position);
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu,menu);
+        getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
-        switch(item.getItemId()) {
-            case R.id.action_favorite:
-                Toast.makeText(this,"Fav pressed",Toast.LENGTH_LONG).show();
+        switch (item.getItemId()) {
+            case (R.id.action_favorite):
+                intent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("https://play.google.com/store/apps/details?id=" + "me.itsrishi.exercisecounter"));
+                startActivity(intent);
                 break;
             case R.id.action_settings:
                 intent = new Intent(ExerciseCreateActivity.this, SettingsActivity.class);
@@ -211,6 +218,16 @@ public class ExerciseCreateActivity extends AppCompatActivity implements Compoun
                 intent = new Intent(ExerciseCreateActivity.this, StatsActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+                break;
+            case R.id.action_about:
+                intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://itsrishi.me"));
+                startActivity(intent);
+                break;
+            case R.id.action_license:
+                new EasyLicensesDialogCompat(this)
+                        .setTitle("Open source licenses")
+                        .setPositiveButton(android.R.string.ok, null)
+                        .show();
                 break;
         }
         return true;

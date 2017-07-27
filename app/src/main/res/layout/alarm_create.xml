@@ -55,51 +55,51 @@
 
                     <android.support.v7.widget.AppCompatCheckBox
                         android:id="@+id/checkbox_monday"
-                        android:checked="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:checked="true"
                         android:text="@string/monday" />
 
                     <android.support.v7.widget.AppCompatCheckBox
                         android:id="@+id/checkbox_tuesday"
-                        android:checked="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:checked="true"
                         android:text="@string/tuesday" />
 
                     <android.support.v7.widget.AppCompatCheckBox
                         android:id="@+id/checkbox_wednesday"
-                        android:checked="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:checked="true"
                         android:text="@string/wednesday" />
 
                     <android.support.v7.widget.AppCompatCheckBox
                         android:id="@+id/checkbox_thursday"
-                        android:checked="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:checked="true"
                         android:text="@string/thursday" />
 
                     <android.support.v7.widget.AppCompatCheckBox
                         android:id="@+id/checkbox_friday"
-                        android:checked="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:checked="true"
                         android:text="@string/friday" />
 
                     <android.support.v7.widget.AppCompatCheckBox
                         android:id="@+id/checkbox_saturday"
-                        android:checked="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:checked="true"
                         android:text="@string/saturday" />
 
                     <android.support.v7.widget.AppCompatCheckBox
                         android:id="@+id/checkbox_sunday"
-                        android:checked="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:checked="true"
                         android:text="@string/sunday" />
                 </LinearLayout>
 

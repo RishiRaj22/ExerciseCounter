@@ -48,8 +48,8 @@ import me.itsrishi.exercisecounter.models.AlarmTime;
 
 public class AlarmDialogFragment extends DialogFragment implements CompoundButton.OnCheckedChangeListener {
     public static final int NEW_INDEX = -1;
-    AlarmTime alarm;
     static AlarmDialogStateListener listener;
+    AlarmTime alarm;
     int index;
     TimePicker timePicker;
     AppCompatCheckBox days[] = new AppCompatCheckBox[7];
@@ -62,7 +62,7 @@ public class AlarmDialogFragment extends DialogFragment implements CompoundButto
      * @param index Index of the alarmTime if it exists or -1 if it doesnot
      * @return
      */
-    public static AlarmDialogFragment getInstance(AlarmDialogStateListener listener,AlarmTime alarm, int index) {
+    public static AlarmDialogFragment getInstance(AlarmDialogStateListener listener, AlarmTime alarm, int index) {
         AlarmDialogFragment.listener = listener;
         AlarmDialogFragment fragment = new AlarmDialogFragment();
         Bundle args = new Bundle();

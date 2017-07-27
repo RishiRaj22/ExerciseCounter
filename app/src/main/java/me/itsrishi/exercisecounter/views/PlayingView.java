@@ -416,6 +416,16 @@ public class PlayingView extends View implements TextToSpeech.OnInitListener, Ex
 
 
     /*        Overriden view methods begin        */
+
+    @Override
+    protected void onDetachedFromWindow() {
+        if (textToSpeech != null) {
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+        }
+        super.onDetachedFromWindow();
+    }
+
     @Override
     protected Parcelable onSaveInstanceState() {
         paused = true;

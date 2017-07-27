@@ -121,7 +121,7 @@ public class UpcomingExercisesAdapter extends RecyclerView.Adapter<UpcomingExerc
 
         ExerciseViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 }

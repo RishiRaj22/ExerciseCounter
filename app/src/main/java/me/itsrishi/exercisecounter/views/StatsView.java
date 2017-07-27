@@ -229,14 +229,14 @@ public class StatsView extends View implements OnScaleGestureListener, GestureDe
             drawLineFrom(canvas, i);
             drawPoint(canvas, i);
         }
-        drawOverlay(canvas,focussed);
+        drawOverlay(canvas, focussed);
     }
 
     private void drawMarkings(Canvas canvas) {
         int prevColor = paint.getColor();
         paint.setColor(Color.DKGRAY);
         paint.setStrokeWidth(GRID_WIDTH);
-        float desiredHeight = Math.min(marginHeight - 5,drawingHeight / max);
+        float desiredHeight = Math.min(marginHeight - 5, drawingHeight / max);
         float currentHeight = paint.descent() - paint.ascent();
         paint.setTextSize(paint.getTextSize() * desiredHeight / currentHeight);
         if (max > GRAPH_PLOTS) {
@@ -257,7 +257,7 @@ public class StatsView extends View implements OnScaleGestureListener, GestureDe
     }
 
     private void drawLineFrom(Canvas canvas, int pos) {
-        if(pos >= dataPoints - 1)
+        if (pos >= dataPoints - 1)
             return;
         int prevColor = paint.getColor();
         paint.setStrokeWidth(LINE_WIDTH * zoom);
@@ -271,7 +271,7 @@ public class StatsView extends View implements OnScaleGestureListener, GestureDe
     }
 
     private void drawPoint(Canvas canvas, int pos) {
-        if(pos >= dataPoints) return;
+        if (pos >= dataPoints) return;
         int prevColor = paint.getColor();
         paint.setColor(accentColor);
         float x, y;
@@ -330,16 +330,16 @@ public class StatsView extends View implements OnScaleGestureListener, GestureDe
      * @param pos    The position of the item for which the text is drawn
      */
     private void drawOverlay(Canvas canvas, int pos) {
-        if(pos < 0 || pos >= dataPoints)
+        if (pos < 0 || pos >= dataPoints)
             return;
         float x = getXForPosition(pos);
         float y = getYForPosition(pos);
         String txt = getDateTextForPosition(pos, true);
-        float desiredSize = Math.max(getWidth()/5,space * zoom * labelGap * 0.8f);
+        float desiredSize = Math.max(getWidth() / 5, space * zoom * labelGap * 0.8f);
         paint.setTextSize(paint.getTextSize() * desiredSize / paint.measureText(txt));
         if (x > getWidth() / 2)
             x -= desiredSize;
-        if(y < getHeight()/2)
+        if (y < getHeight() / 2)
             y += paint.descent();
         paint.setColor(Color.GRAY);
         canvas.drawRect(x - 5, y + paint.ascent(), x + desiredSize + 5, y + paint.descent(), paint);
