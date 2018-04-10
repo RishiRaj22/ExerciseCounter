@@ -384,7 +384,7 @@ public class SessionCreateActivity extends AppCompatActivity implements View.OnC
                 startActivity(intent);
                 break;
             case R.id.action_about:
-                intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://itsrishi.me"));
+                intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://rishiraj22.github.io"));
                 startActivity(intent);
                 break;
             case R.id.action_license:
