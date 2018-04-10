@@ -79,7 +79,7 @@ public class PlayingView extends View implements TextToSpeech.OnInitListener, Ex
     private long tappedTime = -1;
     private SoundPool soundPool;
     private int sounds[], nextSound;
-    private int prevSec;
+    private int prevSec = -1;
     private int timeLeftAfterCurrentExercise; //I know that LOOONG name hurts ;)
     private LinkedList<IntegerChangeListener> integerChangeListeners;
     private float gapBetweenExercises;
@@ -257,7 +257,12 @@ public class PlayingView extends View implements TextToSpeech.OnInitListener, Ex
     }
 
     private void drawRingText(Canvas canvas) {
-        String text = Integer.toString(exercises.get(index).getTurns() - turnsPassed);
+        String text;
+        if(SettingsActivity.isCountStyleDown()) {
+            text = Integer.toString(exercises.get(index).getTurns() - turnsPassed);
+        } else {
+            text = Integer.toString(turnsPassed);
+        }
         canvas.drawText(text, (cx - paintTurns.measureText(text) / 2), turnsTextYpos, paintTurns);
 
         String exName = exercises.get(index).getName();
@@ -315,7 +320,7 @@ public class PlayingView extends View implements TextToSpeech.OnInitListener, Ex
     }
 
     private void drawRestTime(Canvas canvas) {
-        if (timePassed < 0) {
+        if (timePassed < -0.04f) {
             String restTime = Float.toString(-timePassed);
             for (int i = 0; i < restTime.length(); i++) {
                 if (restTime.charAt(i) == '.') {
@@ -382,7 +387,10 @@ public class PlayingView extends View implements TextToSpeech.OnInitListener, Ex
         if (timePassed > tpt) {
             turnsPassed++;
             if (turnsPassed != exercises.get(index).getTurns() && currentTappedX == -1) {
-                final String text = exercises.get(index).getTurns() - turnsPassed + "to go";
+                final String text;
+                if(SettingsActivity.isCountStyleDown())
+                    text = exercises.get(index).getTurns() - turnsPassed + "to go";
+                else text = turnsPassed + " completed";
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -404,12 +412,16 @@ public class PlayingView extends View implements TextToSpeech.OnInitListener, Ex
     }
 
     private void updateTimers() {
-        int currSec = (int) ((1 - Math.max(0, timePassed)
-                / exercises.get(index).getTimePerTurn()) * 10);
+        int currSec = (int) (Math.max(0, timePassed) / exercises.get(index).getTimePerTurn() * 10);
+        if(timePassed < 0) currSec = 10;
         if (currSec != prevSec) {
+            //Skip very first count
+            if(prevSec == -1 && (currSec == 0 || currSec == 10)) {
+                return;
+            }
+            Log.d("SOUND","Prev: " + prevSec + ", Current: " + currSec);
             prevSec = currSec;
-            if (countdownVolume != 0)
-                playSound(currSec);
+            playSound(currSec);
         }
     }
     /*        Updating code ends        */
@@ -498,7 +510,7 @@ public class PlayingView extends View implements TextToSpeech.OnInitListener, Ex
         timerX = cx + outerRadius * 0.4f;
         paintTimer.setTextSize(100);
         delta = (getWidth() - timerX) / paintTimer.measureText("12:12");
-        paintTimer.setTextSize(100 * 0.8f * delta);
+        paintTimer.setTextSize(100 * 0.7f * delta);
         timerY = getHeight() - paint.ascent() - volumeControlX;
 
         paintRest.setTextSize(100);
@@ -560,10 +572,19 @@ public class PlayingView extends View implements TextToSpeech.OnInitListener, Ex
 
     /*        Utility methods begin        */
     private void playSound(int n) {
+        Log.d("SOUND","Playing " + n);
         if (!soundMute) {
             if (soundPool == null || sounds == null)
                 initSounds();
-            soundPool.play(sounds[(n + 1) % 11], countdownVolume, countdownVolume, 2, 0, 1);
+            if(countdownVolume != 0) {
+                if(SettingsActivity.isCountStyleDown()) {
+                    n = 10 - n;
+                }
+                soundPool.play(sounds[n], countdownVolume, countdownVolume, 2, 0, 1);
+            }
+            else {
+                if(n == 0) soundPool.play(nextSound,0.5f,0.5f,2,0,1);
+            }
         }
     }
 

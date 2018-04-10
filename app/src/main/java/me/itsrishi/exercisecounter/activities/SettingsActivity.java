@@ -49,10 +49,14 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
+import butterknife.OnClick;
 import com.marcoscg.easylicensesdialog.EasyLicensesDialogCompat;
 import com.nononsenseapps.filepicker.FilePickerActivity;
 import com.nononsenseapps.filepicker.Utils;
+import me.itsrishi.exercisecounter.R;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -60,12 +64,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnCheckedChanged;
-import butterknife.OnClick;
-import me.itsrishi.exercisecounter.R;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -75,11 +73,12 @@ public class SettingsActivity extends AppCompatActivity {
     public static final String COUNTDOWN_TAG = "countdown";
     public static final String LOG_TAG = "log";
     public static final String NOTIFS_TAG = "notif";
+    public static final String COUNT_TYPE_TAG = "countType";
     public static final String TIME_BEF_NOT_TAG = "timeBefNotif";
     private static final int EXPORT_CODE = 10;
     private static final int IMPORT_CODE = 20;
     private static final String TAG = "SETTINGS";
-    private static boolean mute, tts, countdown, log, notifs;
+    private static boolean mute, tts, countdown, log, notifs, countStyle;
     private static boolean init = false;
     private static int timeBefNotif;
     @BindView(R.id.settings_switch_mute)
@@ -94,6 +93,8 @@ public class SettingsActivity extends AppCompatActivity {
     AppCompatEditText settingsSwitchNotifTime;
     @BindView(R.id.settings_switch_log)
     SwitchCompat settingsSwitchLog;
+    @BindView(R.id.settings_switch_countstyle)
+    SwitchCompat settingsSwitchCountStyle;
     @BindView(R.id.settings_entry_import)
     LinearLayout settingsEntryImport;
     @BindView(R.id.settings_entry_export)
@@ -113,6 +114,7 @@ public class SettingsActivity extends AppCompatActivity {
         log = preferences.getBoolean(LOG_TAG, true);
         notifs = preferences.getBoolean(NOTIFS_TAG, true);
         timeBefNotif = preferences.getInt(TIME_BEF_NOT_TAG, 5);
+        countStyle = preferences.getBoolean(COUNT_TYPE_TAG,true);
         init = true;
     }
 
@@ -153,6 +155,13 @@ public class SettingsActivity extends AppCompatActivity {
         return 5;
     }
 
+    public static boolean isCountStyleDown() {
+        if (init)
+            return countStyle;
+        Log.e(TAG, "SETTINGS NOT INITIALISED");
+        return true;
+    }
+
     public static boolean isNotifs() {
         if (init)
             return notifs;
@@ -178,6 +187,7 @@ public class SettingsActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             settingsSwitchMute.setChecked(mute);
             settingsSwitchTts.setChecked(tts);
+            settingsSwitchCountStyle.setChecked(countStyle);
             settingsSwitchCountdown.setChecked(countdown);
             settingsSwitchNotif.setChecked(notifs);
             settingsSwitchLog.setChecked(log);
@@ -258,7 +268,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     }
 
-    @OnCheckedChanged({R.id.settings_switch_countdown, R.id.settings_switch_log, R.id.settings_switch_mute, R.id.settings_switch_notif, R.id.settings_switch_tts})
+    @OnCheckedChanged({R.id.settings_switch_countstyle,R.id.settings_switch_countdown, R.id.settings_switch_log, R.id.settings_switch_mute, R.id.settings_switch_notif, R.id.settings_switch_tts})
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         switch (buttonView.getId()) {
             case R.id.settings_switch_mute:
@@ -281,6 +291,10 @@ public class SettingsActivity extends AppCompatActivity {
             case R.id.settings_switch_tts:
                 tts = isChecked;
                 editor.putBoolean(TTS_TAG, isChecked);
+                break;
+            case R.id.settings_switch_countstyle:
+                countStyle = isChecked;
+                editor.putBoolean(COUNT_TYPE_TAG,isChecked);
                 break;
             case R.id.settings_switch_countdown:
                 countdown = isChecked;

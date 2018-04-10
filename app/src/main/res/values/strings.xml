@@ -75,7 +75,7 @@
     <string name="mute">Mute</string>
     <string name="tts">Speak exercise name</string>
     <string name="tts_details">Use text to speech</string>
-    <string name="play_countdown">Play countdown</string>
+    <string name="play_countdown">Play counting</string>
     <string name="notifs">Notifications</string>
     <string name="session_alert">Session Alert</string>
     <string name="session_alert_details">Alert for upcoming sessions</string>
@@ -98,4 +98,5 @@
     <string name="sunday_short">SUN</string>
     <string name="session_add_banner">Add the following sessions</string>
     <string name="open_source_licenses">Licenses</string>
+    <string name="countstyle">Count down/up</string>
 </resources>
