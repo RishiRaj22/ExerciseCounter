@@ -28,7 +28,7 @@ If you want to support us, **donate us**!
 We plan to add other languages in our application soon.
 
 # Screenshots:
-<img src="http://rishiraj22.github.io/img/ex_counter/playing_view_paused.png" width="32%" /> <img src="http://rishira22.github.io/img/ex_counter/session_create_activity.png" width="32%" /> <img src="http://rishiraj22.github.io/img/ex_counter/stats_view.png" width="32%" />
+<img src="https://lh3.googleusercontent.com/0AJBDVeTpsfI5Rj8B4-Y_zFU8A02snJdD7nPY6YkeW2dKZKwUPuVu4eBi9IGkT5vTYHZ=w1366-h595" width="31%" /> <img src="https://lh3.googleusercontent.com/mLbtkISUMDPB9VTTAbRZ_tMg3IYDm3ac3LPR9uQEb-W0xyiTdOMfT6GahaHeL0gaGKCs=w1366-h595" width="31%" /> <img src="https://lh3.googleusercontent.com/qnnf35p6_zBfzva-Y19pLLg4FXrG_BenYerC4OKZ9jxKzouonUOYI97zbPCzeYPBNeU=w1366-h595" width="31%" />
 
 # License:
 Exercise Counter for Android
